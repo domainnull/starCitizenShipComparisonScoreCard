@@ -6,6 +6,19 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Rubric 3.1.0 / script 2.1.0 / editor 2.0.1 / viewer 2.0.1 (Nov 26 2026): extra ships take cargo space
+
+- **Extra ships' cargo comes off the hold** (cargoCapacity). An extra ship still fills no role and
+  scores nothing itself, but its `cargoScu` is taken off the hold before cargo capacity is scored,
+  the same as a role ship's, including `fitsInLowCase: false` (then it only comes off in the high
+  case). Owner's example: a 400 SCU hold with one ship taking 100 SCU scores as 300 SCU. Before,
+  the editor let you tick "takes cargo space" on an extra ship and the score ignored it.
+- An extra ship's `cargoScu` that isn't a number of 0 or more only warns and counts as 0, since
+  extra ships stay unvalidated.
+- **Minor**, not major: no saved layout has an extra ship taking cargo space, so no score moved and
+  3.0.0 scores stay comparable. Editor and viewer change wording only (patch).
+- The 3.0.0 rubric and its results are kept in `rubricVersions/3.0.0/`.
+
 ## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships, theoretical roles, exploration
 
 - **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts

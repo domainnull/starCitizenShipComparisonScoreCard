@@ -27,7 +27,7 @@ from pathlib import Path
 
 import yaml
 
-SCRIPT_VERSION = "2.0.0"
+SCRIPT_VERSION = "2.1.0"
 
 ROOT = Path(__file__).resolve().parent.parent
 RUBRIC_PATH = ROOT / "rubric.yaml"
@@ -139,6 +139,14 @@ def check_fields(path, data, required, optional, report, where=""):
         if k not in required and k not in optional:
             report.warn(path, prefix + k, "extra field", "ignored, not graded")
     return ok
+
+
+def extra_cargo(e):
+    """Cargo space an extra ship takes, or None when its cargoScu isn't a usable number."""
+    c = e.get("cargoScu", 0)
+    if isinstance(c, bool) or not isinstance(c, (int, float)) or c < 0:
+        return None
+    return c
 
 
 # --------------------------------------------------------------------------- validation
@@ -442,8 +450,8 @@ def validate_layout(path, data, carrier, ships, report, rubric):
     elif roles is not None:
         report.error(path, "roles", "bad value", "must be a mapping")
         ok = False
-    # Extra ships fill no role and score nothing, so they are never validated: a wrong entry
-    # only gets a warning and can't stop the layout being scored.
+    # Extra ships fill no role, so they are never validated: a wrong entry only gets a warning
+    # and can't stop the layout being scored. Their cargoScu still comes off the hold.
     extra = data.get("extraShips")
     if extra is not None and not isinstance(extra, list):
         report.warn(path, "extraShips", "bad value", "should be a list; ignored")
@@ -459,6 +467,8 @@ def validate_layout(path, data, carrier, ships, report, rubric):
             loc = e.get("location")
             if loc is not None and loc not in locations:
                 report.warn(path, f"{where}.location", "bad value", f"{loc!r} is not a location this carrier has")
+            if "cargoScu" in e and extra_cargo(e) is None:
+                report.warn(path, f"{where}.cargoScu", "bad value", "should be a number, 0 or more; taken as 0")
     return ok
 
 
@@ -619,6 +629,12 @@ class Scorer:
             without = self.line(cat, n, None, carrier_id)
             lines[cat] = max(with_ship, without)
             sources[cat] = sid if with_ship > without else "native"
+
+        # Extra ships fill no role, but one that sits on the cargo grid still takes its space,
+        # before the hold is scored. Same rule as role ships, including fitsInLowCase.
+        for e in layout.get("extraShips") or []:
+            if isinstance(e, dict) and aboard(e) and extra_cargo(e) is not None:
+                aboard_cargo += extra_cargo(e)
 
         scu = max((n.get("cargo") or {}).get("scu", 0) - aboard_cargo, 0)
         lines["cargoCapacity"] = self.capacity(scu)

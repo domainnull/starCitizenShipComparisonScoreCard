@@ -495,6 +495,9 @@
       var e = layout.roles && layout.roles[k];
       if (e && isShip(e.source) && e.cargoScu) used.push(shipName(e.source) + " " + e.cargoScu);
     });
+    (layout.extraShips || []).forEach(function (e) {
+      if (e && e.ship && typeof e.cargoScu === "number" && e.cargoScu > 0) used.push(shipName(e.ship) + " " + e.cargoScu + " (extra)");
+    });
     var cargoSub = used.length ? "Was " + fmtR(base) + " SCU; carried ships take " + used.join(", ") + " SCU" : "No carried ship takes cargo space";
 
     var medBeds = both(st, function (x) { return x.medicalBeds || 0; });
@@ -520,7 +523,7 @@
 
     var aboard = R.locations.filter(function (k) { return score.aboard[k].high > 0; })
       .map(function (k) { return locTitle(k) + ": " + fmtR(score.aboard[k]); }).join("; ");
-    var extras = (layout.extraShips || []).length ? "Extra ships (score nothing): " + layout.extraShips.map(function (e) { return shipName(e.ship); }).join(", ") : null;
+    var extras = (layout.extraShips || []).length ? "Extra ships (no role): " + layout.extraShips.map(function (e) { return shipName(e.ship); }).join(", ") : null;
 
     return h("div", { class: "stats" }, [
       stat("Cargo space left", fmtR(left) + " SCU", cargoSub),
@@ -541,7 +544,7 @@
       var e = layout.roles ? layout.roles[cat] : null;
       var who;
       if (cat === "cargoCapacity") {
-        who = h("span", { class: "meta", text: "not a role: cargo left after role ships, " + fmtR(score.cargoLeftScu) + " SCU" });
+        who = h("span", { class: "meta", text: "not a role: cargo left after carried ships, " + fmtR(score.cargoLeftScu) + " SCU" });
       } else if (e && e.source === "noRoom") {
         who = h("span", { class: "meta", text: "No room (scores " + num(R.noRoomScore) + ")" });
       } else if (e && e.source === "theoretical") {
@@ -570,7 +573,7 @@
       h("td", { class: "num", text: fmtR(score.total) }), h("td", { class: "num", text: fmtR(alone.total) }),
       h("td", { class: "num " + (diffT > 0 ? "up" : diffT < 0 ? "down" : ""), text: diffT ? (diffT > 0 ? "+" : "") + num(diffT) : "" })]));
     var extra = (layout.extraShips || []).length ? h("div", null, [h("h3", { text: "Extra ships" }),
-      h("p", { class: "meta", text: "Aboard but filling no role. They score nothing and aren't checked." }),
+      h("p", { class: "meta", text: "Aboard but filling no role. They score nothing themselves, but cargo space they take comes off the hold, and they aren't checked." }),
       h("ul", null, layout.extraShips.map(function (e) {
         return h("li", null, [h("span", { text: shipName(e.ship) + (e.location ? " (" + locName(e.location) + ") " : " ") }), moreLink(e.ship),
           e.note ? h("div", { class: "meta", text: e.note }) : null].filter(Boolean));
@@ -1113,7 +1116,7 @@
     }
 
     body.appendChild(h("h2", { text: "Extra ships" }));
-    body.appendChild(h("p", { class: "meta", text: "Ships aboard that fill no role. They score nothing, cargo included, and aren't checked; add a note on what else fits." }));
+    body.appendChild(h("p", { class: "meta", text: "Ships aboard that fill no role. They score nothing themselves, but cargo space they take comes off the hold before cargo capacity is scored. They aren't checked; add a note on what else fits." }));
     var extraWrap = h("div");
     body.appendChild(extraWrap);
     drawExtras();

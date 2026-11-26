@@ -12,7 +12,7 @@
 (function () {
   "use strict";
 
-  var VIEWER_VERSION = "2.0.0";
+  var VIEWER_VERSION = "2.0.1";
   var SCRIPT_MAJOR_SUPPORTED = 2;   // results written by score script 2.x
   var MAX_SNAPSHOTS = 5;
 
@@ -270,7 +270,7 @@
   }
 
   function sourceLine(cat, line, role) {
-    if (cat === "cargoCapacity") return [h("div", { class: "src", text: "Not a role: the base's cargo space left after its role ships" })];
+    if (cat === "cargoCapacity") return [h("div", { class: "src", text: "Not a role: the base's cargo space left after its carried ships, extra ships included" })];
     var src = line.sources || { low: line.source, high: line.source };
     var parts = [];
     if (src.low === src.high) {
@@ -424,7 +424,7 @@
     });
     out.push(h("h2", { text: "Extra ships" }));
     out.push(h("div", { class: "card" }, [
-      h("p", { class: "meta", text: "Ships that fill no role. They score nothing; they record what else fits." }),
+      h("p", { class: "meta", text: "Ships that fill no role. They score nothing themselves, but cargo space they take comes off the hold; they record what else fits." }),
       extras.length ? h("ul", { class: "plain" }, extras) : h("p", { class: "meta", text: "No extra ships in this layout." }),
       layout.cargoLeftScu ? h("p", { class: "meta", style: "margin-top:4px", text: "Cargo left after carried ships: " + fmt(layout.cargoLeftScu) + " SCU." }) : null
     ]));

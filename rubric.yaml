@@ -5,7 +5,7 @@
 # Versioning (semver): major = old scores are not comparable, minor = new rule or
 # category, patch = fix. Every version gets a git tag (rubric-vX.Y.Z) and an entry in
 # rubricVersions/DECISIONS.md. Old rubric files live in rubricVersions/.
-rubricVersion: 3.0.0
+rubricVersion: 3.1.0
 
 # Tiers and weights. Each line scores 0-5 unless it says otherwise.
 tiers:
@@ -117,7 +117,7 @@ rules:
     text: A role can be Theoretical, for a capability no ship has in game yet, with a score from 0 to the role's max that the maintainer sets. Like every theoretical range, it counts only in the high case; the low case keeps what the base has built in. A layout with a theoretical role is estimated.
   - id: extraShips
     categories: [all]
-    text: Extra ships fill no role and score nothing, cargo included. They hold a note on what else fits and aren't validated.
+    text: Extra ships fill no role and score nothing themselves, but cargo space one takes comes off the hold before cargo capacity is scored, the same as a role ship (a 400 SCU hold with a 100 SCU extra ship scores as 300 SCU). They hold a note on what else fits and aren't validated.
   - id: locations
     categories: [all]
     text: A carried ship goes in one of the base's locations (hangar, landing pad, cargo hold, vehicle bay). Locations have no ship count; which ships fit together is a fact of the layout.

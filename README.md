@@ -77,7 +77,8 @@ because saving and scoring go through the script.
   landing pad, cargo hold or vehicle bay; any number of ships each), whether it takes cargo space
   and how much, the fit source and patch, and whether it may not fit in the low case. **Optional
   roles** (desired; none at the moment, so the section is hidden) can stay built in. **Extra ships** take the same fields plus a note; they score
-  nothing and aren't checked.
+  nothing themselves, but cargo space they take comes off the hold before cargo capacity is
+  scored, and they aren't checked.
 - **Edit a ship**: a form for every field, with **Range** to split any value into a low and a high
   case, and **Edit as YAML** for anything the form can't show. **Record a change** adds a `changes`
   entry with its patch.
@@ -179,7 +180,8 @@ Keys are camelCase everywhere, including the results file. The viewer shows each
   optional one-line `fit` source and the `patch`. Use `fitsInLowCase: false` for a ship that may not
   fit at all. Every needed role must be filled: `native` only where the base has something built
   in, otherwise a ship or `noRoom` (scores 0). `extraShips` lists ships aboard that fill no role, with
-  the same fields plus an optional `note`; they score nothing and only raise warnings.
+  the same fields plus an optional `note`; they score nothing themselves, but their `cargoScu` comes off
+  the hold before cargo capacity is scored, as a role ship's does, and they only raise warnings.
 - **Fit sources**, best first: the maintainer's own in-game test, then a player fit test. Note
   whether the roof or bay door was open or closed; if a player didn't say, mark it about 90%.
 - **changes**: add an entry only when something about the ship changed, with the patch it changed in.
