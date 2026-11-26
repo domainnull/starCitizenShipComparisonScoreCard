@@ -30,11 +30,15 @@ roles:
     scu: 252
     maneuverability: {low: 1, high: 2}
   commuter: false
-  engineering: false
-hangar: {smallSlot: 1, vehicleBay: 1}
+  exploration:
+    radarSize: {low: 3, high: 4}
+    level: {low: none, high: explorer}
+locations: [hangar, vehicleBay]
 notes:
 - Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).
 - One XS hangar slot; a separate Ursa-sized ground bay. Turret positions unpublished.
+- Marketed as a long-range explorer: explorer level in the high case only, since the exploration loop is not in game.
+- Radar not in game data (concept); size 3 to 4 estimated from ships its size (Carrack and Ironclad carry size 3, Polaris size 4).
 sources:
 - https://starcitizen.tools/Odyssey
 changes: []

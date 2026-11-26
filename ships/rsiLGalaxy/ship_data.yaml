@@ -31,8 +31,8 @@ roles:
   livingQuarters: {beds: 6, recSpace: true}
   cargo: {scu: 64, maneuverability: 2}
   commuter: false
-  engineering: false
-hangar: {smallSlot: 1, vehicleBay: 1}
+  exploration: {radarSize: 3, level: none}
+locations: [hangar, vehicleBay]
 notes:
 - Scored with the Med Bay module (tier 1, 2 and 3 beds). Modules swap only at a shop.
 - Rear hangar has one XXS pad; the module lift takes an Ursa-sized vehicle.

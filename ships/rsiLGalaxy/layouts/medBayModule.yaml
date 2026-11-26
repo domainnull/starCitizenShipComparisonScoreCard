@@ -8,7 +8,7 @@ patch: 4.10.3
 roles:
   mining:
     source: grinSRocDs
-    slot: vehicleBay
+    location: vehicleBay
     cargoScu: 0
     fit: 'Estimated: module lift takes an Ursa-sized vehicle'
     patch: 4.10.3
@@ -22,9 +22,9 @@ roles:
   cargo: {source: native}
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: 'Estimated: the C8X is rated XXS and the pad is XXS'
     patch: 4.10.3
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips: []

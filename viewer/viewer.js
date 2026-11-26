@@ -12,8 +12,8 @@
 (function () {
   "use strict";
 
-  var VIEWER_VERSION = "1.0.0";
-  var SCRIPT_MAJOR_SUPPORTED = 1;   // results written by score script 1.x
+  var VIEWER_VERSION = "2.0.0";
+  var SCRIPT_MAJOR_SUPPORTED = 2;   // results written by score script 2.x
   var MAX_SNAPSHOTS = 5;
 
   var results = window.scorecardResults || null;
@@ -60,15 +60,21 @@
 
   function shipName(id) {
     if (!id || id === "native") return "Built in";
+    if (id === "noRoom") return "No room";
+    if (id === "theoretical") return "Theoretical";
     var info = results && results.shipInfo && results.shipInfo[id];
     return info ? info.name : id;
   }
 
   function shipLink(id) {
+    if (!id || id === "native" || id === "noRoom" || id === "theoretical") return h("span", { text: shipName(id) });
     return h("a", { href: "#/ship/" + encodeURIComponent(id), text: shipName(id) });
   }
 
-  var SLOT_NAMES = { smallSlot: "small slot", openPad: "open pad", mediumSlot: "medium slot", vehicleBay: "vehicle bay" };
+  // Locations (script 2.x) and the older slot names (script 1.x snapshots).
+  var LOCATION_NAMES = { hangar: "hangar", pad: "landing pad", cargoHold: "cargo hold", vehicleBay: "vehicle bay",
+    smallSlot: "small slot", openPad: "open pad", mediumSlot: "medium slot" };
+  function locName(e) { var k = e.location || e.slot; return LOCATION_NAMES[k] || k; }
   var STATUS_NAMES = { flightReady: "Flight ready", concept: "Concept" };
 
   function catName(k) { return (results.categories && results.categories[k]) || k; }
@@ -264,26 +270,30 @@
   }
 
   function sourceLine(cat, line, role) {
+    if (cat === "cargoCapacity") return [h("div", { class: "src", text: "Not a role: the base's cargo space left after its role ships" })];
     var src = line.sources || { low: line.source, high: line.source };
     var parts = [];
     if (src.low === src.high) {
-      parts.push(src.low === "native" ? "Built in" : "Carried: " + shipName(src.low));
+      parts.push(src.low === "native" || src.low === "noRoom" ? shipName(src.low) : "Carried: " + shipName(src.low));
     } else {
-      parts.push("Low case: " + (src.low === "native" ? "built in" : shipName(src.low)) +
-                 " · High case: " + (src.high === "native" ? "built in" : shipName(src.high)));
+      parts.push("Low case: " + shipName(src.low) + " · High case: " + shipName(src.high));
     }
-    var planned = role && role.source !== "native" ? role.source : null;
+    if (role && role.source === "theoretical") {
+      return [h("div", { class: "src", text: "Theoretical: " + fmt(role.score) + ", counts in the high case only" })]
+        .concat(role.note ? [h("div", { class: "fit", text: role.note })] : []);
+    }
+    var planned = role && role.source !== "native" && role.source !== "noRoom" ? role.source : null;
     var used = src.low === planned || src.high === planned;
-    var kids = [h("div", { class: "src" }, src.low === src.high && src.low !== "native"
+    var kids = [h("div", { class: "src" }, src.low === src.high && src.low !== "native" && src.low !== "noRoom"
       ? ["Carried: ", shipLink(src.low)] : [parts.join("")])];
     if (planned) {
       var fitBits = [];
-      if (role.slot) fitBits.push(SLOT_NAMES[role.slot] || role.slot);
+      if (role.location || role.slot) fitBits.push(locName(role));
       if (role.cargoScu) fitBits.push(role.cargoScu + " SCU of cargo space");
       if (role.fit) fitBits.push("Fit: " + role.fit);
       if (role.patch) fitBits.push("patch " + role.patch);
       if (role.fitsInLowCase === false) fitBits.push("may not fit, so left out of the low case");
-      if (!used) kids.push(h("div", { class: "fit", text: shipName(planned) + " is aboard for this role but adds nothing over the built-in score, so its slot counts as spare room." }));
+      if (!used) kids.push(h("div", { class: "fit", text: shipName(planned) + " is aboard for this role but adds nothing over the built-in score." }));
       if (fitBits.length) kids.push(h("div", { class: "fit", text: (used ? "" : shipName(planned) + ": ") + fitBits.join(" · ") }));
     }
     return kids;
@@ -405,17 +415,17 @@
     out = out.concat(renderCategories(layout, wasLayout));
 
     var extras = (layout.extraShips || []).map(function (e) {
-      var bits = [SLOT_NAMES[e.slot] || e.slot];
+      var bits = [locName(e)];
       if (e.cargoScu) bits.push(e.cargoScu + " SCU of cargo space");
       if (e.fit) bits.push("Fit: " + e.fit);
       if (e.fitsInLowCase === false) bits.push("left out of the low case");
-      return h("li", null, [shipLink(e.source), " · " + bits.join(" · ")]);
+      if (e.note) bits.push(e.note);
+      return h("li", null, [shipLink(e.source), " · " + bits.filter(Boolean).join(" · ")]);
     });
-    var spare = layout.spareShips || [];
-    out.push(h("h2", { text: "Aboard but not filling a role" }));
+    out.push(h("h2", { text: "Extra ships" }));
     out.push(h("div", { class: "card" }, [
+      h("p", { class: "meta", text: "Ships that fill no role. They score nothing; they record what else fits." }),
       extras.length ? h("ul", { class: "plain" }, extras) : h("p", { class: "meta", text: "No extra ships in this layout." }),
-      spare.length ? h("p", { class: "meta", style: "margin-top:8px", text: "Counted as spare room: " + spare.map(shipName).join(", ") + "." }) : null,
       layout.cargoLeftScu ? h("p", { class: "meta", style: "margin-top:4px", text: "Cargo left after carried ships: " + fmt(layout.cargoLeftScu) + " SCU." }) : null
     ]));
 
@@ -447,7 +457,7 @@
     ]));
 
     var shipIds = [ship.id];
-    Object.keys(layout.roles || {}).forEach(function (k) { var s = layout.roles[k].source; if (s && s !== "native" && shipIds.indexOf(s) < 0) shipIds.push(s); });
+    Object.keys(layout.roles || {}).forEach(function (k) { var s = layout.roles[k].source; if (s && s !== "native" && s !== "noRoom" && s !== "theoretical" && shipIds.indexOf(s) < 0) shipIds.push(s); });
     (layout.extraShips || []).forEach(function (e) { if (shipIds.indexOf(e.source) < 0) shipIds.push(e.source); });
     var changes = changeList(shipIds);
     out.push(h("h2", { text: "Patch changes for these ships" }));

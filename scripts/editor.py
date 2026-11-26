@@ -35,7 +35,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import score  # noqa: E402  (scripts/score.py)
 
-EDITOR_VERSION = "1.0.0"
+EDITOR_VERSION = "2.0.0"
 
 ROOT = score.ROOT
 SHIPS_DIR = score.SHIPS_DIR
@@ -50,11 +50,10 @@ LAYOUT_HEADER = "# Layout: which ship covers each role. Scores are written to re
 
 # Key order the data files use, so a saved file reads like the hand-written ones.
 SHIP_ORDER = ["id", "name", "manufacturer", "size", "cigSize", "sizeOverride", "status", "patch",
-              "dimensions", "carrierSize", "roles", "hangar", "notes", "sources", "changes"]
+              "dimensions", "carrierSize", "roles", "locations", "cargoBay", "notes", "sources", "changes"]
 ROLE_ORDER = score.ROLE_KEYS + ["hauler", "fighter"]
-HANGAR_ORDER = score.SLOT_TYPES + ["cargoBay"]
 LAYOUT_ORDER = ["layout", "carrier", "description", "estimated", "patch", "cargoScuMethod", "roles", "extraShips"]
-ENTRY_ORDER = ["source", "ship", "slot", "cargoScu", "fit", "patch", "fitsInLowCase"]
+ENTRY_ORDER = ["source", "ship", "location", "cargoScu", "fit", "patch", "fitsInLowCase", "note"]
 MANUFACTURER_NAMES = {
     "AEGS": "Aegis", "ANVL": "Anvil", "ARGO": "Argo", "BANU": "Banu", "CNOU": "Consolidated Outland",
     "CRUS": "Crusader", "DRAK": "Drake", "ESPR": "Esperia", "GAMA": "Gatac", "GRIN": "Greycat",
@@ -100,8 +99,6 @@ def tidy_ship(ship):
     ship = ordered(ship, SHIP_ORDER)
     if isinstance(ship.get("roles"), dict):
         ship["roles"] = ordered(ship["roles"], ROLE_ORDER)
-    if isinstance(ship.get("hangar"), dict):
-        ship["hangar"] = ordered(ship["hangar"], HANGAR_ORDER)
     return ship
 
 
@@ -165,11 +162,8 @@ def run_checks(raw_ships, raw_layouts, missing):
     scored = {}
     for carrier_id, items in layouts.items():
         for lp, layout in items:
-            res, problems = score.score_both(scorer, carrier_id, ships[carrier_id], layout, ships)
-            for p in problems:
-                report.error(lp, "slot", "bad value", p)
-            scored[(carrier_id, layout.get("layout"))] = {
-                "result": score.layout_result(res), "problems": problems}
+            res = score.score_both(scorer, carrier_id, ships[carrier_id], layout, ships)
+            scored[(carrier_id, layout.get("layout"))] = {"result": score.layout_result(res)}
     return report, rubric, ships, scored
 
 
@@ -225,14 +219,16 @@ def rubric_info(rubric):
         "editorVersion": EDITOR_VERSION,
         "roleKeys": score.ROLE_KEYS,
         "lineOrder": score.LINE_ORDER,
-        "slotTypes": score.SLOT_TYPES,
+        "locations": score.LOCATIONS,
         "manufacturers": {k: MANUFACTURER_NAMES.get(k, k) for k in sorted(score.MANUFACTURERS)},
         "categories": {k: {"displayName": v["displayName"], "max": v.get("max"),
                            "levels": list((v.get("levels") or {}).keys())} for k, v in cats.items()},
         "repairLevels": list(cats["salvageRepair"]["repairBonus"].keys()),
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
+        "radarSizes": list(cats["exploration"]["radarScore"].keys()),
         "maneuverabilityMax": cats["cargo"]["maneuverabilityMax"],
         "largeBases": list(cats["defense"].get("largeBases") or []),
+        "noRoomScore": rubric["noRoom"]["score"],
         "tiers": {k: {"weight": v["weight"], "categories": list(v["categories"])} for k, v in rubric["tiers"].items()},
     }
 
@@ -270,7 +266,7 @@ def state():
                 "data": ldata,
                 "errors": [e for e in all_errors if e.startswith(lf + ":")],
                 "warnings": [w for w in all_warnings if w.startswith(lf + ":")],
-                "score": s["result"] if s and not s["problems"] else None,
+                "score": s["result"] if s else None,
             })
         out.append(entry)
     other_errors = [e for e in all_errors if not any(e.startswith(s["file"] + ":") for s in out)
@@ -360,7 +356,7 @@ def layout_request(body, save):
     errors, warnings, rubric, ships, scored = check_change(raw_ships, raw_layouts, missing, [rel(path)], load_errors)
     s = scored.get((carrier, name))
     result = {"ok": not errors, "errors": errors, "warnings": warnings, "layout": data,
-              "score": s["result"] if s and not s["problems"] else None}
+              "score": s["result"] if s else None}
     if carrier in ships:
         result["alone"] = score.ship_breakdown(rubric, carrier, ships[carrier])["alone"]
     if save and not errors:

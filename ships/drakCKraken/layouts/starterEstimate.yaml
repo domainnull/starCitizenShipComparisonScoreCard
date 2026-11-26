@@ -7,37 +7,42 @@ patch: null
 roles:
   mining:
     source: drakSGolem
-    slot: mediumSlot
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
   refining: {source: native}
   medical:
     source: anvlSTerrapinMedic
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
   salvageRepair:
     source: rsiSSalvation
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}
-  cargo: {source: native}
-  commuter:
-    source: anvlSC8x
-    slot: openPad
+  cargo:
+    source: drakSGolemOx
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
-  engineering: {source: native}
+  commuter:
+    source: anvlSC8x
+    location: pad
+    cargoScu: 0
+    fit: 'Estimated: concept ship, sizes unpublished'
+    patch: null
+  exploration: {source: native}
 extraShips:
 - ship: miscSGuardianMx
-  slot: mediumSlot
+  location: pad
   cargoScu: 0
   fit: 'Estimated: concept ship, sizes unpublished'
   patch: null

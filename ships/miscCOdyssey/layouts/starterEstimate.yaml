@@ -9,16 +9,16 @@ roles:
   mining: {source: native}
   refining: {source: native}
   medical: {source: native}
-  salvageRepair: {source: native}
+  salvageRepair: {source: noRoom}
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}
   cargo: {source: native}
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips: []
