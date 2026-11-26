@@ -71,12 +71,12 @@ because saving and scoring go through the script.
   in each location) and every role's score against the nothing-carried score. **more…** next to a carried ship
   opens its full stats.
 - **Add or edit a layout**: **Required roles** each need built in, a carried ship (the list shows
-  what each adds), **Experimental** (a 0-5 slider for a capability no ship has yet; it counts in
-  the high case only) or **No room**, which scores 0 when there's no space left for one. Built in
-  isn't offered for a role the base has nothing for, and living quarters are built in only. For a carried ship, pick its location (hangar,
+  what each adds), **Theoretical** (a slider from 0 to the role's max for a capability no ship has in game
+  yet; it counts in the high case only) or **No room**, which scores 0 when there's no space left for one. Built in
+  isn't offered for a role the base has nothing for. Living quarters can be built in or a carried ship with quarters, such as a luxury ship. For a carried ship, pick its location (hangar,
   landing pad, cargo hold or vehicle bay; any number of ships each), whether it takes cargo space
   and how much, the fit source and patch, and whether it may not fit in the low case. **Optional
-  roles** (desired) can stay built in. **Extra ships** take the same fields plus a note; they score
+  roles** (desired; none at the moment, so the section is hidden) can stay built in. **Extra ships** take the same fields plus a note; they score
   nothing and aren't checked.
 - **Edit a ship**: a form for every field, with **Range** to split any value into a low and a high
   case, and **Edit as YAML** for anything the form can't show. **Record a change** adds a `changes`
@@ -173,7 +173,7 @@ Keys are camelCase everywhere, including the results file. The viewer shows each
   `hangar`, `pad`, `cargoHold` and `vehicleBay`. A location has no ship count: which ships fit
   together is recorded by the layout and its fit sources. An optional `cargoBay` gives the floor size
   and grid SCU where ships ride on the cargo grid.
-- **Layouts**: each role says `source: native`, a carried ship id, `experimental` (with a `score`
+- **Layouts**: each role says `source: native`, a carried ship id, `theoretical` (with a `score`
   from 0 to the role's max and an optional `note`; counts in the high case only) or `noRoom`. A carried ship also
   gives the `location` it goes in, `cargoScu` it takes up (0 unless it sits on the cargo grid), an
   optional one-line `fit` source and the `patch`. Use `fitsInLowCase: false` for a ship that may not

@@ -61,13 +61,13 @@
   function shipName(id) {
     if (!id || id === "native") return "Built in";
     if (id === "noRoom") return "No room";
-    if (id === "experimental") return "Experimental";
+    if (id === "theoretical") return "Theoretical";
     var info = results && results.shipInfo && results.shipInfo[id];
     return info ? info.name : id;
   }
 
   function shipLink(id) {
-    if (!id || id === "native" || id === "noRoom" || id === "experimental") return h("span", { text: shipName(id) });
+    if (!id || id === "native" || id === "noRoom" || id === "theoretical") return h("span", { text: shipName(id) });
     return h("a", { href: "#/ship/" + encodeURIComponent(id), text: shipName(id) });
   }
 
@@ -278,8 +278,8 @@
     } else {
       parts.push("Low case: " + shipName(src.low) + " · High case: " + shipName(src.high));
     }
-    if (role && role.source === "experimental") {
-      return [h("div", { class: "src", text: "Experimental: " + fmt(role.score) + ", counts in the high case only" })]
+    if (role && role.source === "theoretical") {
+      return [h("div", { class: "src", text: "Theoretical: " + fmt(role.score) + ", counts in the high case only" })]
         .concat(role.note ? [h("div", { class: "fit", text: role.note })] : []);
     }
     var planned = role && role.source !== "native" && role.source !== "noRoom" ? role.source : null;
@@ -457,7 +457,7 @@
     ]));
 
     var shipIds = [ship.id];
-    Object.keys(layout.roles || {}).forEach(function (k) { var s = layout.roles[k].source; if (s && s !== "native" && s !== "noRoom" && s !== "experimental" && shipIds.indexOf(s) < 0) shipIds.push(s); });
+    Object.keys(layout.roles || {}).forEach(function (k) { var s = layout.roles[k].source; if (s && s !== "native" && s !== "noRoom" && s !== "theoretical" && shipIds.indexOf(s) < 0) shipIds.push(s); });
     (layout.extraShips || []).forEach(function (e) { if (shipIds.indexOf(e.source) < 0) shipIds.push(e.source); });
     var changes = changeList(shipIds);
     out.push(h("h2", { text: "Patch changes for these ships" }));

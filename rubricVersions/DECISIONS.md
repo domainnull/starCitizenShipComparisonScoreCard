@@ -6,7 +6,7 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships, experimental roles, exploration
+## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships, theoretical roles, exploration
 
 - **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts
   (1 per small slot up to 4, 2 per open pad, 2 per medium slot up to 6). The repo owner's call: room
@@ -54,27 +54,35 @@ snapshot.
 - **Carried ships score full value** (mining, medical, salvageRepair, manufacturing). The x0.8 with
   its minimum of 1 (0.5 for mining) is removed. Owner's words: leaning on native already shows up as
   better use of hangar space. Steps that still favour built in, left as they are: refining (5 or 4
-  built in, 3 carried), engineering (5 built in, 4 carried), defense (a carried fighter scores
-  2 x its gun - 0.5 and nothing on large bases, built in gets +1 there), living quarters (carried
-  beds don't count). Shuttle is 1 either way.
+  built in, 3 carried) and defense (a carried fighter scores 2 x its gun - 0.5 and nothing on
+  large bases, built in gets +1 there). Shuttle is 1 either way.
 - **Hold-size scale approved** by the owner as proposed. Hauler scoring stays on manoeuvrability
   for now; a future score from max cargo, container size and ease of loading is issue #7 (the
   Golem OX takes 32 SCU containers where the Hull A, with the same 64 SCU, can't).
-- **Experimental option** (every role but living quarters). `source: experimental` with a `score`
-  from 0 to the role's max, set by the owner (a slider in the editor), and an optional `note`, for a
-  capability no ship has yet (owner's ask). It counts only in the high case, like other marketing
-  promises, so the low case is never self-graded; a layout with one is estimated. That rule is a
-  proposal the owner can change.
-- **Living quarters are built in only** (livingQuarters). A carried ship there was a warning; it's
-  now an error, and the editor offers no ship or experimental option.
+- **Theoretical option** (every required role). `source: theoretical` with a `score` from 0 to
+  the role's max, set by the owner (a slider in the editor), and an optional `note`, for a
+  capability no ship has in game yet. It is handled as theoretical values were before: it counts
+  only in the high case (low = the built-in line, high = the larger of that and the score), so the
+  low case is never self-graded, and a layout with one is estimated. (Briefly called "experimental"
+  during this round; the owner confirmed theoretical is the name.)
+- **Living quarters stay a required role, and a carried ship can fill it** (livingQuarters), so a
+  luxury ship can be the quarters. The line is the larger of the base's own beds and rec space and
+  the carried ship's, and the ship needs living-quarters data. Owner's words: "I agree with the
+  living quarters staying as a required role, this makes more sense."
 - **Engineering dropped** (engineering). It came from the owner's Nov 24 role list as a desired
   "dedicated engineering ship, if one is announced". No ship or gameplay loop exists, and every base
-  scored 0, so no total moved.
-- **Exploration added** as a desired role (weight 0.5), a placeholder until the gameplay exists,
-  scored as marketed: 5 for a ship built and sold for long-range exploration, 3 for a dedicated
-  scout or pathfinder, 0 for none; a carried scout counts at full value, or the role can be
-  experimental. The steps are proposals. The Odyssey is marketed as an explorer, so it scores 5
-  (+2.5 total); no other ship in the repo has exploration yet.
+  scored 0, so no total moved. Owner: "Let's drop the engineering role."
+- **Exploration is a required role** at full weight, a placeholder until the gameplay exists:
+  5 for a ship built and sold for long-range exploration, 3 for a dedicated scout or scanning ship,
+  1 for the base's own scanner and radar, 0 for none. Every ship can scan, so every base has at
+  least 1 built in; a layout can swap that for a carried scout or a theoretical score. The owner
+  asked for radar strength to set the built-in score if it could be found; the ship data has no
+  radar field, so every base stays at 1 and nothing was scraped (issue #9; lock range overlaps with
+  defense). The Odyssey is marketed as a long-range explorer, so it scores 5 (+5 total, marketing
+  only). The desired tier is now empty; its 0.5 weight is kept for later.
+- **Deferred and theoretical items are tracked as issues**: #7 hauler score, #8 exploration rework,
+  #9 radar-based exploration, #10 refining, #11 salvage and repair, #12 manufacturing, #13 concept
+  ships and estimated layouts.
 - **Estimated flag**: a layout is estimated when its file says so or the carrier's roles hold a
   range. Hangar count ranges are gone, so the Liberator's tested layout is no longer a range.
 - **Script 2.0.0** (major): no `carrier` line; layout entries carry `location` instead of `slot`;
@@ -87,14 +95,14 @@ Leaderboard, best layout, 2.0.0 then 3.0.0:
 
 | Ship | 2.0.0 | 3.0.0 |
 |---|---|---|
-| Drake Kraken | 25.5-34.5 (1st) | 25-29 (1st) |
-| RSI Polaris | 27 (3rd) | 26.5 (2nd) |
-| Aegis Idris-P | 28.5 (2nd) | 25.5 (3rd) |
-| Drake Ironclad Assault | 20.5-24.5 (4th) | 23.5-26.5 (4th) |
-| MISC Odyssey | 19.5-23.5 (6th) | 21.5-25.5 (5th) |
-| Anvil Liberator | 22-23 (5th) | 21.5 (6th) |
-| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 17-22 (7th) |
-| Drake Ironclad | 13.5-16.5 (8th) | 17-19 (8th) |
+| Drake Kraken | 25.5-34.5 (1st) | 26-30 (1st) |
+| RSI Polaris | 27 (3rd) | 27.5 (2nd) |
+| Aegis Idris-P | 28.5 (2nd) | 26.5 (3rd) |
+| MISC Odyssey | 19.5-23.5 (6th) | 24-28 (4th) |
+| Drake Ironclad Assault | 20.5-24.5 (4th) | 24.5-27.5 (5th) |
+| Anvil Liberator | 22-23 (5th) | 22.5 (6th) |
+| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 18-23 (7th) |
+| Drake Ironclad | 13.5-16.5 (8th) | 18-20 (8th) |
 
 No base now scores lower with its role ships aboard than with nothing carried (under 2.0.0 the
 Kraken and Ironclad did).

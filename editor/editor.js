@@ -76,9 +76,8 @@
     return { hangar: "hangar", pad: "landing pad", cargoHold: "cargo hold", vehicleBay: "vehicle bay" }[s] || s;
   }
   function locTitle(s) { var n = locName(s); return n.charAt(0).toUpperCase() + n.slice(1); }
-  function shipName(id) { return id === "noRoom" ? "No room" : id === "experimental" ? "Experimental" : byId[id] ? (byId[id].data.name || id) : id; }
-  function isShip(src) { return !!src && src !== "native" && src !== "noRoom" && src !== "experimental"; }
-  function builtInOnly(k) { return k === "livingQuarters"; }
+  function shipName(id) { return id === "noRoom" ? "No room" : id === "theoretical" ? "Theoretical" : byId[id] ? (byId[id].data.name || id) : id; }
+  function isShip(src) { return !!src && src !== "native" && src !== "noRoom" && src !== "theoretical"; }
   function isRequired(k) { return R.tiers.needed.categories.indexOf(k) >= 0; }
   function go(hash) { location.hash = hash; }
   function readPref(k, d) { try { var v = sessionStorage.getItem("editor." + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
@@ -541,8 +540,8 @@
         who = h("span", { class: "meta", text: "not a role: cargo left after role ships, " + fmtR(score.cargoLeftScu) + " SCU" });
       } else if (e && e.source === "noRoom") {
         who = h("span", { class: "meta", text: "No room (scores " + num(R.noRoomScore) + ")" });
-      } else if (e && e.source === "experimental") {
-        who = h("div", null, [h("span", { text: "Experimental " + num(e.score) + " / " + R.categories[cat].max }),
+      } else if (e && e.source === "theoretical") {
+        who = h("div", null, [h("span", { text: "Theoretical " + num(e.score) + " / " + R.categories[cat].max }),
           h("div", { class: "meta", text: "counts in the high case only" }), e.note ? h("div", { class: "meta", text: e.note }) : null].filter(Boolean));
       } else if (e && isShip(e.source)) {
         var bits = [h("span", { text: shipName(e.source) + " " }), moreLink(e.source)];
@@ -1004,7 +1003,7 @@
     var r = (ship.data && ship.data.roles) || {};
     if (role === "cargo") return !!r.hauler;
     if (role === "defense") return "defense" in r;
-    if (role === "livingQuarters") return false;
+    if (role === "livingQuarters") return !!r.livingQuarters;
     return role in r && r[role] !== false && r[role] !== "none";
   }
 
@@ -1162,11 +1161,11 @@
           if (nativeEmpty && current === "native") first.unshift(h("option", { value: "", text: "Choose…" }));
           first.push(h("option", { value: "noRoom", text: "No room (scores " + num(R.noRoomScore) + ")" }));
         }
-        if (!builtInOnly(k)) first.push(h("option", { value: "experimental", text: "Experimental (set a score)" }));
+        first.push(h("option", { value: "theoretical", text: "Theoretical (set a score)" }));
         var sel = h("select", { "aria-label": catName(k) + " source", onchange: function () {
           if (sel.value === "native" || sel.value === "") draft.roles[k] = { source: "native" };
           else if (sel.value === "noRoom") draft.roles[k] = { source: "noRoom" };
-          else if (sel.value === "experimental") draft.roles[k] = { source: "experimental", score: Math.min(3, R.categories[k].max) };
+          else if (sel.value === "theoretical") draft.roles[k] = { source: "theoretical", score: Math.min(3, R.categories[k].max) };
           else {
             var prev = draft.roles[k];
             draft.roles[k] = { source: sel.value, location: prev.location || defaultLocation(sel.value), cargoScu: prev.cargoScu || 0,
@@ -1182,25 +1181,24 @@
         sel.value = required && nativeEmpty && current === "native" ? "" : (current || "native");
         var head = [h("strong", { text: catName(k) }), sel];
         if (isShip(current)) head.push(moreLink(current));
-        if (builtInOnly(k)) head.push(h("span", { class: "meta", text: "built in only: no ship can fill this" }));
-        else if (!opts.length) head.push(h("span", { class: "meta", text: "no carried ship has this role yet" }));
+        if (!opts.length) head.push(h("span", { class: "meta", text: "no carried ship has this role yet" }));
         if (required && nativeEmpty && current === "native") head.push(h("span", { class: "meta", text: "needs a choice: the base has nothing built in" }));
         block.appendChild(h("div", { class: "roleHead" }, head));
         if (isShip(current)) block.appendChild(entryEditor(e, "source", k, draw));
-        if (current === "experimental") block.appendChild(experimentalEditor(e, k));
+        if (current === "theoretical") block.appendChild(theoreticalEditor(e, k));
       }
       draw();
       return block;
     }
 
-    function experimentalEditor(e, k) {
+    function theoreticalEditor(e, k) {
       var wrap = h("div", { class: "roleBody" });
       var max = R.categories[k].max;
       var out = h("span", { class: "rangeLbl", text: num(e.score) + " / " + max });
       var slider = h("input", { type: "range", min: "0", max: String(max), step: max > 1 ? "0.5" : "1", value: String(e.score),
-        "aria-label": catName(k) + " experimental score", oninput: function () {
+        "aria-label": catName(k) + " theoretical score", oninput: function () {
           e.score = Number(slider.value); out.textContent = num(e.score) + " / " + max; changed(); } });
-      wrap.appendChild(row("Experimental score", [slider, out], "Your own score for a capability no ship has yet. Counts in the high case only."));
+      wrap.appendChild(row("Theoretical score", [slider, out], "Your own score for a capability no ship has in game yet. Like any theoretical value, it counts in the high case only."));
       wrap.appendChild(row("Note", textInput("What this stands for", 40)(e.note, function (x) {
         if (x) e.note = x; else delete e.note; changed(); })));
       return wrap;

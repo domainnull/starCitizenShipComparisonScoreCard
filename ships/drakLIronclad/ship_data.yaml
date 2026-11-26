@@ -31,7 +31,7 @@ roles:
     recSpace: {low: false, high: true}
   cargo: {scu: 2200, maneuverability: 0}
   commuter: false
-  exploration: none
+  exploration: scanning
 locations: [cargoHold]
 cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 2200}
 notes:

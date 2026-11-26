@@ -47,7 +47,7 @@ roles:
   livingQuarters: {beds: 22, recSpace: true}
   cargo: {scu: 1374, maneuverability: 0}
   commuter: false
-  exploration: none
+  exploration: scanning
 locations: [hangar]
 notes:
 - 'Main bay has held eight small ships at once (player posts, 4.1-4.5, doors not stated, ~90%). Belly bay not counted:

@@ -11,10 +11,10 @@ rubricVersion: 3.0.0
 tiers:
   needed:
     weight: 1.0
-    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter]
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration]
   desired:
     weight: 0.5
-    categories: [exploration]
+    categories: []
 
 categories:
   mining:
@@ -79,20 +79,20 @@ categories:
   exploration:
     # A placeholder until exploration gameplay exists, scored as marketed.
     # explorer = built and sold for long-range exploration; scout = a dedicated scout or
-    # pathfinder ship.
+    # scanning ship; scanning = any ship's own scanner and radar (every ship has one).
     displayName: Exploration
     max: 5
-    levels: {explorer: 5, scout: 3, none: 0}
+    levels: {explorer: 5, scout: 3, scanning: 1, none: 0}
 
 # A required role (the needed tier) must be filled by the base, a carried ship or "noRoom".
 # noRoom means the base has no room left for a ship that would fill it.
 noRoom:
   score: 0
 
-# Any role but living quarters can be "experimental": a capability no ship has yet, with a
-# score the maintainer sets (0 to the role's max). It counts only in the high case, so the
-# low case is never self-graded.
-experimental:
+# Any role can be "theoretical": a capability no ship has in game yet, with a score the
+# maintainer sets (0 to the role's max). Like every theoretical range, it counts only in the
+# high case, so the low case stays what's in game today.
+theoretical:
   countsIn: [high]
 
 rounding:
@@ -101,20 +101,17 @@ rounding:
 # Rules in words, tagged with the categories they touch. The script implements each one.
 rules:
   - id: carriedRoleShip
-    categories: [mining, medical, salvageRepair, manufacturing, exploration]
+    categories: [mining, medical, salvageRepair, manufacturing, livingQuarters, exploration]
     text: A carried ship scores its own full score in the role it fills.
   - id: requiredRoles
-    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter]
-    text: Every needed role must be filled by the base itself, a carried ship or No room. A role the base has nothing built in for can't be left as built in. No room scores 0 in that role.
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter, exploration]
+    text: Every needed role must be filled by the base itself, a carried ship, a theoretical score or No room. A role the base has nothing built in for can't be left as built in. No room scores 0 in that role.
   - id: roleShipUsesSpace
-    categories: [mining, medical, salvageRepair, defense, cargo, cargoCapacity, commuter, exploration]
+    categories: [mining, medical, salvageRepair, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration]
     text: A carried ship in a role is aboard and its cargo space comes off the base's cargo. The role scores the higher of the base's own and the ship's.
-  - id: experimental
-    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, cargo, commuter, exploration]
-    text: A role can be Experimental, for a capability no ship has yet, with a score from 0 to the role's max that the maintainer sets. It counts only in the high case; the low case keeps what the base has built in. A layout with an experimental role is estimated.
-  - id: builtInOnly
-    categories: [livingQuarters]
-    text: Living quarters are built in only. No carried ship or experimental score can fill them.
+  - id: theoretical
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter, exploration]
+    text: A role can be Theoretical, for a capability no ship has in game yet, with a score from 0 to the role's max that the maintainer sets. Like every theoretical range, it counts only in the high case; the low case keeps what the base has built in. A layout with a theoretical role is estimated.
   - id: extraShips
     categories: [all]
     text: Extra ships fill no role and score nothing, cargo included. They hold a note on what else fits and aren't validated.
@@ -122,7 +119,7 @@ rules:
     categories: [all]
     text: A carried ship goes in one of the base's locations (hangar, landing pad, cargo hold, vehicle bay). Locations have no ship count; which ships fit together is a fact of the layout.
   - id: loadoutOnly
-    categories: [mining, medical, salvageRepair, defense, cargo, commuter, exploration]
+    categories: [mining, medical, salvageRepair, defense, livingQuarters, cargo, commuter, exploration]
     text: Carried roles count only from one layout whose ships fit together. A ship ranks by its best layout.
   - id: bestSeat
     categories: [defense]
@@ -141,10 +138,10 @@ rules:
     text: +1 when the base repairs, refuels and rearms the small ships it carries, +2 when it repairs itself or larger ships. Line capped at 5.
   - id: exploration
     categories: [exploration]
-    text: Exploration is a desired placeholder until the gameplay exists, scored as marketed. 5 for a ship built and sold for long-range exploration, 3 for a dedicated scout or pathfinder ship, 0 for none. A carried scout counts at full value.
+    text: Exploration is a needed placeholder until the gameplay exists, scored as marketed. 5 for a ship built and sold for long-range exploration, 3 for a dedicated scout or scanning ship, 1 for any ship's own scanner and radar (every ship has one). A carried scout counts at full value. Radar strength isn't scored yet.
   - id: livingQuarters
     categories: [livingQuarters]
-    text: 1 point per native bed, up to 4, plus 1 for rec space.
+    text: 1 point per bed, up to 4, plus 1 for rec space. A carried ship such as a luxury ship can fill the role; it scores the higher of the base and the ship.
   - id: cargoHauler
     categories: [cargo]
     text: Cargo hauler is 0-5, the manoeuvrability of whatever moves the cargo (judgement, Andromeda 5, Ironclad 0), the higher of the base and a carried hauler at full value.
