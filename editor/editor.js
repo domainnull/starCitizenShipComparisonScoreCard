@@ -210,11 +210,9 @@
     });
     app.appendChild(h("div", { class: "toolbar" }, [search, h("span", { class: "spacer" }),
       h("button", { class: "btn primary", type: "button", onclick: function () { go("#/new"); }, text: "Add ship" })]));
-    app.appendChild(h("div", { class: "card filters" }, fs));
     var count = h("p", { class: "meta" });
     var list = h("ul", { class: "shipList" });
-    app.appendChild(count);
-    app.appendChild(list);
+    app.appendChild(h("div", { class: "listLayout" }, [h("div", { class: "card filters" }, fs), h("div", null, [count, list])]));
 
     function draw() {
       list.innerHTML = "";
@@ -826,7 +824,9 @@
       body.appendChild(basics());
       body.appendChild(h("h2", { text: "Roles" }));
       body.appendChild(h("p", { class: "meta", text: "Tick a role the ship has data for. Range splits a value into a low and a high case." }));
-      R.roleKeys.concat(["hauler", "fighter"]).forEach(function (k) { body.appendChild(roleBlock(k)); });
+      var roleGrid = h("div", { class: "roleGrid" });
+      R.roleKeys.concat(["hauler", "fighter"]).forEach(function (k) { roleGrid.appendChild(roleBlock(k)); });
+      body.appendChild(roleGrid);
       body.appendChild(h("h2", { text: "Hangar" }));
       body.appendChild(hangarBlock());
       body.appendChild(h("h2", { text: "Notes, sources and changes" }));
@@ -1110,17 +1110,21 @@
     body.appendChild(h("p", { class: "meta", text: "Each must be filled: built in, a carried ship, or No room when there's no space left for one (scores " + num(R.noRoomScore) + "). " +
       "Built in isn't offered for a role the base has nothing for." }));
     if (largeBase) body.appendChild(h("p", { class: "meta", text: (s.data.name || carrierId) + " is in the rubric's large-base list: carried fighters score nothing here." }));
-    R.roleKeys.filter(isRequired).forEach(function (k) { body.appendChild(roleRow(k)); });
+    var requiredGrid = h("div", { class: "roleGrid" });
+    R.roleKeys.filter(isRequired).forEach(function (k) { requiredGrid.appendChild(roleRow(k)); });
+    body.appendChild(requiredGrid);
     var optional = R.roleKeys.filter(function (k) { return !isRequired(k); });
     if (optional.length) {
       body.appendChild(h("h2", { text: "Optional roles" }));
       body.appendChild(h("p", { class: "meta", text: "Desired roles. Leave as built in if nothing fills them." }));
-      optional.forEach(function (k) { body.appendChild(roleRow(k)); });
+      var optionalGrid = h("div", { class: "roleGrid" });
+      optional.forEach(function (k) { optionalGrid.appendChild(roleRow(k)); });
+      body.appendChild(optionalGrid);
     }
 
     body.appendChild(h("h2", { text: "Extra ships" }));
     body.appendChild(h("p", { class: "meta", text: "Ships aboard that fill no role. Give each a score from " + R.extraShipScore.min + " to " + R.extraShipScore.max + " for what it's worth to you; the Extra ships line is their sum, capped at " + R.categories.extraShips.max + ". Cargo space they take comes off the hold before cargo capacity is scored. They aren't checked; add a note on what else fits." }));
-    var extraWrap = h("div");
+    var extraWrap = h("div", { class: "roleGrid" });
     body.appendChild(extraWrap);
     drawExtras();
 

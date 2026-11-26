@@ -44,7 +44,8 @@ body {
   color: var(--fg);
   font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-main { max-width: 960px; margin: 0 auto; padding: 20px 16px 64px; }
+/* Fills the window; wide windows get more columns rather than longer rows. */
+main { margin: 0; padding: 20px clamp(16px, 3vw, 48px) 64px; }
 h1 { font-size: 1.5rem; margin: 0 0 4px; line-height: 1.2; }
 h2 { font-size: 1.1rem; margin: 28px 0 10px; }
 h3 { font-size: 0.85rem; margin: 18px 0 6px; color: var(--muted); font-weight: 600;
@@ -88,8 +89,10 @@ label.check { display: inline-flex; gap: 6px; align-items: center; cursor: point
 .filters legend { font-weight: 600; font-size: 0.85rem; color: var(--muted); padding: 0; margin-bottom: 2px;
                   width: 100%; }
 
-.shipList { list-style: none; margin: 0; padding: 0; }
-.shipList li { margin: 6px 0; }
+.shipList { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px 12px;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); }
+.shipList li { margin: 0; min-width: 0; display: flex; }
+.shipList li > .shipRow { flex: 1; }
 .shipRow {
   display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; width: 100%; text-align: left;
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
@@ -145,15 +148,27 @@ tr.total td { font-weight: 700; border-bottom: none; }
 .roleBody { margin-top: 6px; display: grid; gap: 6px; }
 .seat { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; padding: 6px;
         border: 1px dashed var(--border); border-radius: 8px; }
-.formGrid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 18px; align-items: start; }
+.formGrid { display: grid; grid-template-columns: minmax(0, 1fr) clamp(260px, 24vw, 420px); gap: 18px; align-items: start; }
+.roleGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 30rem), 1fr));
+            gap: 8px 12px; align-items: start; }
+.roleGrid > .roleBlock { margin: 0; }
+.roleGrid > .btn { grid-column: 1 / -1; justify-self: start; }
+.listLayout { display: grid; gap: 12px; align-items: start; }
+.listLayout > .filters { margin: 0; }
 .preview { position: sticky; top: 12px; }
 .saveBar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 16px 0; }
 
 dialog { border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--fg);
-         width: min(720px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 16px; }
+         width: min(960px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 16px; }
 dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
 .dialogHead { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .dialogHead h2 { margin: 0; }
+
+@media (min-width: 1100px) {
+  .listLayout { grid-template-columns: minmax(14rem, 20rem) minmax(0, 1fr); }
+  .listLayout > .filters { position: sticky; top: 12px; }
+  .listLayout .filters fieldset { flex-direction: column; }
+}
 
 @media (max-width: 760px) {
   .formGrid { grid-template-columns: 1fr; }
