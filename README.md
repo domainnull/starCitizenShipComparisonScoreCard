@@ -10,9 +10,11 @@ score script ranks each carrier by its best layout.
 ## Folder layout
 
 ```
-index.html                 leaderboard viewer (placeholder for now; reads results/leaderboard.js)
+index.html                 leaderboard viewer; open it straight from disk, no server needed
+viewer/                    the viewer's script and styles (versioned on its own)
 rubric.yaml                the current rubric
-rubricVersions/            older rubrics, DECISIONS.md (changelog and reasons), results snapshots
+rubricVersions/            older rubrics, DECISIONS.md (changelog and reasons), results snapshots,
+                           index.js (generated list of snapshots for the viewer)
 scripts/score.py           validates the data, scores every layout, writes results/leaderboard.js
 results/leaderboard.js     generated data file; don't edit by hand
 ships/<shipId>/
@@ -21,6 +23,28 @@ ships/<shipId>/
 ```
 
 Ships that only ride on other ships (Golem, Salvation, C8X…) have `ship_data.yaml` and no `layouts/`.
+
+## Viewing the leaderboard
+
+Open `index.html` in a browser, straight from your clone (double-click it, or `file:///path/to/index.html`).
+There is no server, build step or internet connection involved: the page loads
+`results/leaderboard.js`, `rubricVersions/index.js` and `viewer/viewer.js` with plain script tags.
+
+- **Leaderboard**: ships ranked by the middle of their best layout's range, with a bar showing the
+  low case and how far the high case reaches. Estimated layouts and stale results are badged.
+- **Ship page** (tap a ship): its best layout (other layouts as tabs), every role's score against its
+  maximum, which ship fills it, the slot and cargo space it uses, its fit source and patch, the
+  rubric rules for that role, spare ships, score history across saved rubric versions, and the
+  patch changes recorded for every ship in the layout. Tap a carried ship to see which layouts use it.
+- **Compare with**: pick an older rubric version to see each ship's old score and change. Totals
+  always compare; role scores compare when the old snapshot has the same layout.
+- **Stale**: the viewer flags a layout scored with a different rubric or script version than the
+  rest of the file. It can't see whether a YAML file changed since the last run (a browser can't read
+  your files from disk), so `scripts/run.sh --check` stays the real staleness check.
+
+The same page works on GitHub Pages if you turn Pages on for the repo (Settings > Pages > deploy
+from the `main` branch, root folder). The viewer has its own semver in `viewer/viewer.js`
+(`VIEWER_VERSION`); ship data changes never need a viewer change.
 
 ## Running the script
 
@@ -79,8 +103,9 @@ category, **patch** = fix. When the rubric changes:
 
 1. Copy `rubric.yaml` and `results/leaderboard.js` into `rubricVersions/<old version>/`.
 2. Edit `rubric.yaml`, bump `rubricVersion`, add an entry to `rubricVersions/DECISIONS.md`.
-3. Run the script, commit, and tag the merge commit `rubric-vX.Y.Z`.
-4. Keep the last 3-5 versions in `rubricVersions/`.
+3. Run the script, commit, and tag the merge commit `rubric-vX.Y.Z`. The run also rewrites
+   `rubricVersions/index.js`, which is how the viewer finds the snapshot you copied.
+4. Keep the last 3-5 versions in `rubricVersions/`; the viewer loads up to 5.
 
 ## Ship ids
 
