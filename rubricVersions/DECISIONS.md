@@ -6,6 +6,20 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Script 1.1.0 / viewer 1.0.0 (Nov 26 2026): leaderboard viewer
+
+- **Viewer 1.0.0**: `index.html` with `viewer/viewer.js` and `viewer/viewer.css`. Leaderboard, ship
+  page with its best layout, compare with an older rubric, stale and estimated badges. No libraries,
+  no server, works from file:// and GitHub Pages, light and dark mode, phone width.
+- **Script 1.1.0** (minor, new output fields only): each layout now carries `roles` (which ship fills
+  each role, slot, `cargoScu`, fit source, patch) and `extraShips`; each line adds `sources` with the
+  low and high case apart. The file adds `categoryMax`, `tiers`, `rules` and `shipInfo` (name,
+  maker, size, status, patch, data file, sources and patch changes for every ship). A normal run also
+  writes `rubricVersions/index.js`, the list of snapshots the viewer loads.
+- No score changed. Every fingerprint changed because the fingerprint includes `scripts/score.py`.
+- `rubricVersions/1.3.0/leaderboard.js` added so the viewer can compare against 1.3.0. It holds
+  the same hand-scored totals as `leaderboard.md` in that folder, with no layouts.
+
 ## Tooling (Nov 26 2026): uv environment
 
 - The scorer now runs in a uv-managed environment: `pyproject.toml` pins PyYAML 6.0.3, `uv.lock`
