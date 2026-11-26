@@ -5,13 +5,13 @@
 # Versioning (semver): major = old scores are not comparable, minor = new rule or
 # category, patch = fix. Every version gets a git tag (rubric-vX.Y.Z) and an entry in
 # rubricVersions/DECISIONS.md. Old rubric files live in rubricVersions/.
-rubricVersion: 3.0.0
+rubricVersion: 3.1.0
 
 # Tiers and weights. Each line scores 0-5 unless it says otherwise.
 tiers:
   needed:
     weight: 1.0
-    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration]
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration, extraShips]
   desired:
     weight: 0.5
     categories: []
@@ -86,6 +86,13 @@ categories:
     max: 5
     radarScore: {1: 1, 2: 1.5, 3: 2, 4: 2.5}   # radar component size -> score; stays under a scout
     levels: {explorer: 5, scout: 3, none: 0}
+  extraShips:
+    # Not a role: ships aboard that fill no role. The maintainer sets each one's worth (1-5,
+    # floor 1 so a base that carries a lot gets weight for it). The line is their sum, capped,
+    # so listing more ships can't run away with the score. Proposed cap and weight; change them here.
+    displayName: Extra ships
+    max: 5                      # cap on the line, however many extra ships
+    perShip: {min: 1, max: 5, default: 1}
 
 # A required role (the needed tier) must be filled by the base, a carried ship or "noRoom".
 # noRoom means the base has no room left for a ship that would fill it.
@@ -99,7 +106,7 @@ theoretical:
   countsIn: [high]
 
 rounding:
-  halfPoints: [defense, cargoCapacity]   # these lines keep half points, rounded down
+  halfPoints: [defense, cargoCapacity, extraShips]   # these lines keep half points, rounded down
 
 # Rules in words, tagged with the categories they touch. The script implements each one.
 rules:
@@ -116,8 +123,8 @@ rules:
     categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter, exploration]
     text: A role can be Theoretical, for a capability no ship has in game yet, with a score from 0 to the role's max that the maintainer sets. Like every theoretical range, it counts only in the high case; the low case keeps what the base has built in. A layout with a theoretical role is estimated.
   - id: extraShips
-    categories: [all]
-    text: Extra ships fill no role and score nothing, cargo included. They hold a note on what else fits and aren't validated.
+    categories: [extraShips, cargoCapacity]
+    text: Extra ships fill no role. Each one gets a score from 1 to 5 that the maintainer sets (1 if left out); the Extra ships line is their sum, capped at 5, in the needed tier. Cargo space one takes comes off the hold before cargo capacity is scored, the same as a role ship (a 400 SCU hold with a 100 SCU extra ship scores as 300 SCU). A ship that may not fit counts in the high case only. They hold a note on what else fits and aren't validated.
   - id: locations
     categories: [all]
     text: A carried ship goes in one of the base's locations (hangar, landing pad, cargo hold, vehicle bay). Locations have no ship count; which ships fit together is a fact of the layout.

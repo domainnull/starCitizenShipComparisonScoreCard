@@ -6,6 +6,29 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Rubric 3.1.0 / script 2.1.0 / editor 2.1.0 / viewer 2.1.0 (Nov 26 2026): extra ships score and take cargo space
+
+- **Extra ships' cargo comes off the hold** (cargoCapacity). An extra ship still fills no role and
+  scores nothing itself, but its `cargoScu` is taken off the hold before cargo capacity is scored,
+  the same as a role ship's, including `fitsInLowCase: false` (then it only comes off in the high
+  case). Owner's example: a 400 SCU hold with one ship taking 100 SCU scores as 300 SCU. Before,
+  the editor let you tick "takes cargo space" on an extra ship and the score ignored it.
+- An extra ship's `cargoScu` that isn't a number of 0 or more only warns and counts as 0, since
+  extra ships stay unvalidated.
+- **Extra ships line** (extraShips, new category in the needed tier, weight 1.0). Each extra ship
+  gets a `score` from 1 to 5 that the owner sets (a slider in the editor), floor 1 because the
+  owner wants weight for bases that can carry a lot. Left out, it counts as 1; outside 1-5 or not
+  a number, it warns and is clamped or taken as 1. The line is the sum, capped at 5, so listing
+  ships can't run away with the total (locations hold any number of ships and extra ships aren't
+  validated). A ship that may not fit counts in the high case only. The cap of 5 and putting the
+  line in the needed tier (weight 1.0) are proposals; both live in `rubric.yaml`.
+- Scores that moved: the Idris-P (27.5 to 28.5) and Kraken (27-31.5 to 28-32.5) starter layouts
+  each list a Guardian MX as an extra ship, now scored 1. The tested Liberator and Polaris layouts
+  list no extra ships, so they score nothing here until their extras are recorded.
+- **Minor**, not major: a new category, and old totals are the new totals with that line at 0, so
+  3.0.0 scores stay comparable. Editor and viewer gain the score field (minor).
+- The 3.0.0 rubric and its results are kept in `rubricVersions/3.0.0/`.
+
 ## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships, theoretical roles, exploration
 
 - **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts

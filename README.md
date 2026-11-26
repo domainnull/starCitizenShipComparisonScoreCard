@@ -76,8 +76,10 @@ because saving and scoring go through the script.
   isn't offered for a role the base has nothing for. Living quarters can be built in or a carried ship with quarters, such as a luxury ship. For a carried ship, pick its location (hangar,
   landing pad, cargo hold or vehicle bay; any number of ships each), whether it takes cargo space
   and how much, the fit source and patch, and whether it may not fit in the low case. **Optional
-  roles** (desired; none at the moment, so the section is hidden) can stay built in. **Extra ships** take the same fields plus a note; they score
-  nothing and aren't checked.
+  roles** (desired; none at the moment, so the section is hidden) can stay built in. **Extra ships** take the same fields plus a note and a 1-5
+  score slider (what the ship is worth to you); the Extra ships line adds those up, capped at 5.
+  Cargo space they take comes off the hold before cargo capacity is scored, and they aren't
+  checked.
 - **Edit a ship**: a form for every field, with **Range** to split any value into a low and a high
   case, and **Edit as YAML** for anything the form can't show. **Record a change** adds a `changes`
   entry with its patch.
@@ -179,7 +181,9 @@ Keys are camelCase everywhere, including the results file. The viewer shows each
   optional one-line `fit` source and the `patch`. Use `fitsInLowCase: false` for a ship that may not
   fit at all. Every needed role must be filled: `native` only where the base has something built
   in, otherwise a ship or `noRoom` (scores 0). `extraShips` lists ships aboard that fill no role, with
-  the same fields plus an optional `note`; they score nothing and only raise warnings.
+  the same fields plus an optional `note` and a `score` from 1 to 5 (1 if left out); the Extra ships
+  line is their sum, capped at 5. Their `cargoScu` comes off the hold before cargo capacity is scored,
+  as a role ship's does, and they only raise warnings.
 - **Fit sources**, best first: the maintainer's own in-game test, then a player fit test. Note
   whether the roof or bay door was open or closed; if a player didn't say, mark it about 90%.
 - **changes**: add an entry only when something about the ship changed, with the patch it changed in.
