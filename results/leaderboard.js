@@ -13,7 +13,8 @@ window.scorecardResults = {
     "cargo": "Cargo hauler",
     "cargoCapacity": "Cargo capacity",
     "commuter": "Shuttle",
-    "exploration": "Exploration"
+    "exploration": "Exploration",
+    "extraShips": "Extra ships"
   },
   "categoryMax": {
     "mining": 5,
@@ -26,7 +27,8 @@ window.scorecardResults = {
     "cargo": 5,
     "cargoCapacity": 5,
     "commuter": 1,
-    "exploration": 5
+    "exploration": 5,
+    "extraShips": 5
   },
   "tiers": {
     "needed": {
@@ -42,7 +44,8 @@ window.scorecardResults = {
         "cargo",
         "cargoCapacity",
         "commuter",
-        "exploration"
+        "exploration",
+        "extraShips"
       ]
     },
     "desired": {
@@ -113,9 +116,10 @@ window.scorecardResults = {
     {
       "id": "extraShips",
       "categories": [
-        "all"
+        "extraShips",
+        "cargoCapacity"
       ],
-      "text": "Extra ships fill no role and score nothing themselves, but cargo space one takes comes off the hold before cargo capacity is scored, the same as a role ship (a 400 SCU hold with a 100 SCU extra ship scores as 300 SCU). They hold a note on what else fits and aren't validated."
+      "text": "Extra ships fill no role. Each one gets a score from 1 to 5 that the maintainer sets (1 if left out); the Extra ships line is their sum, capped at 5, in the needed tier. Cargo space one takes comes off the hold before cargo capacity is scored, the same as a role ship (a 400 SCU hold with a 100 SCU extra ship scores as 300 SCU). A ship that may not fit counts in the high case only. They hold a note on what else fits and aren't validated."
     },
     {
       "id": "locations",
@@ -486,8 +490,8 @@ window.scorecardResults = {
       "status": "concept",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 27,
-        "high": 31.5
+        "low": 28,
+        "high": 32.5
       },
       "layouts": [
         {
@@ -497,12 +501,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": null,
           "total": {
-            "low": 27,
-            "high": 31.5
+            "low": 28,
+            "high": 32.5
           },
           "needed": {
-            "low": 27,
-            "high": 31.5
+            "low": 28,
+            "high": 32.5
           },
           "desired": {
             "low": 0,
@@ -607,6 +611,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -671,12 +684,13 @@ window.scorecardResults = {
               "location": "pad",
               "cargoScu": 0,
               "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
+              "patch": null,
+              "score": 1
             }
           ],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "7356a119b4240cfb"
+          "fingerprint": "219026e7ee01cbaa"
         }
       ],
       "rank": 1
@@ -810,6 +824,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -867,7 +890,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "f0f6e93397224fee"
+          "fingerprint": "1ad36049bc3dc2df"
         }
       ],
       "rank": 2
@@ -880,8 +903,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 27.5,
-        "high": 27.5
+        "low": 28.5,
+        "high": 28.5
       },
       "layouts": [
         {
@@ -891,12 +914,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.5",
           "total": {
-            "low": 27.5,
-            "high": 27.5
+            "low": 28.5,
+            "high": 28.5
           },
           "needed": {
-            "low": 27.5,
-            "high": 27.5
+            "low": 28.5,
+            "high": 28.5
           },
           "desired": {
             "low": 0,
@@ -1001,6 +1024,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -1065,12 +1097,13 @@ window.scorecardResults = {
               "location": "hangar",
               "cargoScu": 0,
               "fit": "Player post: fits at the exact height of the hangar, about 90%",
-              "patch": "4.5"
+              "patch": "4.5",
+              "score": 1
             }
           ],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "890366838a904043"
+          "fingerprint": "c2ddab495b1d16a9"
         }
       ],
       "rank": 3
@@ -1204,6 +1237,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -1265,7 +1307,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "f61ce5851f4435ae"
+          "fingerprint": "dcfe4507ce80df9e"
         }
       ],
       "rank": 4
@@ -1399,6 +1441,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -1444,7 +1495,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "a55c88e31ed22812"
+          "fingerprint": "f46e5d3e73635c60"
         }
       ],
       "rank": 5
@@ -1578,6 +1629,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -1643,7 +1703,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "00f46af6e7e5d3c0"
+          "fingerprint": "061089474371e087"
         }
       ],
       "rank": 6
@@ -1777,6 +1837,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -1827,7 +1896,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "bc418f632ba8073b"
+          "fingerprint": "5dbc603a39ca5edb"
         }
       ],
       "rank": 7
@@ -1961,6 +2030,15 @@ window.scorecardResults = {
                 "low": "native",
                 "high": "native"
               }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
             }
           },
           "cargoLeftScu": {
@@ -2022,7 +2100,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "e8371e0160ef3dab"
+          "fingerprint": "cae3cc24050a9566"
         }
       ],
       "rank": 8

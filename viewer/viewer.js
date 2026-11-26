@@ -12,7 +12,7 @@
 (function () {
   "use strict";
 
-  var VIEWER_VERSION = "2.0.1";
+  var VIEWER_VERSION = "2.1.0";
   var SCRIPT_MAJOR_SUPPORTED = 2;   // results written by score script 2.x
   var MAX_SNAPSHOTS = 5;
 
@@ -270,6 +270,7 @@
   }
 
   function sourceLine(cat, line, role) {
+    if (cat === "extraShips") return [h("div", { class: "src", text: "Not a role: each extra ship's own score (1-5), added up and capped" })];
     if (cat === "cargoCapacity") return [h("div", { class: "src", text: "Not a role: the base's cargo space left after its carried ships, extra ships included" })];
     var src = line.sources || { low: line.source, high: line.source };
     var parts = [];
@@ -416,6 +417,7 @@
 
     var extras = (layout.extraShips || []).map(function (e) {
       var bits = [locName(e)];
+      bits.push("scores " + fmt(typeof e.score === "number" ? e.score : 1));
       if (e.cargoScu) bits.push(e.cargoScu + " SCU of cargo space");
       if (e.fit) bits.push("Fit: " + e.fit);
       if (e.fitsInLowCase === false) bits.push("left out of the low case");
@@ -424,7 +426,7 @@
     });
     out.push(h("h2", { text: "Extra ships" }));
     out.push(h("div", { class: "card" }, [
-      h("p", { class: "meta", text: "Ships that fill no role. They score nothing themselves, but cargo space they take comes off the hold; they record what else fits." }),
+      h("p", { class: "meta", text: "Ships that fill no role. Each scores what the maintainer set (1-5), capped at 5 together, and cargo space they take comes off the hold; they record what else fits." }),
       extras.length ? h("ul", { class: "plain" }, extras) : h("p", { class: "meta", text: "No extra ships in this layout." }),
       layout.cargoLeftScu ? h("p", { class: "meta", style: "margin-top:4px", text: "Cargo left after carried ships: " + fmt(layout.cargoLeftScu) + " SCU." }) : null
     ]));

@@ -35,7 +35,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import score  # noqa: E402  (scripts/score.py)
 
-EDITOR_VERSION = "2.0.1"
+EDITOR_VERSION = "2.1.0"
 
 ROOT = score.ROOT
 SHIPS_DIR = score.SHIPS_DIR
@@ -53,7 +53,7 @@ SHIP_ORDER = ["id", "name", "manufacturer", "size", "cigSize", "sizeOverride", "
               "dimensions", "carrierSize", "roles", "locations", "cargoBay", "notes", "sources", "changes"]
 ROLE_ORDER = score.ROLE_KEYS + ["hauler", "fighter"]
 LAYOUT_ORDER = ["layout", "carrier", "description", "estimated", "patch", "cargoScuMethod", "roles", "extraShips"]
-ENTRY_ORDER = ["source", "ship", "location", "cargoScu", "fit", "patch", "fitsInLowCase", "note"]
+ENTRY_ORDER = ["source", "ship", "location", "cargoScu", "fit", "patch", "fitsInLowCase", "score", "note"]
 MANUFACTURER_NAMES = {
     "AEGS": "Aegis", "ANVL": "Anvil", "ARGO": "Argo", "BANU": "Banu", "CNOU": "Consolidated Outland",
     "CRUS": "Crusader", "DRAK": "Drake", "ESPR": "Esperia", "GAMA": "Gatac", "GRIN": "Greycat",
@@ -229,6 +229,7 @@ def rubric_info(rubric):
         "maneuverabilityMax": cats["cargo"]["maneuverabilityMax"],
         "largeBases": list(cats["defense"].get("largeBases") or []),
         "noRoomScore": rubric["noRoom"]["score"],
+        "extraShipScore": cats["extraShips"]["perShip"],
         "tiers": {k: {"weight": v["weight"], "categories": list(v["categories"])} for k, v in rubric["tiers"].items()},
     }
 
