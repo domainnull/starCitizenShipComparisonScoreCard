@@ -24,11 +24,43 @@ Ships that only ride on other ships (Golem, Salvation, C8X…) have `ship_data.y
 
 ## Running the script
 
+The project uses [uv](https://docs.astral.sh/uv/) for its Python environment. `pyproject.toml` pins
+PyYAML to an exact version, `uv.lock` locks it, and `.python-version` sets Python 3.13 (uv fetches it
+if you don't have it). The environment lives in `.venv/`, which git ignores.
+
+**Normal use**, one command that sets up or syncs the environment and then runs the scorer:
+
 ```
-pip install -r requirements.txt
-python3 scripts/score.py            # validate, score, write results/leaderboard.js
-python3 scripts/score.py --check    # list stale results without writing anything
-python3 scripts/score.py --dry-run  # print the leaderboard without writing
+scripts/run.sh               # sync, validate, score, write results/leaderboard.js
+scripts/run.sh --check       # sync, then list stale results without writing anything
+scripts/run.sh --dry-run     # sync, then print the leaderboard without writing
+```
+
+It stops with a link to uv's install page if uv isn't installed; it never installs anything itself.
+
+**Bare uv commands**, if you'd rather run the steps yourself:
+
+```
+uv sync                                  # create .venv and install the locked PyYAML
+uv run scripts/score.py                  # validate, score, write results/leaderboard.js
+uv run scripts/score.py --check          # list stale results without writing anything
+uv run scripts/score.py --dry-run        # print the leaderboard without writing
+```
+
+**Changing a dependency**: edit `pyproject.toml`, then refresh the lock and `requirements.txt`
+together so they stay in step:
+
+```
+uv lock
+uv export --format requirements-txt --no-hashes --no-header -o requirements.txt
+```
+
+**Without uv**, plain venv and pip still work from `requirements.txt`:
+
+```
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python scripts/score.py
 ```
 
 Validation names the file, the field and the problem: **missing field**, **extra field** or **bad
