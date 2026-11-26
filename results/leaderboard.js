@@ -10,7 +10,8 @@ window.scorecardResults = {
     "manufacturing": "Manufacturing",
     "defense": "Defense",
     "livingQuarters": "Living quarters",
-    "cargo": "Cargo and hauling",
+    "cargo": "Cargo hauler",
+    "cargoCapacity": "Cargo capacity",
     "commuter": "Shuttle",
     "engineering": "Engineering ship"
   },
@@ -22,7 +23,8 @@ window.scorecardResults = {
     "manufacturing": 5,
     "defense": 5,
     "livingQuarters": 5,
-    "cargo": 10,
+    "cargo": 5,
+    "cargoCapacity": 5,
     "commuter": 1,
     "engineering": 5
   },
@@ -38,6 +40,7 @@ window.scorecardResults = {
         "defense",
         "livingQuarters",
         "cargo",
+        "cargoCapacity",
         "commuter"
       ]
     },
@@ -57,7 +60,7 @@ window.scorecardResults = {
         "salvageRepair",
         "manufacturing"
       ],
-      "text": "A carried ship scores 0.8 of its own score, rounded down, with a minimum of 1 (0.5 for mining) when its own score is above 0."
+      "text": "A carried ship scores its own full score in the role it fills."
     },
     {
       "id": "requiredRoles",
@@ -82,6 +85,7 @@ window.scorecardResults = {
         "salvageRepair",
         "defense",
         "cargo",
+        "cargoCapacity",
         "commuter",
         "engineering"
       ],
@@ -157,11 +161,18 @@ window.scorecardResults = {
       "text": "1 point per native bed, up to 4, plus 1 for rec space."
     },
     {
-      "id": "cargoLine",
+      "id": "cargoHauler",
       "categories": [
         "cargo"
       ],
-      "text": "Cargo is 0-10. Half is manoeuvrability (0-5, judgement, the higher of the base and 0.5 x a carried hauler). Half is capacity, 0 at 200 SCU or less up to 5 at 800 SCU or more, after subtracting the cargo space the layout's carried ships take up. This is also the spare-room score, since room left means cargo space left."
+      "text": "Cargo hauler is 0-5, the manoeuvrability of whatever moves the cargo (judgement, Andromeda 5, Ironclad 0), the higher of the base and a carried hauler at full value."
+    },
+    {
+      "id": "cargoCapacity",
+      "categories": [
+        "cargoCapacity"
+      ],
+      "text": "Cargo capacity is 0-5 from the base's cargo space after subtracting what the layout's carried ships take up. 0 at 100 SCU or less, then 1 point per doubling (200 SCU 1, 400 2, 800 3, 1600 4, 3200 or more 5), in half points rounded down. It isn't a role, so No room on the hauler leaves it alone. This is also the spare-room score, since room left means cargo space left."
     },
     {
       "id": "commuter",
@@ -441,6 +452,209 @@ window.scorecardResults = {
   },
   "ships": [
     {
+      "id": "drakCKraken",
+      "name": "Drake Kraken",
+      "manufacturer": "DRAK",
+      "size": "C",
+      "status": "concept",
+      "bestLayout": "starterEstimate",
+      "total": {
+        "low": 25,
+        "high": 29
+      },
+      "layouts": [
+        {
+          "layout": "starterEstimate",
+          "file": "ships/drakCKraken/layouts/starterEstimate.yaml",
+          "description": "Starter layout ported from the scorecard doc (rev 73). Concept ship, so every fit is estimated from sizes.",
+          "estimated": true,
+          "patch": null,
+          "total": {
+            "low": 25,
+            "high": 29
+          },
+          "needed": {
+            "low": 25,
+            "high": 29
+          },
+          "desired": {
+            "low": 0,
+            "high": 0
+          },
+          "lines": {
+            "mining": {
+              "low": 2,
+              "high": 2,
+              "source": "drakSGolem",
+              "sources": {
+                "low": "drakSGolem",
+                "high": "drakSGolem"
+              }
+            },
+            "refining": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "medical": {
+              "low": 3,
+              "high": 5,
+              "source": "anvlSTerrapinMedic / native",
+              "sources": {
+                "low": "anvlSTerrapinMedic",
+                "high": "native"
+              }
+            },
+            "salvageRepair": {
+              "low": 2,
+              "high": 2,
+              "source": "rsiSSalvation",
+              "sources": {
+                "low": "rsiSSalvation",
+                "high": "rsiSSalvation"
+              }
+            },
+            "manufacturing": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "defense": {
+              "low": 3,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "livingQuarters": {
+              "low": 4,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargo": {
+              "low": 3,
+              "high": 3,
+              "source": "drakSGolemOx",
+              "sources": {
+                "low": "drakSGolemOx",
+                "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
+              "low": 5,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "commuter": {
+              "low": 1,
+              "high": 1,
+              "source": "anvlSC8x",
+              "sources": {
+                "low": "anvlSC8x",
+                "high": "anvlSC8x"
+              }
+            },
+            "engineering": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            }
+          },
+          "cargoLeftScu": {
+            "low": 3792,
+            "high": 3792
+          },
+          "roles": {
+            "mining": {
+              "source": "drakSGolem",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "refining": {
+              "source": "native"
+            },
+            "medical": {
+              "source": "anvlSTerrapinMedic",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "salvageRepair": {
+              "source": "rsiSSalvation",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "manufacturing": {
+              "source": "native"
+            },
+            "defense": {
+              "source": "native"
+            },
+            "livingQuarters": {
+              "source": "native"
+            },
+            "cargo": {
+              "source": "drakSGolemOx",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "commuter": {
+              "source": "anvlSC8x",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "engineering": {
+              "source": "native"
+            }
+          },
+          "extraShips": [
+            {
+              "source": "miscSGuardianMx",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            }
+          ],
+          "rubricVersion": "3.0.0",
+          "scriptVersion": "2.0.0",
+          "fingerprint": "e57d14da85fc6402"
+        }
+      ],
+      "rank": 1
+    },
+    {
       "id": "rsiCPolaris",
       "name": "RSI Polaris",
       "manufacturer": "RSI",
@@ -448,8 +662,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "inGameLoadout",
       "total": {
-        "low": 24.5,
-        "high": 24.5
+        "low": 26.5,
+        "high": 26.5
       },
       "layouts": [
         {
@@ -459,12 +673,12 @@ window.scorecardResults = {
           "estimated": false,
           "patch": "4.10.3",
           "total": {
-            "low": 24.5,
-            "high": 24.5
+            "low": 26.5,
+            "high": 26.5
           },
           "needed": {
-            "low": 24.5,
-            "high": 24.5
+            "low": 26.5,
+            "high": 26.5
           },
           "desired": {
             "low": 0,
@@ -472,8 +686,8 @@ window.scorecardResults = {
           },
           "lines": {
             "mining": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "drakSGolem",
               "sources": {
                 "low": "drakSGolem",
@@ -535,12 +749,21 @@ window.scorecardResults = {
               }
             },
             "cargo": {
-              "low": 4.5,
-              "high": 4.5,
+              "low": 3,
+              "high": 3,
               "source": "drakSGolemOx",
               "sources": {
                 "low": "drakSGolemOx",
                 "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
+              "low": 2.5,
+              "high": 2.5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
               }
             },
             "commuter": {
@@ -617,10 +840,10 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "e520861615e9af75"
+          "fingerprint": "f75194b3e9474191"
         }
       ],
-      "rank": 1
+      "rank": 2
     },
     {
       "id": "aegsCIdrisP",
@@ -630,8 +853,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 23,
-        "high": 23
+        "low": 25.5,
+        "high": 25.5
       },
       "layouts": [
         {
@@ -641,12 +864,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.5",
           "total": {
-            "low": 23,
-            "high": 23
+            "low": 25.5,
+            "high": 25.5
           },
           "needed": {
-            "low": 23,
-            "high": 23
+            "low": 25.5,
+            "high": 25.5
           },
           "desired": {
             "low": 0,
@@ -654,8 +877,8 @@ window.scorecardResults = {
           },
           "lines": {
             "mining": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "drakSGolem",
               "sources": {
                 "low": "drakSGolem",
@@ -717,8 +940,17 @@ window.scorecardResults = {
               }
             },
             "cargo": {
-              "low": 5,
-              "high": 5,
+              "low": 3,
+              "high": 3,
+              "source": "drakSGolemOx",
+              "sources": {
+                "low": "drakSGolemOx",
+                "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
+              "low": 3.5,
+              "high": 3.5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -783,7 +1015,11 @@ window.scorecardResults = {
               "source": "native"
             },
             "cargo": {
-              "source": "native"
+              "source": "drakSGolemOx",
+              "location": "hangar",
+              "cargoScu": 0,
+              "fit": "Estimated: same frame as the Golem, which players report fits; not tested together",
+              "patch": "4.5"
             },
             "commuter": {
               "source": "anvlSC8x",
@@ -807,197 +1043,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "9b09ee89d993ee7a"
-        }
-      ],
-      "rank": 2
-    },
-    {
-      "id": "drakCKraken",
-      "name": "Drake Kraken",
-      "manufacturer": "DRAK",
-      "size": "C",
-      "status": "concept",
-      "bestLayout": "starterEstimate",
-      "total": {
-        "low": 20,
-        "high": 25
-      },
-      "layouts": [
-        {
-          "layout": "starterEstimate",
-          "file": "ships/drakCKraken/layouts/starterEstimate.yaml",
-          "description": "Starter layout ported from the scorecard doc (rev 73). Concept ship, so every fit is estimated from sizes.",
-          "estimated": true,
-          "patch": null,
-          "total": {
-            "low": 20,
-            "high": 25
-          },
-          "needed": {
-            "low": 20,
-            "high": 25
-          },
-          "desired": {
-            "low": 0,
-            "high": 0
-          },
-          "lines": {
-            "mining": {
-              "low": 1,
-              "high": 1,
-              "source": "drakSGolem",
-              "sources": {
-                "low": "drakSGolem",
-                "high": "drakSGolem"
-              }
-            },
-            "refining": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "medical": {
-              "low": 2,
-              "high": 5,
-              "source": "anvlSTerrapinMedic / native",
-              "sources": {
-                "low": "anvlSTerrapinMedic",
-                "high": "native"
-              }
-            },
-            "salvageRepair": {
-              "low": 2,
-              "high": 2,
-              "source": "rsiSSalvation",
-              "sources": {
-                "low": "rsiSSalvation",
-                "high": "rsiSSalvation"
-              }
-            },
-            "manufacturing": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "defense": {
-              "low": 3,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "livingQuarters": {
-              "low": 4,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "cargo": {
-              "low": 5,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "commuter": {
-              "low": 1,
-              "high": 1,
-              "source": "anvlSC8x",
-              "sources": {
-                "low": "anvlSC8x",
-                "high": "anvlSC8x"
-              }
-            },
-            "engineering": {
-              "low": 0,
-              "high": 0,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            }
-          },
-          "cargoLeftScu": {
-            "low": 3792,
-            "high": 3792
-          },
-          "roles": {
-            "mining": {
-              "source": "drakSGolem",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            },
-            "refining": {
-              "source": "native"
-            },
-            "medical": {
-              "source": "anvlSTerrapinMedic",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            },
-            "salvageRepair": {
-              "source": "rsiSSalvation",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            },
-            "manufacturing": {
-              "source": "native"
-            },
-            "defense": {
-              "source": "native"
-            },
-            "livingQuarters": {
-              "source": "native"
-            },
-            "cargo": {
-              "source": "native"
-            },
-            "commuter": {
-              "source": "anvlSC8x",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            },
-            "engineering": {
-              "source": "native"
-            }
-          },
-          "extraShips": [
-            {
-              "source": "miscSGuardianMx",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            }
-          ],
-          "rubricVersion": "3.0.0",
-          "scriptVersion": "2.0.0",
-          "fingerprint": "47d0dc4a912cad95"
+          "fingerprint": "2a702873079198e3"
         }
       ],
       "rank": 3
@@ -1010,8 +1056,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 19,
-        "high": 22
+        "low": 23.5,
+        "high": 26.5
       },
       "layouts": [
         {
@@ -1021,12 +1067,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.8",
           "total": {
-            "low": 19,
-            "high": 22
+            "low": 23.5,
+            "high": 26.5
           },
           "needed": {
-            "low": 19,
-            "high": 22
+            "low": 23.5,
+            "high": 26.5
           },
           "desired": {
             "low": 0,
@@ -1034,8 +1080,8 @@ window.scorecardResults = {
           },
           "lines": {
             "mining": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "drakSGolem",
               "sources": {
                 "low": "drakSGolem",
@@ -1052,8 +1098,8 @@ window.scorecardResults = {
               }
             },
             "medical": {
-              "low": 2,
-              "high": 2,
+              "low": 3,
+              "high": 3,
               "source": "anvlSTerrapinMedic",
               "sources": {
                 "low": "anvlSTerrapinMedic",
@@ -1097,8 +1143,17 @@ window.scorecardResults = {
               }
             },
             "cargo": {
-              "low": 2,
-              "high": 2,
+              "low": 3,
+              "high": 3,
+              "source": "drakSGolemOx",
+              "sources": {
+                "low": "drakSGolemOx",
+                "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
+              "low": 1.5,
+              "high": 1.5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1125,8 +1180,8 @@ window.scorecardResults = {
             }
           },
           "cargoLeftScu": {
-            "low": 477,
-            "high": 477
+            "low": 291,
+            "high": 291
           },
           "roles": {
             "mining": {
@@ -1163,7 +1218,11 @@ window.scorecardResults = {
               "source": "native"
             },
             "cargo": {
-              "source": "native"
+              "source": "drakSGolemOx",
+              "location": "cargoHold",
+              "cargoScu": 186,
+              "fit": "Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem's",
+              "patch": "4.8"
             },
             "commuter": {
               "source": "anvlSC8x",
@@ -1179,355 +1238,10 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "c485050885e16a32"
+          "fingerprint": "eeaee99949224515"
         }
       ],
       "rank": 4
-    },
-    {
-      "id": "miscCOdyssey",
-      "name": "MISC Odyssey",
-      "manufacturer": "MISC",
-      "size": "C",
-      "status": "concept",
-      "bestLayout": "starterEstimate",
-      "total": {
-        "low": 18,
-        "high": 22
-      },
-      "layouts": [
-        {
-          "layout": "starterEstimate",
-          "file": "ships/miscCOdyssey/layouts/starterEstimate.yaml",
-          "description": "Starter layout ported from the scorecard doc (rev 73). The one hangar slot holds the C8X, which scored more than the Salvation.",
-          "estimated": true,
-          "patch": null,
-          "total": {
-            "low": 18,
-            "high": 22
-          },
-          "needed": {
-            "low": 18,
-            "high": 22
-          },
-          "desired": {
-            "low": 0,
-            "high": 0
-          },
-          "lines": {
-            "mining": {
-              "low": 1,
-              "high": 3,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "refining": {
-              "low": 4,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "medical": {
-              "low": 3,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "salvageRepair": {
-              "low": 0,
-              "high": 0,
-              "source": "noRoom",
-              "sources": {
-                "low": "noRoom",
-                "high": "noRoom"
-              }
-            },
-            "manufacturing": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "defense": {
-              "low": 2,
-              "high": 2,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "livingQuarters": {
-              "low": 5,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "cargo": {
-              "low": 1,
-              "high": 2,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "commuter": {
-              "low": 1,
-              "high": 1,
-              "source": "anvlSC8x",
-              "sources": {
-                "low": "anvlSC8x",
-                "high": "anvlSC8x"
-              }
-            },
-            "engineering": {
-              "low": 0,
-              "high": 0,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            }
-          },
-          "cargoLeftScu": {
-            "low": 252,
-            "high": 252
-          },
-          "roles": {
-            "mining": {
-              "source": "native"
-            },
-            "refining": {
-              "source": "native"
-            },
-            "medical": {
-              "source": "native"
-            },
-            "salvageRepair": {
-              "source": "noRoom"
-            },
-            "manufacturing": {
-              "source": "native"
-            },
-            "defense": {
-              "source": "native"
-            },
-            "livingQuarters": {
-              "source": "native"
-            },
-            "cargo": {
-              "source": "native"
-            },
-            "commuter": {
-              "source": "anvlSC8x",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            },
-            "engineering": {
-              "source": "native"
-            }
-          },
-          "extraShips": [],
-          "rubricVersion": "3.0.0",
-          "scriptVersion": "2.0.0",
-          "fingerprint": "1b8983e7285766d1"
-        }
-      ],
-      "rank": 5
-    },
-    {
-      "id": "rsiLGalaxy",
-      "name": "RSI Galaxy (Med Bay)",
-      "manufacturer": "RSI",
-      "size": "L",
-      "status": "flightReady",
-      "bestLayout": "medBayModule",
-      "total": {
-        "low": 17,
-        "high": 21.5
-      },
-      "layouts": [
-        {
-          "layout": "medBayModule",
-          "file": "ships/rsiLGalaxy/layouts/medBayModule.yaml",
-          "description": "Starter layout ported from the scorecard doc (rev 73), with the Med Bay module. C8X on the XXS pad; a ROC-DS on the module lift may fit.",
-          "estimated": true,
-          "patch": "4.10.3",
-          "total": {
-            "low": 17,
-            "high": 21.5
-          },
-          "needed": {
-            "low": 17,
-            "high": 21.5
-          },
-          "desired": {
-            "low": 0,
-            "high": 0
-          },
-          "lines": {
-            "mining": {
-              "low": 0,
-              "high": 0.5,
-              "source": "native / grinSRocDs",
-              "sources": {
-                "low": "native",
-                "high": "grinSRocDs"
-              }
-            },
-            "refining": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "medical": {
-              "low": 5,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "salvageRepair": {
-              "low": 0,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "manufacturing": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "defense": {
-              "low": 2,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "livingQuarters": {
-              "low": 5,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "cargo": {
-              "low": 2,
-              "high": 2,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "commuter": {
-              "low": 1,
-              "high": 1,
-              "source": "anvlSC8x",
-              "sources": {
-                "low": "anvlSC8x",
-                "high": "anvlSC8x"
-              }
-            },
-            "engineering": {
-              "low": 0,
-              "high": 0,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            }
-          },
-          "cargoLeftScu": {
-            "low": 64,
-            "high": 64
-          },
-          "roles": {
-            "mining": {
-              "source": "grinSRocDs",
-              "location": "vehicleBay",
-              "cargoScu": 0,
-              "fit": "Estimated: module lift takes an Ursa-sized vehicle",
-              "patch": "4.10.3",
-              "fitsInLowCase": false
-            },
-            "refining": {
-              "source": "native"
-            },
-            "medical": {
-              "source": "native"
-            },
-            "salvageRepair": {
-              "source": "native"
-            },
-            "manufacturing": {
-              "source": "native"
-            },
-            "defense": {
-              "source": "native"
-            },
-            "livingQuarters": {
-              "source": "native"
-            },
-            "cargo": {
-              "source": "native"
-            },
-            "commuter": {
-              "source": "anvlSC8x",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Estimated: the C8X is rated XXS and the pad is XXS",
-              "patch": "4.10.3"
-            },
-            "engineering": {
-              "source": "native"
-            }
-          },
-          "extraShips": [],
-          "rubricVersion": "3.0.0",
-          "scriptVersion": "2.0.0",
-          "fingerprint": "ca5d4d1e85cea8d7"
-        }
-      ],
-      "rank": 6
     },
     {
       "id": "anvlLLiberator",
@@ -1537,8 +1251,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "inGameLoadout",
       "total": {
-        "low": 17.5,
-        "high": 17.5
+        "low": 21.5,
+        "high": 21.5
       },
       "layouts": [
         {
@@ -1548,12 +1262,12 @@ window.scorecardResults = {
           "estimated": false,
           "patch": "4.10.3",
           "total": {
-            "low": 17.5,
-            "high": 17.5
+            "low": 21.5,
+            "high": 21.5
           },
           "needed": {
-            "low": 17.5,
-            "high": 17.5
+            "low": 21.5,
+            "high": 21.5
           },
           "desired": {
             "low": 0,
@@ -1561,8 +1275,8 @@ window.scorecardResults = {
           },
           "lines": {
             "mining": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "drakSGolem",
               "sources": {
                 "low": "drakSGolem",
@@ -1579,8 +1293,8 @@ window.scorecardResults = {
               }
             },
             "medical": {
-              "low": 2,
-              "high": 2,
+              "low": 3,
+              "high": 3,
               "source": "anvlSTerrapinMedic",
               "sources": {
                 "low": "anvlSTerrapinMedic",
@@ -1630,6 +1344,15 @@ window.scorecardResults = {
               "sources": {
                 "low": "drakSGolemOx",
                 "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
+              "low": 2,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
               }
             },
             "commuter": {
@@ -1714,7 +1437,370 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "44bd17853a5442d8"
+          "fingerprint": "0d9ffedafedb4788"
+        }
+      ],
+      "rank": 5
+    },
+    {
+      "id": "miscCOdyssey",
+      "name": "MISC Odyssey",
+      "manufacturer": "MISC",
+      "size": "C",
+      "status": "concept",
+      "bestLayout": "starterEstimate",
+      "total": {
+        "low": 19,
+        "high": 23
+      },
+      "layouts": [
+        {
+          "layout": "starterEstimate",
+          "file": "ships/miscCOdyssey/layouts/starterEstimate.yaml",
+          "description": "Starter layout ported from the scorecard doc (rev 73). The one hangar slot holds the C8X, which scored more than the Salvation.",
+          "estimated": true,
+          "patch": null,
+          "total": {
+            "low": 19,
+            "high": 23
+          },
+          "needed": {
+            "low": 19,
+            "high": 23
+          },
+          "desired": {
+            "low": 0,
+            "high": 0
+          },
+          "lines": {
+            "mining": {
+              "low": 1,
+              "high": 3,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "refining": {
+              "low": 4,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "medical": {
+              "low": 3,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "salvageRepair": {
+              "low": 0,
+              "high": 0,
+              "source": "noRoom",
+              "sources": {
+                "low": "noRoom",
+                "high": "noRoom"
+              }
+            },
+            "manufacturing": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "defense": {
+              "low": 2,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "livingQuarters": {
+              "low": 5,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargo": {
+              "low": 1,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargoCapacity": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "commuter": {
+              "low": 1,
+              "high": 1,
+              "source": "anvlSC8x",
+              "sources": {
+                "low": "anvlSC8x",
+                "high": "anvlSC8x"
+              }
+            },
+            "engineering": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            }
+          },
+          "cargoLeftScu": {
+            "low": 252,
+            "high": 252
+          },
+          "roles": {
+            "mining": {
+              "source": "native"
+            },
+            "refining": {
+              "source": "native"
+            },
+            "medical": {
+              "source": "native"
+            },
+            "salvageRepair": {
+              "source": "noRoom"
+            },
+            "manufacturing": {
+              "source": "native"
+            },
+            "defense": {
+              "source": "native"
+            },
+            "livingQuarters": {
+              "source": "native"
+            },
+            "cargo": {
+              "source": "native"
+            },
+            "commuter": {
+              "source": "anvlSC8x",
+              "location": "hangar",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "engineering": {
+              "source": "native"
+            }
+          },
+          "extraShips": [],
+          "rubricVersion": "3.0.0",
+          "scriptVersion": "2.0.0",
+          "fingerprint": "b415baeb6714527e"
+        }
+      ],
+      "rank": 6
+    },
+    {
+      "id": "rsiLGalaxy",
+      "name": "RSI Galaxy (Med Bay)",
+      "manufacturer": "RSI",
+      "size": "L",
+      "status": "flightReady",
+      "bestLayout": "medBayModule",
+      "total": {
+        "low": 17,
+        "high": 22
+      },
+      "layouts": [
+        {
+          "layout": "medBayModule",
+          "file": "ships/rsiLGalaxy/layouts/medBayModule.yaml",
+          "description": "Starter layout ported from the scorecard doc (rev 73), with the Med Bay module. C8X on the XXS pad; a ROC-DS on the module lift may fit.",
+          "estimated": true,
+          "patch": "4.10.3",
+          "total": {
+            "low": 17,
+            "high": 22
+          },
+          "needed": {
+            "low": 17,
+            "high": 22
+          },
+          "desired": {
+            "low": 0,
+            "high": 0
+          },
+          "lines": {
+            "mining": {
+              "low": 0,
+              "high": 1,
+              "source": "native / grinSRocDs",
+              "sources": {
+                "low": "native",
+                "high": "grinSRocDs"
+              }
+            },
+            "refining": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "medical": {
+              "low": 5,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "salvageRepair": {
+              "low": 0,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "manufacturing": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "defense": {
+              "low": 2,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "livingQuarters": {
+              "low": 5,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargo": {
+              "low": 2,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargoCapacity": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "commuter": {
+              "low": 1,
+              "high": 1,
+              "source": "anvlSC8x",
+              "sources": {
+                "low": "anvlSC8x",
+                "high": "anvlSC8x"
+              }
+            },
+            "engineering": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            }
+          },
+          "cargoLeftScu": {
+            "low": 64,
+            "high": 64
+          },
+          "roles": {
+            "mining": {
+              "source": "grinSRocDs",
+              "location": "vehicleBay",
+              "cargoScu": 0,
+              "fit": "Estimated: module lift takes an Ursa-sized vehicle",
+              "patch": "4.10.3",
+              "fitsInLowCase": false
+            },
+            "refining": {
+              "source": "native"
+            },
+            "medical": {
+              "source": "native"
+            },
+            "salvageRepair": {
+              "source": "native"
+            },
+            "manufacturing": {
+              "source": "native"
+            },
+            "defense": {
+              "source": "native"
+            },
+            "livingQuarters": {
+              "source": "native"
+            },
+            "cargo": {
+              "source": "native"
+            },
+            "commuter": {
+              "source": "anvlSC8x",
+              "location": "hangar",
+              "cargoScu": 0,
+              "fit": "Estimated: the C8X is rated XXS and the pad is XXS",
+              "patch": "4.10.3"
+            },
+            "engineering": {
+              "source": "native"
+            }
+          },
+          "extraShips": [],
+          "rubricVersion": "3.0.0",
+          "scriptVersion": "2.0.0",
+          "fingerprint": "6f3c00f7db48111e"
         }
       ],
       "rank": 7
@@ -1727,8 +1813,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 12,
-        "high": 14
+        "low": 17,
+        "high": 19
       },
       "layouts": [
         {
@@ -1738,12 +1824,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.8",
           "total": {
-            "low": 12,
-            "high": 14
+            "low": 17,
+            "high": 19
           },
           "needed": {
-            "low": 12,
-            "high": 14
+            "low": 17,
+            "high": 19
           },
           "desired": {
             "low": 0,
@@ -1751,8 +1837,8 @@ window.scorecardResults = {
           },
           "lines": {
             "mining": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "drakSGolem",
               "sources": {
                 "low": "drakSGolem",
@@ -1769,8 +1855,8 @@ window.scorecardResults = {
               }
             },
             "medical": {
-              "low": 2,
-              "high": 2,
+              "low": 3,
+              "high": 3,
               "source": "anvlSTerrapinMedic",
               "sources": {
                 "low": "anvlSTerrapinMedic",
@@ -1814,6 +1900,15 @@ window.scorecardResults = {
               }
             },
             "cargo": {
+              "low": 3,
+              "high": 3,
+              "source": "drakSGolemOx",
+              "sources": {
+                "low": "drakSGolemOx",
+                "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
               "low": 0,
               "high": 0,
               "source": "native",
@@ -1842,8 +1937,8 @@ window.scorecardResults = {
             }
           },
           "cargoLeftScu": {
-            "low": 226,
-            "high": 226
+            "low": 0,
+            "high": 0
           },
           "roles": {
             "mining": {
@@ -1880,7 +1975,11 @@ window.scorecardResults = {
               "source": "native"
             },
             "cargo": {
-              "source": "native"
+              "source": "drakSGolemOx",
+              "location": "cargoHold",
+              "cargoScu": 284,
+              "fit": "Player post with Golem OX, Salvation and L-22 aboard, roof closed (stated); cargo taken estimated as the Golem's",
+              "patch": "4.8"
             },
             "commuter": {
               "source": "anvlSC8x",
@@ -1896,7 +1995,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "51fed91e6f1e2ca4"
+          "fingerprint": "f8333cc0cddb84f2"
         }
       ],
       "rank": 8

@@ -536,7 +536,9 @@
       var line = score.lines[cat];
       var e = layout.roles ? layout.roles[cat] : null;
       var who;
-      if (e && e.source === "noRoom") {
+      if (cat === "cargoCapacity") {
+        who = h("span", { class: "meta", text: "not a role: cargo left after role ships, " + fmtR(score.cargoLeftScu) + " SCU" });
+      } else if (e && e.source === "noRoom") {
         who = h("span", { class: "meta", text: "No room (scores " + num(R.noRoomScore) + ")" });
       } else if (e && isShip(e.source)) {
         var bits = [h("span", { text: shipName(e.source) + " " }), moreLink(e.source)];

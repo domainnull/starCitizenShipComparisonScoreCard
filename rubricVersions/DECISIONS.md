@@ -6,7 +6,7 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles
+## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships
 
 - **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts
   (1 per small slot up to 4, 2 per open pad, 2 per medium slot up to 6). The repo owner's call: room
@@ -38,6 +38,25 @@ snapshot.
 - **Extra ships** (all). `extraShips` is its own section with the same fields as a role entry
   (ship, location, cargo use, fit, patch) plus a `note`. Extra ships score nothing, cargo included,
   and aren't validated: an unknown ship or location there is a warning, never an error.
+- **Cargo split in two** (cargo, cargoCapacity). The old 0-10 cargo line mixed the hauling role
+  with hold size. Now **cargo hauler** (layout key still `cargo`) is a required role, 0-5: the
+  manoeuvrability of whatever moves the cargo, the base or a carried hauler at full value (the old
+  0.5 on carried haulers is gone). **Cargo capacity** is a needed line, 0-5, that no layout fills:
+  0 at 100 SCU or less, then 1 point per doubling (200 SCU 1, 400 2, 800 3, 1600 4, 3200 or more 5)
+  after role ships take their cargo space. Owner's call to split them; both scales are proposals
+  the owner can change. Why doubling: the old capacity half flattened every hold over 800 SCU, so a
+  3,792 SCU Kraken and an 800 SCU ship scored the same. Since capacity isn't a role, No room on the
+  hauler no longer zeroes the base's own hold.
+- **Starter layouts get the Golem OX as hauler**. The Idris-P, Kraken, Ironclad and Ironclad
+  Assault have manoeuvrability 0, so "built in" isn't allowed for the hauler role any more. Their
+  estimated starter layouts now carry the Golem OX, as the tested Liberator and Polaris layouts do,
+  with cargo taken estimated as the Golem's on the Ironclads. Set it to No room if that's wrong.
+- **Carried ships score full value** (mining, medical, salvageRepair, manufacturing). The x0.8 with
+  its minimum of 1 (0.5 for mining) is removed. Owner's words: leaning on native already shows up as
+  better use of hangar space. Steps that still favour built in, left as they are: refining (5 or 4
+  built in, 3 carried), engineering (5 built in, 4 carried), defense (a carried fighter scores
+  2 x its gun - 0.5 and nothing on large bases, built in gets +1 there), living quarters (carried
+  beds don't count). Shuttle is 1 either way.
 - **Estimated flag**: a layout is estimated when its file says so or the carrier's roles hold a
   range. Hangar count ranges are gone, so the Liberator's tested layout is no longer a range.
 - **Script 2.0.0** (major): no `carrier` line; layout entries carry `location` instead of `slot`;
@@ -50,14 +69,14 @@ Leaderboard, best layout, 2.0.0 then 3.0.0:
 
 | Ship | 2.0.0 | 3.0.0 |
 |---|---|---|
-| RSI Polaris | 27 (3rd) | 24.5 (1st) |
-| Aegis Idris-P | 28.5 (2nd) | 23 (2nd) |
-| Drake Kraken | 25.5-34.5 (1st) | 20-25 (3rd) |
-| Drake Ironclad Assault | 20.5-24.5 (4th) | 19-22 (4th) |
-| MISC Odyssey | 19.5-23.5 (6th) | 18-22 (5th) |
-| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 17-21.5 (6th) |
-| Anvil Liberator | 22-23 (5th) | 17.5 (7th) |
-| Drake Ironclad | 13.5-16.5 (8th) | 12-14 (8th) |
+| Drake Kraken | 25.5-34.5 (1st) | 25-29 (1st) |
+| RSI Polaris | 27 (3rd) | 26.5 (2nd) |
+| Aegis Idris-P | 28.5 (2nd) | 25.5 (3rd) |
+| Drake Ironclad Assault | 20.5-24.5 (4th) | 23.5-26.5 (4th) |
+| Anvil Liberator | 22-23 (5th) | 21.5 (5th) |
+| MISC Odyssey | 19.5-23.5 (6th) | 19-23 (6th) |
+| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 17-22 (7th) |
+| Drake Ironclad | 13.5-16.5 (8th) | 17-19 (8th) |
 
 No base now scores lower with its role ships aboard than with nothing carried (under 2.0.0 the
 Kraken and Ironclad did).

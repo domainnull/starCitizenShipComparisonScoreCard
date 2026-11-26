@@ -27,7 +27,12 @@ roles:
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}
-  cargo: {source: native}
+  cargo:
+    source: drakSGolemOx
+    location: pad
+    cargoScu: 0
+    fit: 'Estimated: concept ship, sizes unpublished'
+    patch: null
   commuter:
     source: anvlSC8x
     location: pad

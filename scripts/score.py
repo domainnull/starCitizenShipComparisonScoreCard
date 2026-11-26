@@ -46,7 +46,9 @@ ROLE_KEYS = ["mining", "refining", "medical", "salvageRepair", "manufacturing", 
 # Where a carried ship can go. A location holds any number of ships; the layout says which fit together.
 LOCATIONS = ["hangar", "pad", "cargoHold", "vehicleBay"]
 # Order the score lines are shown in.
-LINE_ORDER = list(ROLE_KEYS)
+# Lines scored: every role, plus cargo capacity, which no layout fills.
+LINE_ORDER = [k for k in ROLE_KEYS]
+LINE_ORDER.insert(LINE_ORDER.index("cargo") + 1, "cargoCapacity")
 # A required role's source when the base has no room left for a ship that would fill it.
 NO_ROOM = "noRoom"
 GUN_RE = re.compile(r"^S[1-9]$")
@@ -446,17 +448,6 @@ class Scorer:
     def __init__(self, rubric):
         self.r = rubric
         self.cats = rubric["categories"]
-        self.carried_cfg = rubric["carried"]
-
-    def carried_adjust(self, cat, score):
-        cfg = self.carried_cfg
-        if score <= 0:
-            return 0
-        if cat not in cfg["appliesTo"]:
-            return score
-        v = math.floor(score * cfg["multiplier"] + 1e-9)
-        minimum = cfg.get("minimumByCategory", {}).get(cat, cfg["minimum"])
-        return max(v, minimum)
 
     def seat_score(self, seat):
         if seat.get("energyCapable") is False:
@@ -472,7 +463,7 @@ class Scorer:
         lv = self.cats["mining"]["levels"]
         s = lv[n.get("mining", "none")]
         if c:
-            s = max(s, self.carried_adjust("mining", lv[c.get("mining", "none")]))
+            s = max(s, lv[c.get("mining", "none")])
         return s
 
     def refining(self, n, c):
@@ -488,7 +479,7 @@ class Scorer:
         s = cfg["levels"][nm["level"]]
         beds = nm["beds"]
         if c and c.get("medical"):
-            s = max(s, self.carried_adjust("medical", cfg["levels"][c["medical"]["level"]]))
+            s = max(s, cfg["levels"][c["medical"]["level"]])
             beds += c["medical"]["beds"]
         if s > 0 and beds >= 2:
             s += cfg["multipleBedsBonus"]
@@ -499,7 +490,7 @@ class Scorer:
         ns = n.get("salvageRepair") or {"level": "none", "repair": "none"}
         s = cfg["levels"][ns["level"]]
         if c and c.get("salvageRepair"):
-            s = max(s, self.carried_adjust("salvageRepair", cfg["levels"][c["salvageRepair"]["level"]]))
+            s = max(s, cfg["levels"][c["salvageRepair"]["level"]])
         s += cfg["repairBonus"][ns["repair"]]
         return min(s, cfg["max"])
 
@@ -507,7 +498,7 @@ class Scorer:
         lv = self.cats["manufacturing"]["levels"]
         s = lv[n.get("manufacturing", "none")]
         if c:
-            s = max(s, self.carried_adjust("manufacturing", lv[c.get("manufacturing", "none")]))
+            s = max(s, lv[c.get("manufacturing", "none")])
         return s
 
     def defense(self, n, c, carrier_id):
@@ -525,16 +516,17 @@ class Scorer:
         lq = n.get("livingQuarters") or {"beds": 0, "recSpace": False}
         return min(lq["beds"] * cfg["perBed"], cfg["maxBedPoints"]) + (cfg["recSpace"] if lq["recSpace"] else 0)
 
-    def maneuverability(self, n, c):
+    def hauler(self, n, c):
         m = (n.get("cargo") or {}).get("maneuverability", 0)
         if c and c.get("hauler"):
-            m = max(m, c["cargo"]["maneuverability"] * self.cats["cargo"]["carriedHaulerMultiplier"])
-        return m
+            m = max(m, c["cargo"]["maneuverability"])
+        return min(m, self.cats["cargo"]["max"])
 
     def capacity(self, scu):
-        cfg = self.cats["cargo"]["capacity"]
-        frac = (scu - cfg["minScu"]) / (cfg["maxScu"] - cfg["minScu"])
-        return floor_half(clamp(frac * cfg["maxPoints"], 0, cfg["maxPoints"]))
+        cfg = self.cats["cargoCapacity"]
+        if scu <= cfg["baseScu"]:
+            return 0
+        return floor_half(clamp(math.log2(scu / cfg["baseScu"]), 0, cfg["max"]))
 
     def commuter(self, n, c):
         cfg = self.cats["commuter"]
@@ -556,7 +548,7 @@ class Scorer:
         if cat == "livingQuarters":
             return self.living(n)
         if cat == "cargo":
-            return self.maneuverability(n, c)  # capacity added later
+            return self.hauler(n, c)
         return getattr(self, cat)(n, c)
 
     def score_layout(self, carrier_id, carrier, layout, ships, scenario):
@@ -590,8 +582,8 @@ class Scorer:
             sources[cat] = sid if with_ship > without else "native"
 
         scu = max((n.get("cargo") or {}).get("scu", 0) - aboard_cargo, 0)
-        if sources["cargo"] != NO_ROOM:
-            lines["cargo"] = floor_half(min(lines["cargo"] + self.capacity(scu), self.cats["cargo"]["max"]))
+        lines["cargoCapacity"] = self.capacity(scu)
+        sources["cargoCapacity"] = "native"
 
         tiers = self.r["tiers"]
         needed = sum(lines[c] for c in tiers["needed"]["categories"])
@@ -666,8 +658,7 @@ def carried_value(rubric, sid, ship):
         for scen in SCENARIOS:
             c = resolve(sroles, scen)
             if cat == "cargo":
-                m = (c.get("cargo") or {}).get("maneuverability", 0) or 0
-                vals[scen] = m * scorer.cats["cargo"]["carriedHaulerMultiplier"]
+                vals[scen] = (c.get("cargo") or {}).get("maneuverability", 0) or 0
             else:
                 vals[scen] = scorer.line(cat, {}, c, "")
         out[cat] = vals

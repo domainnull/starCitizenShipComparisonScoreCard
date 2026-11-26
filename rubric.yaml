@@ -11,7 +11,7 @@ rubricVersion: 3.0.0
 tiers:
   needed:
     weight: 1.0
-    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter]
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter]
   desired:
     weight: 0.5
     categories: [engineering]
@@ -61,11 +61,16 @@ categories:
     maxBedPoints: 4
     recSpace: 1
   cargo:
-    displayName: Cargo and hauling
-    max: 10
+    # A role: the ship that moves cargo between the base and stations. Layouts fill it.
+    displayName: Cargo hauler
+    max: 5
     maneuverabilityMax: 5       # anchors: Constellation Andromeda 5, Ironclad 0
-    capacity: {minScu: 200, maxScu: 800, maxPoints: 5}
-    carriedHaulerMultiplier: 0.5
+  cargoCapacity:
+    # Not a role: scored from the base's cargo space left after its role ships.
+    displayName: Cargo capacity
+    max: 5
+    # 0 at baseScu or less, +1 per doubling: 200 SCU 1, 400 2, 800 3, 1600 4, 3200 5.
+    baseScu: 100
   commuter:
     displayName: Shuttle
     max: 1                      # has one or not; needed, but a base without one still ranks
@@ -82,26 +87,19 @@ categories:
 noRoom:
   score: 0
 
-carried:
-  multiplier: 0.8
-  rounding: down               # to a whole point
-  minimum: 1
-  minimumByCategory: {mining: 0.5}
-  appliesTo: [mining, medical, salvageRepair, manufacturing]
-
 rounding:
-  halfPoints: [defense, cargo]   # these lines keep half points, rounded down
+  halfPoints: [defense, cargoCapacity]   # these lines keep half points, rounded down
 
 # Rules in words, tagged with the categories they touch. The script implements each one.
 rules:
   - id: carriedRoleShip
     categories: [mining, medical, salvageRepair, manufacturing]
-    text: A carried ship scores 0.8 of its own score, rounded down, with a minimum of 1 (0.5 for mining) when its own score is above 0.
+    text: A carried ship scores its own full score in the role it fills.
   - id: requiredRoles
     categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter]
     text: Every needed role must be filled by the base itself, a carried ship or No room. A role the base has nothing built in for can't be left as built in. No room scores 0 in that role.
   - id: roleShipUsesSpace
-    categories: [mining, medical, salvageRepair, defense, cargo, commuter, engineering]
+    categories: [mining, medical, salvageRepair, defense, cargo, cargoCapacity, commuter, engineering]
     text: A carried ship in a role is aboard and its cargo space comes off the base's cargo. The role scores the higher of the base's own and the ship's.
   - id: extraShips
     categories: [all]
@@ -130,9 +128,12 @@ rules:
   - id: livingQuarters
     categories: [livingQuarters]
     text: 1 point per native bed, up to 4, plus 1 for rec space.
-  - id: cargoLine
+  - id: cargoHauler
     categories: [cargo]
-    text: Cargo is 0-10. Half is manoeuvrability (0-5, judgement, the higher of the base and 0.5 x a carried hauler). Half is capacity, 0 at 200 SCU or less up to 5 at 800 SCU or more, after subtracting the cargo space the layout's carried ships take up. This is also the spare-room score, since room left means cargo space left.
+    text: Cargo hauler is 0-5, the manoeuvrability of whatever moves the cargo (judgement, Andromeda 5, Ironclad 0), the higher of the base and a carried hauler at full value.
+  - id: cargoCapacity
+    categories: [cargoCapacity]
+    text: Cargo capacity is 0-5 from the base's cargo space after subtracting what the layout's carried ships take up. 0 at 100 SCU or less, then 1 point per doubling (200 SCU 1, 400 2, 800 3, 1600 4, 3200 or more 5), in half points rounded down. It isn't a role, so No room on the hauler leaves it alone. This is also the spare-room score, since room left means cargo space left.
   - id: commuter
     categories: [commuter]
     text: Shuttle is 1 when the base has a commuter, built in or carried, and 0 when it has none. A command module that only detaches the bridge earns nothing.

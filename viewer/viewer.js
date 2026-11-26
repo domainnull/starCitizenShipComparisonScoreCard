@@ -269,6 +269,7 @@
   }
 
   function sourceLine(cat, line, role) {
+    if (cat === "cargoCapacity") return [h("div", { class: "src", text: "Not a role: the base's cargo space left after its role ships" })];
     var src = line.sources || { low: line.source, high: line.source };
     var parts = [];
     if (src.low === src.high) {

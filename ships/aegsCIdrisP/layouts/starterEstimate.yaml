@@ -28,7 +28,12 @@ roles:
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}
-  cargo: {source: native}
+  cargo:
+    source: drakSGolemOx
+    location: hangar
+    cargoScu: 0
+    fit: 'Estimated: same frame as the Golem, which players report fits; not tested together'
+    patch: '4.5'
   commuter:
     source: anvlSC8x
     location: hangar

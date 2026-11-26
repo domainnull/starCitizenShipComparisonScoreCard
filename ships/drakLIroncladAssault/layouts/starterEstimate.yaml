@@ -30,7 +30,12 @@ roles:
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}
-  cargo: {source: native}
+  cargo:
+    source: drakSGolemOx
+    location: cargoHold
+    cargoScu: 186
+    fit: 'Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem''s'
+    patch: '4.8'
   commuter:
     source: anvlSC8x
     location: cargoHold

@@ -30,7 +30,12 @@ roles:
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}
-  cargo: {source: native}
+  cargo:
+    source: drakSGolemOx
+    location: cargoHold
+    cargoScu: 284
+    fit: Player post with Golem OX, Salvation and L-22 aboard, roof closed (stated); cargo taken estimated as the Golem's
+    patch: '4.8'
   commuter:
     source: anvlSC8x
     location: cargoHold
