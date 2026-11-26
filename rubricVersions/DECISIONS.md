@@ -6,6 +6,14 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Tooling (Nov 26 2026): uv environment
+
+- The scorer now runs in a uv-managed environment: `pyproject.toml` pins PyYAML 6.0.3, `uv.lock`
+  locks it, `.python-version` sets Python 3.13, and `scripts/run.sh` syncs and runs in one step.
+  `requirements.txt` is exported from the lock so plain pip still works.
+- No version bump: `rubric.yaml` and `scripts/score.py` are unchanged, so scores and fingerprints
+  are the same.
+
 ## Rubric 2.0.0 / script 1.0.0 (Nov 26 2026): loadout scoring
 
 - **Layouts decide carried roles** (all carried categories, carrier). Carried roles now count only

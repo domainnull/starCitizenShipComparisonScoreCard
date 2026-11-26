@@ -1,1 +1,2 @@
-PyYAML>=6.0
+pyyaml==6.0.3
+    # via star-citizen-ship-scorecard
