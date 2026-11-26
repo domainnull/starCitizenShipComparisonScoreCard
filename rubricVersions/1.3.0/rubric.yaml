@@ -1,0 +1,20 @@
+# Rubric 1.3.0 (Nov 26 2026). Hand-scored in the original scorecard doc (rev 73),
+# before the score script existed, so this file records the rules as text.
+# Replaced by 2.0.0 (loadout scoring). See ../DECISIONS.md.
+rubricVersion: 1.3.0
+weights: {needed: 1.0, desired: 0.5}
+needed: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, carrier, cargo]
+desired: [commuter, engineering]
+rules:
+  - Lines score 0-5 unless noted. Carried role ships score x0.8 rounded down, minimum 1 (mining 0.5). Carried fighters are not cut.
+  - Mining 5 capital, 4 Mole, 3 Prospector, 2 Golem, 1 ROC/ROC-DS, 0 none.
+  - Refining 5 ore and fuel, 4 one of them, 3 carried refinery, 2 fuel-only partial, 1 room for later, 0 none.
+  - Medical 4 tier 1, 3 tier 2, 2 tier 3, 1 med area, 0 none; +1 for two or more beds including carried.
+  - Salvage and repair 4 construction salvage, 3 construction pieces, 2 medium rubble, 1 small rubble; +1 repairs small ships, +2 base or larger; cap 5.
+  - Manufacturing 5 large fabricator, 4 component, 3 personal gear, 2 limited station, 1 room for later, 0 none.
+  - Defense S3 .25, S4 .5, S5 1, S6 2.5, S7 5 per gun, best single seat, energy only, cap 5. Polaris, Idris-P and Kraken get +1 on their own seat and no credit for carried fighters. Smaller bases take the higher of their seat and a carried fighter at 2 x gun score - 0.5.
+  - Living quarters 1 per bed up to 4, +1 rec space.
+  - Carrier 1 per small slot (max 4), 2 per open pad, 2 per medium slot (max 6), counting room left after role ships.
+  - Cargo 0-10, half manoeuvrability (judgement), half capacity 200-800 SCU.
+  - Shared hangar and cargo (both Ironclads) take x0.5 on carrier and on cargo capacity.
+  - Shuttle 5 carried, 10 native; a command module earns nothing. Engineering ship 5 native, 4 carried, 0 none.

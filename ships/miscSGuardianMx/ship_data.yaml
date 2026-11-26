@@ -1,0 +1,22 @@
+# Mirai Guardian MX. Numbers come from the linked sources; text is our own.
+id: miscSGuardianMx
+name: Mirai Guardian MX
+manufacturer: MISC
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 26, width: 17, height: 10}
+carrierSize: small
+roles:
+  defense:
+    seats:
+    - name: Pilot
+      guns: [S4, S4, S4, S4]
+  fighter: true
+notes:
+- Mirai folds into MISC for ids.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Guardian_MX
+changes: []

@@ -1,0 +1,44 @@
+# RSI Galaxy (Med Bay). Numbers come from the linked sources; text is our own.
+id: rsiLGalaxy
+name: RSI Galaxy (Med Bay)
+manufacturer: RSI
+size: L
+cigSize: 5
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 110, width: 60, height: 25}
+carrierSize: none
+roles:
+  mining: none
+  refining: roomForLater
+  medical: {level: tier1, beds: 3}
+  salvageRepair:
+    level: none
+    repair: {low: none, high: smallShips}
+  manufacturing: roomForLater
+  defense:
+    seats:
+    - name: Pilot, turrets slaved forward
+      guns:
+        low: []
+        high: [S5, S5, S5, S5, S5, S5]
+    - name: Remote turret
+      guns: [S5, S5]
+    - name: Remote turret
+      guns: [S5, S5]
+    - name: Remote turret
+      guns: [S5, S5]
+  livingQuarters: {beds: 6, recSpace: true}
+  cargo: {scu: 64, maneuverability: 2}
+  commuter: false
+  engineering: false
+hangar: {smallSlot: 1, vehicleBay: 1}
+notes:
+- Scored with the Med Bay module (tier 1, 2 and 3 beds). Modules swap only at a shop.
+- Rear hangar has one XXS pad; the module lift takes an Ursa-sized vehicle.
+- 'Hangar repair: wiki yes, 2022 Q&A no, so a range. Turrets slaved to the pilot: wiki yes, 2022 Q&A no, so a range.'
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Galaxy
+changes:
+- {patch: 4.10.3, change: First flyable.}

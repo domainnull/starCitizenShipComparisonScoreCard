@@ -1,0 +1,40 @@
+# MISC Odyssey. Numbers come from the linked sources; text is our own.
+id: miscCOdyssey
+name: MISC Odyssey
+manufacturer: MISC
+size: C
+cigSize: null
+sizeOverride: 'Not in game data (concept). C assigned by judgement: 140 m capital explorer.'
+status: concept
+patch: null
+dimensions: {length: 140}
+carrierSize: none
+roles:
+  mining: {low: roc, high: prospector}
+  refining: oreOrFuel
+  medical:
+    level: tier2
+    beds: {low: 1, high: 2}
+  salvageRepair: {level: none, repair: none}
+  manufacturing: roomForLater
+  defense:
+    seats:
+    - name: Turret
+      guns: [S5, S5]
+    - name: Turret
+      guns: [S5, S5]
+    - name: Turret
+      guns: [S5, S5]
+  livingQuarters: {beds: 6, recSpace: true}
+  cargo:
+    scu: 252
+    maneuverability: {low: 1, high: 2}
+  commuter: false
+  engineering: false
+hangar: {smallSlot: 1, vehicleBay: 1}
+notes:
+- Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).
+- One XS hangar slot; a separate Ursa-sized ground bay. Turret positions unpublished.
+sources:
+- https://starcitizen.tools/Odyssey
+changes: []

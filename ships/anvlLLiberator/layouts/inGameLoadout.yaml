@@ -1,0 +1,49 @@
+# Layout: which ship covers each role. Scores are written to results/, not here.
+layout: inGameLoadout
+carrier: anvlLLiberator
+description: 'The tested Liberator loadout: C8X, Golem, Golem OX and Salvation inside; Guardian MX and Terrapin Medic on the
+  top pads. Front pad and internal side bays free.'
+estimated: false
+patch: 4.10.3
+roles:
+  mining:
+    source: drakSGolem
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  refining: {source: native}
+  medical:
+    source: anvlSTerrapinMedic
+    slot: openPad
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  salvageRepair:
+    source: rsiSSalvation
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  manufacturing: {source: native}
+  defense:
+    source: miscSGuardianMx
+    slot: openPad
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  livingQuarters: {source: native}
+  cargo:
+    source: drakSGolemOx
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  commuter:
+    source: anvlSC8x
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  engineering: {source: native}
+extraShips: []

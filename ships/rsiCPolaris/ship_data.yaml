@@ -1,0 +1,46 @@
+# RSI Polaris. Numbers come from the linked sources; text is our own.
+id: rsiCPolaris
+name: RSI Polaris
+manufacturer: RSI
+size: C
+cigSize: 6
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 181, width: 87, height: 40}
+carrierSize: none
+roles:
+  mining: none
+  refining: roomForLater
+  medical: {level: tier2, beds: 4}
+  salvageRepair: {level: none, repair: smallShips}
+  manufacturing: roomForLater
+  defense:
+    seats:
+    - name: Top turret
+      guns: [S4, S4, S4, S4]
+    - name: Top turret
+      guns: [S4, S4, S4, S4]
+    - name: Side turret
+      guns: [S3, S3, S3, S3]
+    - name: Side turret
+      guns: [S3, S3, S3, S3]
+    - name: Front low turret
+      guns: [S6, S6]
+    - name: Remote bottom turret
+      guns: [S3, S3, S3, S3]
+  livingQuarters: {beds: 13, recSpace: true}
+  cargo: {scu: 576, maneuverability: 1}
+  commuter: false
+  engineering: false
+hangar: {smallSlot: 4, vehicleBay: 1}
+notes:
+- Hangar held a Golem, Golem OX and C8X with room for another snub; vehicle area held a Salvation off the cargo
+  grid (repo owner's in-game test).
+- Front S6 cannons are ballistic by default; scored as energy-capable.
+- Torpedoes and missiles don't count. Cargo manoeuvrability is a judgement score.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Polaris
+changes:
+- {patch: 3.24.3, change: First flyable.}
+- {patch: 4.8.0, change: 'Landed ships can request repair, fuel and ammo.'}

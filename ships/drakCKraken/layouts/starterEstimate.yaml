@@ -1,0 +1,43 @@
+# Layout: which ship covers each role. Scores are written to results/, not here.
+layout: starterEstimate
+carrier: drakCKraken
+description: Starter layout ported from the scorecard doc (rev 73). Concept ship, so every fit is estimated from sizes.
+estimated: true
+patch: null
+roles:
+  mining:
+    source: drakSGolem
+    slot: mediumSlot
+    cargoScu: 0
+    fit: 'Estimated: concept ship, sizes unpublished'
+    patch: null
+  refining: {source: native}
+  medical:
+    source: anvlSTerrapinMedic
+    slot: openPad
+    cargoScu: 0
+    fit: 'Estimated: concept ship, sizes unpublished'
+    patch: null
+  salvageRepair:
+    source: rsiSSalvation
+    slot: openPad
+    cargoScu: 0
+    fit: 'Estimated: concept ship, sizes unpublished'
+    patch: null
+  manufacturing: {source: native}
+  defense: {source: native}
+  livingQuarters: {source: native}
+  cargo: {source: native}
+  commuter:
+    source: anvlSC8x
+    slot: openPad
+    cargoScu: 0
+    fit: 'Estimated: concept ship, sizes unpublished'
+    patch: null
+  engineering: {source: native}
+extraShips:
+- ship: miscSGuardianMx
+  slot: mediumSlot
+  cargoScu: 0
+  fit: 'Estimated: concept ship, sizes unpublished'
+  patch: null

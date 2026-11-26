@@ -1,0 +1,17 @@
+# MISC Prospector. Numbers come from the linked sources; text is our own.
+id: miscSProspector
+name: MISC Prospector
+manufacturer: MISC
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 26.5, width: 16.5, height: 8}
+carrierSize: small
+roles: {mining: prospector}
+notes:
+- Not in any layout yet.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Prospector
+changes: []

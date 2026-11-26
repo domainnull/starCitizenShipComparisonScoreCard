@@ -1,0 +1,17 @@
+# Greycat ROC-DS. Numbers come from the linked sources; text is our own.
+id: grinSRocDs
+name: Greycat ROC-DS
+manufacturer: GRIN
+size: S
+cigSize: 1
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 6.6, width: 5, height: 3.5}
+carrierSize: vehicle
+roles: {mining: roc}
+notes:
+- Ground vehicle.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/ROC-DS
+changes: []

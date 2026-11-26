@@ -1,0 +1,41 @@
+# Layout: which ship covers each role. Scores are written to results/, not here.
+layout: starterEstimate
+carrier: drakLIronclad
+description: Starter layout ported from the scorecard doc (rev 73). Each ship has fit in player tests, but not all four together.
+  Cargo taken is an estimate.
+estimated: true
+patch: '4.8'
+cargoScuMethod: 'estimate: ship floor area (L x W from game data) as a share of the 40 x 21 m bay floor, times the bay''s
+  grid SCU'
+roles:
+  mining:
+    source: drakSGolem
+    slot: smallSlot
+    cargoScu: 284
+    fit: Player post with Golem OX, Salvation and L-22 aboard, roof closed (stated)
+    patch: '4.8'
+  refining: {source: native}
+  medical:
+    source: anvlSTerrapinMedic
+    slot: smallSlot
+    cargoScu: 864
+    fit: 'Fit-test video (Assault bay, same room): two fit, roof closed (stated)'
+    patch: '4.8'
+  salvageRepair:
+    source: rsiSSalvation
+    slot: smallSlot
+    cargoScu: 323
+    fit: Player post with Golem, Golem OX and L-22 aboard, roof closed (stated)
+    patch: '4.8'
+  manufacturing: {source: native}
+  defense: {source: native}
+  livingQuarters: {source: native}
+  cargo: {source: native}
+  commuter:
+    source: anvlSC8x
+    slot: smallSlot
+    cargoScu: 503
+    fit: Repo owner's word that a C8 fits; roof not stated
+    patch: 4.10.3
+  engineering: {source: native}
+extraShips: []

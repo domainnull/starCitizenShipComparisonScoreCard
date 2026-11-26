@@ -1,0 +1,18 @@
+# Anvil Terrapin Medic. Numbers come from the linked sources; text is our own.
+id: anvlSTerrapinMedic
+name: Anvil Terrapin Medic
+manufacturer: ANVL
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 20, width: 16.5, height: 7.5}
+carrierSize: small
+roles:
+  medical: {level: tier2, beds: 1}
+notes:
+- One tier 2 bed; regeneration up to 8,000 km.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Terrapin_Medic
+changes: []

@@ -1,0 +1,18 @@
+# RSI Salvation. Numbers come from the linked sources; text is our own.
+id: rsiSSalvation
+name: RSI Salvation
+manufacturer: RSI
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 14.5, width: 8.5, height: 4}
+carrierSize: small
+roles:
+  salvageRepair: {level: rubbleSmall, repair: none}
+notes:
+- Scraper modules are hardware-locked.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Salvation
+changes: []
