@@ -357,11 +357,15 @@
     var seatScore = both(st, function (x) { return x.bestSeat ? x.bestSeat.score : 0; });
     var seatSub = seatText(seatLo) + (JSON.stringify(seatLo) !== JSON.stringify(seatHi) ? "; high case " + seatText(seatHi) : "");
     var locs = (st.low.locations || []).map(locTitle).join(", ");
+    var radar = both(st, function (x) { return x.radarSize; });
+    var lvLo = st.low.explorationLevel, lvHi = st.high.explorationLevel;
+    var lvText = lvLo === lvHi ? words(lvLo || "none") : words(lvLo || "none") + " to " + words(lvHi || "none");
     return h("div", { class: "stats" }, [
       stat("Cargo space", fmtR(cargo) + " SCU", "Manoeuvrability " + fmtR(man) + " of " + R.maneuverabilityMax),
       stat("Living quarters", fmtR(beds) + " bed" + (beds === 1 ? "" : "s"), "Rec space: " + fmtR(rec)),
       stat("Strongest solo gun seat", fmtR(seatScore) + " pts", seatSub),
       stat("Carries ships in", locs || "nowhere", "No ship count: a layout says which ships fit together."),
+      stat("Radar", st.low.radarSize == null && st.high.radarSize == null ? "not set" : "Size " + fmtR(radar), "Marketed exploration: " + lvText),
     ]);
   }
 
@@ -387,7 +391,7 @@
     var out = h("div", null, [wrap]);
     if (showCarried) {
       out.appendChild(h("p", { class: "meta", text: "On its own: this ship scored as a base with nothing carried. Adds when carried: " +
-        "its value in each role it can fill on a carrier with nothing built in (carried roles take 0.8 of their score; " +
+        "its value in each role it can fill on a carrier with nothing built in (carried roles count at full value; " +
         "a fighter scores 2 x its best seat - 0.5, and nothing on the large bases)." }));
     }
     return out;
@@ -521,7 +525,7 @@
     return h("div", { class: "stats" }, [
       stat("Cargo space left", fmtR(left) + " SCU", cargoSub),
       stat("Living quarters", fmtR(both(st, function (x) { return x.beds; })) + " beds",
-        "Rec space: " + fmtR(both(st, function (x) { return x.recSpace; })) + ". Carried ships don't add beds."),
+        "Rec space: " + fmtR(both(st, function (x) { return x.recSpace; })) + ". Carried ships don't add beds, but one can fill the role instead."),
       stat("Medical beds", fmtR(medTotal), medSub),
       stat("Defense line", fmtR({ low: defLine.low, high: defLine.high }) + " pts", "Best built-in seat " + fmtR(seat) + " pts. " + gunSub),
       stat("Ships aboard", aboard || "none", extras),
@@ -704,7 +708,7 @@
     mining: "none", refining: "none", manufacturing: "none",
     medical: { level: "none", beds: 0 }, salvageRepair: { level: "none", repair: "none" },
     defense: { seats: [] }, livingQuarters: { beds: 0, recSpace: false }, cargo: { scu: 0, maneuverability: 0 },
-    commuter: false, exploration: "none", hauler: true, fighter: true,
+    commuter: false, exploration: { radarSize: 1, level: "none" }, hauler: true, fighter: true,
   };
 
   function idSuffix(name, maker) {
@@ -877,8 +881,15 @@
         inner.innerHTML = "";
         if (!(k in roles)) return;
         var p = ["roles", k];
-        if (k === "mining" || k === "refining" || k === "manufacturing" || k === "exploration") {
+        if (k === "mining" || k === "refining" || k === "manufacturing") {
           inner.appendChild(row("Level", bind(p, selectInput(R.categories[k].levels))));
+        } else if (k === "exploration") {
+          inner.appendChild(row("Radar size", bind(p.concat("radarSize"), function (v, set) {
+            return selectInput(R.radarSizes.map(String), R.radarSizes.map(function (x) { return "Size " + x; }))(
+              v === undefined || v === null ? v : String(v), function (x) { set(Number(x)); });
+          }), "The ship's radar component size"));
+          inner.appendChild(row("Marketed for", bind(p.concat("level"), selectInput(R.categories.exploration.levels,
+            R.categories.exploration.levels.map(function (x) { return { explorer: "long-range exploration (5)", scout: "scouting or scanning (3)", none: "nothing more" }[x] || words(x); })))));
         } else if (k === "medical") {
           inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.medical.levels))));
           inner.appendChild(row("Medical beds", bind(p.concat("beds"), numberInput(true))));

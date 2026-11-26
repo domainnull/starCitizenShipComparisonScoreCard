@@ -77,12 +77,15 @@ categories:
     native: 1
     carried: 1
   exploration:
-    # A placeholder until exploration gameplay exists, scored as marketed.
-    # explorer = built and sold for long-range exploration; scout = a dedicated scout or
-    # scanning ship; scanning = any ship's own scanner and radar (every ship has one).
+    # A placeholder until exploration gameplay exists. The low end is the ship's radar size, a
+    # stand-in for scanning (every ship has a radar, so at least 1). The high end adds what the
+    # ship is marketed for: explorer = built and sold for the long-range exploration loop;
+    # scout = a dedicated scout or scanning ship. Put a marketed level that isn't in game yet in
+    # as a range, e.g. level: {low: none, high: explorer}, so it counts in the high case only.
     displayName: Exploration
     max: 5
-    levels: {explorer: 5, scout: 3, scanning: 1, none: 0}
+    radarScore: {1: 1, 2: 1.5, 3: 2, 4: 2.5}   # radar component size -> score; stays under a scout
+    levels: {explorer: 5, scout: 3, none: 0}
 
 # A required role (the needed tier) must be filled by the base, a carried ship or "noRoom".
 # noRoom means the base has no room left for a ship that would fill it.
@@ -138,7 +141,7 @@ rules:
     text: +1 when the base repairs, refuels and rearms the small ships it carries, +2 when it repairs itself or larger ships. Line capped at 5.
   - id: exploration
     categories: [exploration]
-    text: Exploration is a needed placeholder until the gameplay exists, scored as marketed. 5 for a ship built and sold for long-range exploration, 3 for a dedicated scout or scanning ship, 1 for any ship's own scanner and radar (every ship has one). A carried scout counts at full value. Radar strength isn't scored yet.
+    text: Exploration is a needed placeholder until the gameplay exists. The line is the larger of the radar score (radar size 1 = 1, 2 = 1.5, 3 = 2, 4 = 2.5; every ship has one) and the marketed level (explorer 5, scout 3). A marketed level that isn't in game yet goes in as a range from none, so it counts in the high case only. A carried scout counts at full value.
   - id: livingQuarters
     categories: [livingQuarters]
     text: 1 point per bed, up to 4, plus 1 for rec space. A carried ship such as a luxury ship can fill the role; it scores the higher of the base and the ship.

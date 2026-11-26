@@ -31,7 +31,7 @@ roles:
   livingQuarters: {beds: 13, recSpace: true}
   cargo: {scu: 576, maneuverability: 1}
   commuter: false
-  exploration: scanning
+  exploration: {radarSize: 4, level: none}
 locations: [hangar, cargoHold]
 notes:
 - Hangar held a Golem, Golem OX and C8X with room for another snub; vehicle area held a Salvation off the cargo

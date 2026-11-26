@@ -26,7 +26,7 @@ roles:
   livingQuarters: {beds: 2, recSpace: true}
   cargo: {scu: 400, maneuverability: 1}
   commuter: false
-  exploration: scanning
+  exploration: {radarSize: 2, level: none}
 locations: [hangar, pad]
 notes:
 - Internal garage plus side bays (side bays hold one or two small ships, estimate) and three exterior pads (two

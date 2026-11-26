@@ -225,6 +225,7 @@ def rubric_info(rubric):
                            "levels": list((v.get("levels") or {}).keys())} for k, v in cats.items()},
         "repairLevels": list(cats["salvageRepair"]["repairBonus"].keys()),
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
+        "radarSizes": list(cats["exploration"]["radarScore"].keys()),
         "maneuverabilityMax": cats["cargo"]["maneuverabilityMax"],
         "largeBases": list(cats["defense"].get("largeBases") or []),
         "noRoomScore": rubric["noRoom"]["score"],

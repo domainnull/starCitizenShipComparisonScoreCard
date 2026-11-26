@@ -72,16 +72,21 @@ snapshot.
 - **Engineering dropped** (engineering). It came from the owner's Nov 24 role list as a desired
   "dedicated engineering ship, if one is announced". No ship or gameplay loop exists, and every base
   scored 0, so no total moved. Owner: "Let's drop the engineering role."
-- **Exploration is a required role** at full weight, a placeholder until the gameplay exists:
-  5 for a ship built and sold for long-range exploration, 3 for a dedicated scout or scanning ship,
-  1 for the base's own scanner and radar, 0 for none. Every ship can scan, so every base has at
-  least 1 built in; a layout can swap that for a carried scout or a theoretical score. The owner
-  asked for radar strength to set the built-in score if it could be found; the ship data has no
-  radar field, so every base stays at 1 and nothing was scraped (issue #9; lock range overlaps with
-  defense). The Odyssey is marketed as a long-range explorer, so it scores 5 (+5 total, marketing
-  only). The desired tier is now empty; its 0.5 weight is kept for later.
+- **Exploration is a required role** at full weight, a placeholder until the gameplay exists. The
+  line is the larger of two things. The low end is the ship's radar component size, a stand-in for
+  scanning (owner's idea): size 1 = 1, 2 = 1.5, 3 = 2, 4 = 2.5, from scunpacked-data's ships.json
+  loadout (the `Radar.*` item's installed size; grade isn't counted). Every ship has a radar, so
+  every base scores at least 1, and a radar alone stays under a dedicated scout. The high end adds
+  what a ship is marketed for: explorer 5, scout 3. A marketed level that isn't in game goes in as
+  a range from none (`level: {low: none, high: explorer}`), so it counts in the high case only,
+  as theoretical values do. Ship data: `exploration: {radarSize, level}`. Radar sizes: Polaris 4;
+  Idris-P, Galaxy, Ironclad and Ironclad Assault 3; Liberator 2; Kraken and Odyssey (concepts, not
+  in game data) estimated 3 to 4. Only the Odyssey gets the explorer uplift; the Carrack is
+  marketed for exploration too but isn't a base in this repo. Defense scores only gun size and
+  count, so radar doesn't count twice. The steps are proposals. The desired tier is now empty; its
+  0.5 weight is kept for later.
 - **Deferred and theoretical items are tracked as issues**: #7 hauler score, #8 exploration rework,
-  #9 radar-based exploration, #10 refining, #11 salvage and repair, #12 manufacturing, #13 concept
+  #9 radar-based exploration, #14 gathering radar strength, #10 refining, #11 salvage and repair, #12 manufacturing, #13 concept
   ships and estimated layouts.
 - **Estimated flag**: a layout is estimated when its file says so or the carrier's roles hold a
   range. Hangar count ranges are gone, so the Liberator's tested layout is no longer a range.
@@ -95,14 +100,14 @@ Leaderboard, best layout, 2.0.0 then 3.0.0:
 
 | Ship | 2.0.0 | 3.0.0 |
 |---|---|---|
-| Drake Kraken | 25.5-34.5 (1st) | 26-30 (1st) |
-| RSI Polaris | 27 (3rd) | 27.5 (2nd) |
-| Aegis Idris-P | 28.5 (2nd) | 26.5 (3rd) |
-| MISC Odyssey | 19.5-23.5 (6th) | 24-28 (4th) |
-| Drake Ironclad Assault | 20.5-24.5 (4th) | 24.5-27.5 (5th) |
-| Anvil Liberator | 22-23 (5th) | 22.5 (6th) |
-| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 18-23 (7th) |
-| Drake Ironclad | 13.5-16.5 (8th) | 18-20 (8th) |
+| Drake Kraken | 25.5-34.5 (1st) | 27-31.5 (1st) |
+| RSI Polaris | 27 (3rd) | 29 (2nd) |
+| Aegis Idris-P | 28.5 (2nd) | 27.5 (3rd) |
+| Drake Ironclad Assault | 20.5-24.5 (4th) | 25.5-28.5 (4th) |
+| MISC Odyssey | 19.5-23.5 (6th) | 21-28 (5th) |
+| Anvil Liberator | 22-23 (5th) | 23 (6th) |
+| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 19-24 (7th) |
+| Drake Ironclad | 13.5-16.5 (8th) | 19-21 (8th) |
 
 No base now scores lower with its role ships aboard than with nothing carried (under 2.0.0 the
 Kraken and Ironclad did).

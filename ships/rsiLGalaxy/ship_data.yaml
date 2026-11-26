@@ -31,7 +31,7 @@ roles:
   livingQuarters: {beds: 6, recSpace: true}
   cargo: {scu: 64, maneuverability: 2}
   commuter: false
-  exploration: scanning
+  exploration: {radarSize: 3, level: none}
 locations: [hangar, vehicleBay]
 notes:
 - Scored with the Med Bay module (tier 1, 2 and 3 beds). Modules swap only at a shop.

@@ -178,7 +178,7 @@ window.scorecardResults = {
       "categories": [
         "exploration"
       ],
-      "text": "Exploration is a needed placeholder until the gameplay exists, scored as marketed. 5 for a ship built and sold for long-range exploration, 3 for a dedicated scout or scanning ship, 1 for any ship's own scanner and radar (every ship has one). A carried scout counts at full value. Radar strength isn't scored yet."
+      "text": "Exploration is a needed placeholder until the gameplay exists. The line is the larger of the radar score (radar size 1 = 1, 2 = 1.5, 3 = 2, 4 = 2.5; every ship has one) and the marketed level (explorer 5, scout 3). A marketed level that isn't in game yet goes in as a range from none, so it counts in the high case only. A carried scout counts at full value."
     },
     {
       "id": "livingQuarters",
@@ -486,8 +486,8 @@ window.scorecardResults = {
       "status": "concept",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 26,
-        "high": 30
+        "low": 27,
+        "high": 31.5
       },
       "layouts": [
         {
@@ -497,12 +497,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": null,
           "total": {
-            "low": 26,
-            "high": 30
+            "low": 27,
+            "high": 31.5
           },
           "needed": {
-            "low": 26,
-            "high": 30
+            "low": 27,
+            "high": 31.5
           },
           "desired": {
             "low": 0,
@@ -600,8 +600,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2.5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -676,7 +676,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "5cc745d014d16d21"
+          "fingerprint": "c4a70372d4cb8dfa"
         }
       ],
       "rank": 1
@@ -689,8 +689,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "inGameLoadout",
       "total": {
-        "low": 27.5,
-        "high": 27.5
+        "low": 29,
+        "high": 29
       },
       "layouts": [
         {
@@ -700,12 +700,12 @@ window.scorecardResults = {
           "estimated": false,
           "patch": "4.10.3",
           "total": {
-            "low": 27.5,
-            "high": 27.5
+            "low": 29,
+            "high": 29
           },
           "needed": {
-            "low": 27.5,
-            "high": 27.5
+            "low": 29,
+            "high": 29
           },
           "desired": {
             "low": 0,
@@ -803,8 +803,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1,
-              "high": 1,
+              "low": 2.5,
+              "high": 2.5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -867,7 +867,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "364594c72ed1c3a4"
+          "fingerprint": "e7441d66f20587e2"
         }
       ],
       "rank": 2
@@ -880,8 +880,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 26.5,
-        "high": 26.5
+        "low": 27.5,
+        "high": 27.5
       },
       "layouts": [
         {
@@ -891,12 +891,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.5",
           "total": {
-            "low": 26.5,
-            "high": 26.5
+            "low": 27.5,
+            "high": 27.5
           },
           "needed": {
-            "low": 26.5,
-            "high": 26.5
+            "low": 27.5,
+            "high": 27.5
           },
           "desired": {
             "low": 0,
@@ -994,8 +994,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1070,10 +1070,205 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "e58f7441baa1b4ee"
+          "fingerprint": "ca68c381a8ed9a6d"
         }
       ],
       "rank": 3
+    },
+    {
+      "id": "drakLIroncladAssault",
+      "name": "Drake Ironclad Assault",
+      "manufacturer": "DRAK",
+      "size": "L",
+      "status": "flightReady",
+      "bestLayout": "starterEstimate",
+      "total": {
+        "low": 25.5,
+        "high": 28.5
+      },
+      "layouts": [
+        {
+          "layout": "starterEstimate",
+          "file": "ships/drakLIroncladAssault/layouts/starterEstimate.yaml",
+          "description": "Starter layout ported from the scorecard doc (rev 73). Each ship has fit in player tests, but not all four together. Cargo taken is an estimate.",
+          "estimated": true,
+          "patch": "4.8",
+          "total": {
+            "low": 25.5,
+            "high": 28.5
+          },
+          "needed": {
+            "low": 25.5,
+            "high": 28.5
+          },
+          "desired": {
+            "low": 0,
+            "high": 0
+          },
+          "lines": {
+            "mining": {
+              "low": 2,
+              "high": 2,
+              "source": "drakSGolem",
+              "sources": {
+                "low": "drakSGolem",
+                "high": "drakSGolem"
+              }
+            },
+            "refining": {
+              "low": 0,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "medical": {
+              "low": 3,
+              "high": 3,
+              "source": "anvlSTerrapinMedic",
+              "sources": {
+                "low": "anvlSTerrapinMedic",
+                "high": "anvlSTerrapinMedic"
+              }
+            },
+            "salvageRepair": {
+              "low": 2,
+              "high": 2,
+              "source": "rsiSSalvation",
+              "sources": {
+                "low": "rsiSSalvation",
+                "high": "rsiSSalvation"
+              }
+            },
+            "manufacturing": {
+              "low": 2,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "defense": {
+              "low": 4,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "livingQuarters": {
+              "low": 5,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargo": {
+              "low": 3,
+              "high": 3,
+              "source": "drakSGolemOx",
+              "sources": {
+                "low": "drakSGolemOx",
+                "high": "drakSGolemOx"
+              }
+            },
+            "cargoCapacity": {
+              "low": 1.5,
+              "high": 1.5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "commuter": {
+              "low": 1,
+              "high": 1,
+              "source": "anvlSC8x",
+              "sources": {
+                "low": "anvlSC8x",
+                "high": "anvlSC8x"
+              }
+            },
+            "exploration": {
+              "low": 2,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            }
+          },
+          "cargoLeftScu": {
+            "low": 291,
+            "high": 291
+          },
+          "roles": {
+            "mining": {
+              "source": "drakSGolem",
+              "location": "cargoHold",
+              "cargoScu": 186,
+              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
+              "patch": "4.8"
+            },
+            "refining": {
+              "source": "native"
+            },
+            "medical": {
+              "source": "anvlSTerrapinMedic",
+              "location": "cargoHold",
+              "cargoScu": 566,
+              "fit": "Fit-test video: two fit, roof closed (stated)",
+              "patch": "4.8"
+            },
+            "salvageRepair": {
+              "source": "rsiSSalvation",
+              "location": "cargoHold",
+              "cargoScu": 211,
+              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
+              "patch": "4.8"
+            },
+            "manufacturing": {
+              "source": "native"
+            },
+            "defense": {
+              "source": "native"
+            },
+            "livingQuarters": {
+              "source": "native"
+            },
+            "cargo": {
+              "source": "drakSGolemOx",
+              "location": "cargoHold",
+              "cargoScu": 186,
+              "fit": "Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem's",
+              "patch": "4.8"
+            },
+            "commuter": {
+              "source": "anvlSC8x",
+              "location": "cargoHold",
+              "cargoScu": 0,
+              "fit": "Fit-test video: a C8R (same hull) in the side space, roof not stated, about 90%",
+              "patch": "4.8"
+            },
+            "exploration": {
+              "source": "native"
+            }
+          },
+          "extraShips": [],
+          "rubricVersion": "3.0.0",
+          "scriptVersion": "2.0.0",
+          "fingerprint": "423796cbb672d9d7"
+        }
+      ],
+      "rank": 4
     },
     {
       "id": "miscCOdyssey",
@@ -1083,7 +1278,7 @@ window.scorecardResults = {
       "status": "concept",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 24,
+        "low": 21,
         "high": 28
       },
       "layouts": [
@@ -1094,11 +1289,11 @@ window.scorecardResults = {
           "estimated": true,
           "patch": null,
           "total": {
-            "low": 24,
+            "low": 21,
             "high": 28
           },
           "needed": {
-            "low": 24,
+            "low": 21,
             "high": 28
           },
           "desired": {
@@ -1197,7 +1392,7 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 5,
+              "low": 2,
               "high": 5,
               "source": "native",
               "sources": {
@@ -1249,202 +1444,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "c686bf4a0a47d27e"
-        }
-      ],
-      "rank": 4
-    },
-    {
-      "id": "drakLIroncladAssault",
-      "name": "Drake Ironclad Assault",
-      "manufacturer": "DRAK",
-      "size": "L",
-      "status": "flightReady",
-      "bestLayout": "starterEstimate",
-      "total": {
-        "low": 24.5,
-        "high": 27.5
-      },
-      "layouts": [
-        {
-          "layout": "starterEstimate",
-          "file": "ships/drakLIroncladAssault/layouts/starterEstimate.yaml",
-          "description": "Starter layout ported from the scorecard doc (rev 73). Each ship has fit in player tests, but not all four together. Cargo taken is an estimate.",
-          "estimated": true,
-          "patch": "4.8",
-          "total": {
-            "low": 24.5,
-            "high": 27.5
-          },
-          "needed": {
-            "low": 24.5,
-            "high": 27.5
-          },
-          "desired": {
-            "low": 0,
-            "high": 0
-          },
-          "lines": {
-            "mining": {
-              "low": 2,
-              "high": 2,
-              "source": "drakSGolem",
-              "sources": {
-                "low": "drakSGolem",
-                "high": "drakSGolem"
-              }
-            },
-            "refining": {
-              "low": 0,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "medical": {
-              "low": 3,
-              "high": 3,
-              "source": "anvlSTerrapinMedic",
-              "sources": {
-                "low": "anvlSTerrapinMedic",
-                "high": "anvlSTerrapinMedic"
-              }
-            },
-            "salvageRepair": {
-              "low": 2,
-              "high": 2,
-              "source": "rsiSSalvation",
-              "sources": {
-                "low": "rsiSSalvation",
-                "high": "rsiSSalvation"
-              }
-            },
-            "manufacturing": {
-              "low": 2,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "defense": {
-              "low": 4,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "livingQuarters": {
-              "low": 5,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "cargo": {
-              "low": 3,
-              "high": 3,
-              "source": "drakSGolemOx",
-              "sources": {
-                "low": "drakSGolemOx",
-                "high": "drakSGolemOx"
-              }
-            },
-            "cargoCapacity": {
-              "low": 1.5,
-              "high": 1.5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "commuter": {
-              "low": 1,
-              "high": 1,
-              "source": "anvlSC8x",
-              "sources": {
-                "low": "anvlSC8x",
-                "high": "anvlSC8x"
-              }
-            },
-            "exploration": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            }
-          },
-          "cargoLeftScu": {
-            "low": 291,
-            "high": 291
-          },
-          "roles": {
-            "mining": {
-              "source": "drakSGolem",
-              "location": "cargoHold",
-              "cargoScu": 186,
-              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
-              "patch": "4.8"
-            },
-            "refining": {
-              "source": "native"
-            },
-            "medical": {
-              "source": "anvlSTerrapinMedic",
-              "location": "cargoHold",
-              "cargoScu": 566,
-              "fit": "Fit-test video: two fit, roof closed (stated)",
-              "patch": "4.8"
-            },
-            "salvageRepair": {
-              "source": "rsiSSalvation",
-              "location": "cargoHold",
-              "cargoScu": 211,
-              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
-              "patch": "4.8"
-            },
-            "manufacturing": {
-              "source": "native"
-            },
-            "defense": {
-              "source": "native"
-            },
-            "livingQuarters": {
-              "source": "native"
-            },
-            "cargo": {
-              "source": "drakSGolemOx",
-              "location": "cargoHold",
-              "cargoScu": 186,
-              "fit": "Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem's",
-              "patch": "4.8"
-            },
-            "commuter": {
-              "source": "anvlSC8x",
-              "location": "cargoHold",
-              "cargoScu": 0,
-              "fit": "Fit-test video: a C8R (same hull) in the side space, roof not stated, about 90%",
-              "patch": "4.8"
-            },
-            "exploration": {
-              "source": "native"
-            }
-          },
-          "extraShips": [],
-          "rubricVersion": "3.0.0",
-          "scriptVersion": "2.0.0",
-          "fingerprint": "d9c058c2a5ac3a5b"
+          "fingerprint": "838fa49c444ad534"
         }
       ],
       "rank": 5
@@ -1457,8 +1457,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "inGameLoadout",
       "total": {
-        "low": 22.5,
-        "high": 22.5
+        "low": 23,
+        "high": 23
       },
       "layouts": [
         {
@@ -1468,12 +1468,12 @@ window.scorecardResults = {
           "estimated": false,
           "patch": "4.10.3",
           "total": {
-            "low": 22.5,
-            "high": 22.5
+            "low": 23,
+            "high": 23
           },
           "needed": {
-            "low": 22.5,
-            "high": 22.5
+            "low": 23,
+            "high": 23
           },
           "desired": {
             "low": 0,
@@ -1571,8 +1571,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1,
-              "high": 1,
+              "low": 1.5,
+              "high": 1.5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1643,7 +1643,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "8e0b83abf568ff46"
+          "fingerprint": "a47b607738a1fbc6"
         }
       ],
       "rank": 6
@@ -1656,8 +1656,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "medBayModule",
       "total": {
-        "low": 18,
-        "high": 23
+        "low": 19,
+        "high": 24
       },
       "layouts": [
         {
@@ -1667,12 +1667,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.10.3",
           "total": {
-            "low": 18,
-            "high": 23
+            "low": 19,
+            "high": 24
           },
           "needed": {
-            "low": 18,
-            "high": 23
+            "low": 19,
+            "high": 24
           },
           "desired": {
             "low": 0,
@@ -1770,8 +1770,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1827,7 +1827,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "6404c318fee10217"
+          "fingerprint": "5a9ecd59af456b60"
         }
       ],
       "rank": 7
@@ -1840,8 +1840,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 18,
-        "high": 20
+        "low": 19,
+        "high": 21
       },
       "layouts": [
         {
@@ -1851,12 +1851,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.8",
           "total": {
-            "low": 18,
-            "high": 20
+            "low": 19,
+            "high": 21
           },
           "needed": {
-            "low": 18,
-            "high": 20
+            "low": 19,
+            "high": 21
           },
           "desired": {
             "low": 0,
@@ -1954,8 +1954,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 2,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -2022,7 +2022,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "be0b821ed3dd6083"
+          "fingerprint": "6a099c4f3fda5ed3"
         }
       ],
       "rank": 8

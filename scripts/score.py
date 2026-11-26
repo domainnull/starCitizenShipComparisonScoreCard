@@ -178,9 +178,19 @@ def validate_roles(path, roles, rubric, report, full):
             report.warn(path, f"roles.{k}", "extra field", "ignored, not graded")
     v = roles
     f = "roles."
-    for key in ("mining", "refining", "manufacturing", "exploration"):
+    for key in ("mining", "refining", "manufacturing"):
         if key in v:
             ok &= validate_value(path, f + key, v[key], level_check(cats[key]["levels"]), report)
+    if "exploration" in v:
+        ex = cats["exploration"]
+        def exp(x):
+            if not isinstance(x, dict) or "radarSize" not in x or "level" not in x:
+                return "needs radarSize and level"
+            if x["radarSize"] not in ex["radarScore"]:
+                return f"radarSize {x['radarSize']!r} is not one of {', '.join(str(k) for k in ex['radarScore'])}"
+            if x["level"] not in ex["levels"]:
+                return f"level {x['level']!r} is not one of {', '.join(ex['levels'])}"
+        ok &= validate_value(path, f + "exploration", v["exploration"], exp, report)
     if "medical" in v:
         def med(x):
             if not isinstance(x, dict) or "level" not in x or "beds" not in x:
@@ -552,10 +562,15 @@ class Scorer:
         return s
 
     def exploration(self, n, c):
-        lv = self.cats["exploration"]["levels"]
-        s = lv[n.get("exploration", "none")]
+        cfg = self.cats["exploration"]
+        def score(x):
+            e = x.get("exploration")
+            if not e:
+                return 0
+            return min(max(cfg["radarScore"][e["radarSize"]], cfg["levels"][e["level"]]), cfg["max"])
+        s = score(n)
         if c:
-            s = max(s, lv[c.get("exploration", "none")])
+            s = max(s, score(c))
         return s
 
     def line(self, cat, n, c, carrier_id):
@@ -650,7 +665,10 @@ def ship_stats(rubric, ship):
         cargo = n.get("cargo") or {}
         lq = n.get("livingQuarters") or {}
         med = n.get("medical") or {}
+        ex = n.get("exploration") or {}
         out[scen] = {
+            "radarSize": ex.get("radarSize"),
+            "explorationLevel": ex.get("level"),
             "cargoScu": cargo.get("scu"),
             "maneuverability": cargo.get("maneuverability"),
             "beds": lq.get("beds"),

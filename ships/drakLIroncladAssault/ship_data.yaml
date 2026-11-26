@@ -27,7 +27,7 @@ roles:
   livingQuarters: {beds: 9, recSpace: true}
   cargo: {scu: 1440, maneuverability: 0}
   commuter: false
-  exploration: scanning
+  exploration: {radarSize: 3, level: none}
 locations: [cargoHold]
 cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 1440}
 notes:
