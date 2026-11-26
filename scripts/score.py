@@ -9,6 +9,9 @@ Usage:
 
 Needs Python 3.9+ and PyYAML (see requirements.txt).
 
+scripts/editor.py imports this file: load_raw, validate_all, score_both and the editor helpers
+below let it check and score ships and layouts held in memory before it writes them.
+
 Script versioning (semver): major = old scores are not comparable, minor = new rule or
 output field, patch = fix. Bump SCRIPT_VERSION with every change to this file.
 """
@@ -24,7 +27,7 @@ from pathlib import Path
 
 import yaml
 
-SCRIPT_VERSION = "1.1.0"
+SCRIPT_VERSION = "1.2.0"
 
 ROOT = Path(__file__).resolve().parent.parent
 RUBRIC_PATH = ROOT / "rubric.yaml"
@@ -41,6 +44,8 @@ MANUFACTURERS = {"AEGS", "ANVL", "ARGO", "BANU", "CNOU", "CRUS", "DRAK", "ESPR",
 ROLE_KEYS = ["mining", "refining", "medical", "salvageRepair", "manufacturing", "defense",
              "livingQuarters", "cargo", "commuter", "engineering"]
 SLOT_TYPES = ["smallSlot", "openPad", "mediumSlot", "vehicleBay"]
+# Order the score lines are shown in: the seven role lines, then carrier, cargo and the desired lines.
+LINE_ORDER = ROLE_KEYS[:7] + ["carrier", "cargo", "commuter", "engineering"]
 GUN_RE = re.compile(r"^S[1-9]$")
 SHIP_ID_RE = re.compile(r"^(aegs|anvl|argo|banu|cnou|crus|drak|espr|gama|grin|krig|misc|orig|rsi|tmbl|xnaa)"
                         r"([SLC])([A-Z][A-Za-z0-9]*)$")
@@ -298,6 +303,25 @@ def validate_ship(path, data, rubric, report, has_layouts):
     return ok
 
 
+def carried_role_check(role, sid, sroles):
+    """Can ship `sid` (roles `sroles`) fill `role` in a layout?
+
+    Returns (None, None) when it can, ("warning", text) when it can but adds nothing,
+    or ("error", text) when the layout would fail validation.
+    """
+    if role == "cargo":
+        if not sroles.get("hauler"):
+            return "error", f"{sid} is not marked as a hauler"
+    elif role == "defense":
+        if "defense" not in sroles:
+            return "error", f"{sid} has no defense data"
+    elif role == "livingQuarters":
+        return "warning", "living quarters only score native beds; carried ship ignored"
+    elif role not in sroles or sroles.get(role) in (False, "none"):
+        return "error", f"{sid} has no {role} data"
+    return None, None
+
+
 def validate_layout(path, data, carrier, ships, report):
     ok = check_fields(path, data, ["layout", "carrier", "description", "estimated", "patch", "roles", "extraShips"],
                       ["cargoScuMethod"], report)
@@ -356,20 +380,12 @@ def validate_layout(path, data, carrier, ships, report):
             entry(f"roles.{k}", e, "source")
             sid = e.get("source") if isinstance(e, dict) else None
             if sid and sid != "native" and sid in ships:
-                sroles = ships[sid].get("roles", {}) or {}
-                if k == "cargo":
-                    if not sroles.get("hauler"):
-                        report.error(path, f"roles.{k}.source", "bad value", f"{sid} is not marked as a hauler")
-                        ok = False
-                elif k == "defense":
-                    if "defense" not in sroles:
-                        report.error(path, f"roles.{k}.source", "bad value", f"{sid} has no defense data")
-                        ok = False
-                elif k == "livingQuarters":
-                    report.warn(path, f"roles.{k}.source", "bad value", "living quarters only score native beds; carried ship ignored")
-                elif k not in sroles or sroles.get(k) in (False, "none"):
-                    report.error(path, f"roles.{k}.source", "bad value", f"{sid} has no {k} data")
+                kind, problem = carried_role_check(k, sid, ships[sid].get("roles", {}) or {})
+                if kind == "error":
+                    report.error(path, f"roles.{k}.source", "bad value", problem)
                     ok = False
+                elif kind == "warning":
+                    report.warn(path, f"roles.{k}.source", "bad value", problem)
     elif roles is not None:
         report.error(path, "roles", "bad value", "must be a mapping")
         ok = False
@@ -565,7 +581,108 @@ class Scorer:
         total = needed * tiers["needed"]["weight"] + desired * tiers["desired"]["weight"]
         return {"lines": lines, "sources": sources, "spare": sorted(set(spare)),
                 "needed": needed, "desired": desired, "total": total,
-                "cargoLeftScu": scu, "problems": problems}
+                "cargoLeftScu": scu, "problems": problems,
+                "slotsAboard": physically, "slotsRoleShips": used,
+                "slotsHangar": {k: hangar.get(k, 0) for k in SLOT_TYPES}}
+
+
+# --------------------------------------------------------------------------- editor helpers
+#
+# Used by scripts/editor.py. They read ship data held in memory and never write anything,
+# so the leaderboard can't be affected by them.
+
+def is_carrier(ship):
+    """A ship can take layouts when its hangar lists at least one slot type."""
+    hangar = ship.get("hangar") or {}
+    return isinstance(hangar, dict) and any(k in hangar for k in SLOT_TYPES)
+
+
+def native_layout():
+    """A layout with every role built in and nothing carried."""
+    return {"roles": {k: {"source": "native"} for k in ROLE_KEYS}, "extraShips": []}
+
+
+def ship_stats(rubric, ship):
+    """The facts about a ship that move its score, for the low and high case."""
+    scorer = Scorer(rubric)
+    out = {}
+    for scen in SCENARIOS:
+        n = resolve(ship.get("roles") or {}, scen)
+        hangar = resolve(ship.get("hangar") or {}, scen)
+        seats = (n.get("defense") or {}).get("seats", [])
+        best = None
+        for seat in seats:
+            sc = scorer.seat_score(seat)
+            if best is None or sc > best["score"]:
+                best = {"name": seat.get("name"), "guns": list(seat.get("guns") or []), "score": sc,
+                        "energyCapable": seat.get("energyCapable", True)}
+        cargo = n.get("cargo") or {}
+        lq = n.get("livingQuarters") or {}
+        med = n.get("medical") or {}
+        out[scen] = {
+            "cargoScu": cargo.get("scu"),
+            "maneuverability": cargo.get("maneuverability"),
+            "beds": lq.get("beds"),
+            "recSpace": lq.get("recSpace"),
+            "medicalLevel": med.get("level"),
+            "medicalBeds": med.get("beds"),
+            "bestSeat": best,
+            "hangar": {k: hangar.get(k, 0) for k in SLOT_TYPES if k in hangar},
+            "hauler": bool(n.get("hauler")),
+            "fighter": bool(n.get("fighter")),
+        }
+    return out
+
+
+def carried_value(rubric, sid, ship):
+    """What a ship adds to each role when a base with nothing built in carries it.
+
+    Roles the ship can't fill are left out. Defense is the fighter score on a base outside
+    the rubric's largeBases list; those large bases give carried fighters nothing.
+    """
+    scorer = Scorer(rubric)
+    sroles = ship.get("roles") or {}
+    out = {}
+    for cat in ROLE_KEYS:
+        kind, _ = carried_role_check(cat, sid, sroles)
+        if kind is not None:
+            continue
+        vals = {}
+        for scen in SCENARIOS:
+            c = resolve(sroles, scen)
+            if cat == "cargo":
+                m = (c.get("cargo") or {}).get("maneuverability", 0) or 0
+                vals[scen] = m * scorer.cats["cargo"]["carriedHaulerMultiplier"]
+            else:
+                vals[scen] = scorer.line(cat, {}, c, "")
+        out[cat] = vals
+    return out
+
+
+def ship_breakdown(rubric, sid, ship):
+    """Score a ship on its own (built-in roles only) and list what it adds when carried."""
+    scorer = Scorer(rubric)
+    res = {s: scorer.score_layout(sid, ship, native_layout(), {sid: ship}, s) for s in SCENARIOS}
+    return {"alone": layout_result(res), "carried": carried_value(rubric, sid, ship)}
+
+
+def layout_result(res):
+    """Low and high case results of score_layout, side by side, for the editor."""
+    lo, hi = res["low"], res["high"]
+    return {
+        "total": {"low": lo["total"], "high": hi["total"]},
+        "needed": {"low": lo["needed"], "high": hi["needed"]},
+        "desired": {"low": lo["desired"], "high": hi["desired"]},
+        "lines": {cat: {"low": lo["lines"][cat], "high": hi["lines"][cat],
+                        "sources": {"low": lo["sources"][cat], "high": hi["sources"][cat]}}
+                  for cat in LINE_ORDER},
+        "spareShips": sorted(set(lo["spare"]) | set(hi["spare"])),
+        "cargoLeftScu": {"low": lo["cargoLeftScu"], "high": hi["cargoLeftScu"]},
+        "slots": {k: {"aboard": {"low": lo["slotsAboard"][k], "high": hi["slotsAboard"][k]},
+                      "roleShips": {"low": lo["slotsRoleShips"][k], "high": hi["slotsRoleShips"][k]},
+                      "hangar": {"low": lo["slotsHangar"][k], "high": hi["slotsHangar"][k]}}
+                  for k in SLOT_TYPES},
+    }
 
 
 # --------------------------------------------------------------------------- fingerprint
@@ -582,29 +699,49 @@ def fingerprint(paths):
 
 # --------------------------------------------------------------------------- main
 
-def collect(report):
+def load_raw(report):
+    """Read rubric.yaml, every ship_data.yaml and every layout from disk, without validating.
+
+    Returns (rubric, raw_ships, raw_layouts, missing_folders):
+      raw_ships   {ship id (folder name): (path, data)}
+      raw_layouts [(path, carrier id, data)]
+    A file that isn't valid YAML is reported and left out.
+    """
     rubric = load_yaml(RUBRIC_PATH, report)
     if rubric is None:
-        return None, {}, {}, {}
-    ships, ship_paths, layouts = {}, {}, {}
+        return None, {}, [], []
+    raw_ships, raw_layouts, missing = {}, [], []
     for sd in sorted(SHIPS_DIR.glob("*/ship_data.yaml")):
-        has_layouts = any((sd.parent / "layouts").glob("*.yaml"))
         data = load_yaml(sd, report)
-        if data is None:
-            continue
-        if validate_ship(sd, data, rubric, report, has_layouts):
-            ships[sd.parent.name] = data
-            ship_paths[sd.parent.name] = sd
-        else:
-            report.error(sd, "(file)", "not graded", "fix the errors above")
+        if data is not None:
+            raw_ships[sd.parent.name] = (sd, data)
     for folder in sorted(SHIPS_DIR.iterdir()):
         if folder.is_dir() and not (folder / "ship_data.yaml").exists():
-            report.error(folder, "ship_data.yaml", "missing field", "every ship folder needs ship_data.yaml")
+            missing.append(folder)
     for lp in sorted(SHIPS_DIR.glob("*/layouts/*.yaml")):
-        carrier = lp.parent.parent.name
         data = load_yaml(lp, report)
-        if data is None:
-            continue
+        if data is not None:
+            raw_layouts.append((lp, lp.parent.parent.name, data))
+    return rubric, raw_ships, raw_layouts, missing
+
+
+def validate_all(rubric, raw_ships, raw_layouts, report, missing=()):
+    """Validate ships and layouts held in memory (from load_raw, or edited by the editor).
+
+    Returns (ships, ship_paths, layouts) holding only what passed validation.
+    """
+    ships, ship_paths, layouts = {}, {}, {}
+    carriers_with_layouts = {carrier for _, carrier, _ in raw_layouts}
+    for sid in sorted(raw_ships):
+        sd, data = raw_ships[sid]
+        if validate_ship(sd, data, rubric, report, sid in carriers_with_layouts):
+            ships[sid] = data
+            ship_paths[sid] = sd
+        else:
+            report.error(sd, "(file)", "not graded", "fix the errors above")
+    for folder in missing:
+        report.error(folder, "ship_data.yaml", "missing field", "every ship folder needs ship_data.yaml")
+    for lp, carrier, data in sorted(raw_layouts, key=lambda t: str(t[0])):
         if carrier not in ships:
             report.error(lp, "carrier", "not graded", f"{carrier} ship_data.yaml is missing or has errors")
             continue
@@ -612,7 +749,22 @@ def collect(report):
             layouts.setdefault(carrier, []).append((lp, data))
         else:
             report.error(lp, "(file)", "not graded", "fix the errors above")
+    return ships, ship_paths, layouts
+
+
+def collect(report):
+    rubric, raw_ships, raw_layouts, missing = load_raw(report)
+    if rubric is None:
+        return None, {}, {}, {}
+    ships, ship_paths, layouts = validate_all(rubric, raw_ships, raw_layouts, report, missing)
     return rubric, ships, ship_paths, layouts
+
+
+def score_both(scorer, carrier_id, carrier, layout, ships):
+    """Score one layout in the low and high case. Returns (results by case, slot problems)."""
+    res = {s: scorer.score_layout(carrier_id, carrier, layout, ships, s) for s in SCENARIOS}
+    problems = res["low"]["problems"] + [p for p in res["high"]["problems"] if p not in res["low"]["problems"]]
+    return res, problems
 
 
 def build(rubric, ships, ship_paths, layouts, report):
@@ -623,8 +775,7 @@ def build(rubric, ships, ship_paths, layouts, report):
         carrier = ships[carrier_id]
         entries = []
         for lp, layout in items:
-            res = {s: scorer.score_layout(carrier_id, carrier, layout, ships, s) for s in SCENARIOS}
-            problems = res["low"]["problems"] + [p for p in res["high"]["problems"] if p not in res["low"]["problems"]]
+            res, problems = score_both(scorer, carrier_id, carrier, layout, ships)
             for p in problems:
                 report.error(lp, "slot", "bad value", p)
             if problems:
@@ -633,7 +784,7 @@ def build(rubric, ships, ship_paths, layouts, report):
             files = [RUBRIC_PATH, script_path, ship_paths[carrier_id], lp] + \
                     [ship_paths[s] for s in referenced if s and s != "native"]
             lines = {}
-            for cat in list(ROLE_KEYS[:7]) + ["carrier", "cargo", "commuter", "engineering"]:
+            for cat in LINE_ORDER:
                 lo, hi = res["low"]["lines"][cat], res["high"]["lines"][cat]
                 src_lo, src_hi = res["low"]["sources"][cat], res["high"]["sources"][cat]
                 src = src_lo if src_lo == src_hi else f"{src_lo} / {src_hi}"

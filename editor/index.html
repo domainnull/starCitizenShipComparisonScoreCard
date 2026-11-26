@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Ship Editor</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+  <main id="app">
+    <noscript><p>The editor needs JavaScript turned on.</p></noscript>
+    <p id="loading">Loading ships…</p>
+  </main>
+  <dialog id="more" aria-labelledby="moreTitle">
+    <div class="dialogHead">
+      <h2 id="moreTitle">Ship</h2>
+      <button type="button" class="btn" id="moreClose">Close</button>
+    </div>
+    <div id="moreBody"></div>
+  </dialog>
+  <!--
+    Served by scripts/editor.py (uv run scripts/editor.py). It won't work opened from disk,
+    because saving and scoring go through that script.
+  -->
+  <script src="editor.js"></script>
+</body>
+</html>
