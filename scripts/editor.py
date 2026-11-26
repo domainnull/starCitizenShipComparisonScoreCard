@@ -53,7 +53,7 @@ SHIP_ORDER = ["id", "name", "manufacturer", "size", "cigSize", "sizeOverride", "
               "dimensions", "carrierSize", "roles", "locations", "cargoBay", "notes", "sources", "changes"]
 ROLE_ORDER = score.ROLE_KEYS + ["hauler", "fighter"]
 LAYOUT_ORDER = ["layout", "carrier", "description", "estimated", "patch", "cargoScuMethod", "roles", "extraShips"]
-ENTRY_ORDER = ["source", "ship", "location", "cargoScu", "fit", "patch", "fitsInLowCase"]
+ENTRY_ORDER = ["source", "ship", "location", "cargoScu", "fit", "patch", "fitsInLowCase", "note"]
 MANUFACTURER_NAMES = {
     "AEGS": "Aegis", "ANVL": "Anvil", "ARGO": "Argo", "BANU": "Banu", "CNOU": "Consolidated Outland",
     "CRUS": "Crusader", "DRAK": "Drake", "ESPR": "Esperia", "GAMA": "Gatac", "GRIN": "Greycat",
@@ -227,6 +227,7 @@ def rubric_info(rubric):
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
         "maneuverabilityMax": cats["cargo"]["maneuverabilityMax"],
         "largeBases": list(cats["defense"].get("largeBases") or []),
+        "noRoomScore": rubric["noRoom"]["score"],
         "tiers": {k: {"weight": v["weight"], "categories": list(v["categories"])} for k, v in rubric["tiers"].items()},
     }
 

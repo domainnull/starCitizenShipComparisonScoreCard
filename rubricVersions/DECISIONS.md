@@ -6,7 +6,7 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1
+## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles
 
 - **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts
   (1 per small slot up to 4, 2 per open pad, 2 per medium slot up to 6). The repo owner's call: room
@@ -26,8 +26,18 @@ snapshot.
 - **Shuttle is 0 or 1 and needed** (commuter). It was desired, 10 native or 5 carried (x0.5). Now
   it is a needed line worth 1 when the base has a commuter, built in or carried. A base without one
   still ranks; it just misses the point. The Ironclad command module still earns nothing.
-- **Spare ships take no cargo** (cargo). A carried ship that adds nothing over the built-in score
-  takes no cargo space, as before; `extraShips` record what else fits but don't change the score.
+- **Required roles and No room** (all needed roles). Every needed role must be filled by the base
+  itself, a carried ship or `source: noRoom`, which scores 0 in that role (owner's call: 0, not -1).
+  Leaving a role as built in when the base has nothing built in for it is a validation error. Why:
+  an empty role used to be silent, so a layout couldn't say "there's no space left for this" apart
+  from "nobody looked". The Odyssey's salvage line, which had nothing built in and no ship, is now
+  marked No room; its score didn't change.
+- **Extra bay space removed** (cargo). The old idea that a role ship adding nothing over built in
+  takes no cargo is gone: a ship in a role is aboard and its `cargoScu` always comes off the cargo.
+  No current layout had such a ship, so no score moved.
+- **Extra ships** (all). `extraShips` is its own section with the same fields as a role entry
+  (ship, location, cargo use, fit, patch) plus a `note`. Extra ships score nothing, cargo included,
+  and aren't validated: an unknown ship or location there is a warning, never an error.
 - **Estimated flag**: a layout is estimated when its file says so or the carrier's roles hold a
   range. Hangar count ranges are gone, so the Liberator's tested layout is no longer a range.
 - **Script 2.0.0** (major): no `carrier` line; layout entries carry `location` instead of `slot`;

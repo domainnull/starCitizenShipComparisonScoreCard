@@ -77,6 +77,11 @@ categories:
     native: 5
     carried: 4
 
+# A required role (the needed tier) must be filled by the base, a carried ship or "noRoom".
+# noRoom means the base has no room left for a ship that would fill it.
+noRoom:
+  score: 0
+
 carried:
   multiplier: 0.8
   rounding: down               # to a whole point
@@ -92,9 +97,15 @@ rules:
   - id: carriedRoleShip
     categories: [mining, medical, salvageRepair, manufacturing]
     text: A carried ship scores 0.8 of its own score, rounded down, with a minimum of 1 (0.5 for mining) when its own score is above 0.
+  - id: requiredRoles
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter]
+    text: Every needed role must be filled by the base itself, a carried ship or No room. A role the base has nothing built in for can't be left as built in. No room scores 0 in that role.
   - id: roleShipUsesSpace
     categories: [mining, medical, salvageRepair, defense, cargo, commuter, engineering]
-    text: A carried ship counts as a role ship only where it beats what the base has built in. Then the cargo space it takes up comes off the base's cargo. A carried ship that adds nothing takes no cargo space.
+    text: A carried ship in a role is aboard and its cargo space comes off the base's cargo. The role scores the higher of the base's own and the ship's.
+  - id: extraShips
+    categories: [all]
+    text: Extra ships fill no role and score nothing, cargo included. They hold a note on what else fits and aren't validated.
   - id: locations
     categories: [all]
     text: A carried ship goes in one of the base's locations (hangar, landing pad, cargo hold, vehicle bay). Locations have no ship count; which ships fit together is a fact of the layout.

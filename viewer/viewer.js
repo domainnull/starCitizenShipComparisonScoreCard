@@ -60,11 +60,13 @@
 
   function shipName(id) {
     if (!id || id === "native") return "Built in";
+    if (id === "noRoom") return "No room";
     var info = results && results.shipInfo && results.shipInfo[id];
     return info ? info.name : id;
   }
 
   function shipLink(id) {
+    if (!id || id === "native" || id === "noRoom") return h("span", { text: shipName(id) });
     return h("a", { href: "#/ship/" + encodeURIComponent(id), text: shipName(id) });
   }
 
@@ -270,14 +272,13 @@
     var src = line.sources || { low: line.source, high: line.source };
     var parts = [];
     if (src.low === src.high) {
-      parts.push(src.low === "native" ? "Built in" : "Carried: " + shipName(src.low));
+      parts.push(src.low === "native" || src.low === "noRoom" ? shipName(src.low) : "Carried: " + shipName(src.low));
     } else {
-      parts.push("Low case: " + (src.low === "native" ? "built in" : shipName(src.low)) +
-                 " · High case: " + (src.high === "native" ? "built in" : shipName(src.high)));
+      parts.push("Low case: " + shipName(src.low) + " · High case: " + shipName(src.high));
     }
-    var planned = role && role.source !== "native" ? role.source : null;
+    var planned = role && role.source !== "native" && role.source !== "noRoom" ? role.source : null;
     var used = src.low === planned || src.high === planned;
-    var kids = [h("div", { class: "src" }, src.low === src.high && src.low !== "native"
+    var kids = [h("div", { class: "src" }, src.low === src.high && src.low !== "native" && src.low !== "noRoom"
       ? ["Carried: ", shipLink(src.low)] : [parts.join("")])];
     if (planned) {
       var fitBits = [];
@@ -286,7 +287,7 @@
       if (role.fit) fitBits.push("Fit: " + role.fit);
       if (role.patch) fitBits.push("patch " + role.patch);
       if (role.fitsInLowCase === false) fitBits.push("may not fit, so left out of the low case");
-      if (!used) kids.push(h("div", { class: "fit", text: shipName(planned) + " is aboard for this role but adds nothing over the built-in score, so it takes no cargo space." }));
+      if (!used) kids.push(h("div", { class: "fit", text: shipName(planned) + " is aboard for this role but adds nothing over the built-in score." }));
       if (fitBits.length) kids.push(h("div", { class: "fit", text: (used ? "" : shipName(planned) + ": ") + fitBits.join(" · ") }));
     }
     return kids;
@@ -412,13 +413,13 @@
       if (e.cargoScu) bits.push(e.cargoScu + " SCU of cargo space");
       if (e.fit) bits.push("Fit: " + e.fit);
       if (e.fitsInLowCase === false) bits.push("left out of the low case");
-      return h("li", null, [shipLink(e.source), " · " + bits.join(" · ")]);
+      if (e.note) bits.push(e.note);
+      return h("li", null, [shipLink(e.source), " · " + bits.filter(Boolean).join(" · ")]);
     });
-    var spare = layout.spareShips || [];
-    out.push(h("h2", { text: "Aboard but not filling a role" }));
+    out.push(h("h2", { text: "Extra ships" }));
     out.push(h("div", { class: "card" }, [
+      h("p", { class: "meta", text: "Ships that fill no role. They score nothing; they record what else fits." }),
       extras.length ? h("ul", { class: "plain" }, extras) : h("p", { class: "meta", text: "No extra ships in this layout." }),
-      spare.length ? h("p", { class: "meta", style: "margin-top:8px", text: "Aboard but adding nothing, so taking no cargo space: " + spare.map(shipName).join(", ") + "." }) : null,
       layout.cargoLeftScu ? h("p", { class: "meta", style: "margin-top:4px", text: "Cargo left after carried ships: " + fmt(layout.cargoLeftScu) + " SCU." }) : null
     ]));
 

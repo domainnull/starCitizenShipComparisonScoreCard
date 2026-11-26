@@ -36,7 +36,7 @@ There is no server, build step or internet connection involved: the page loads
   low case and how far the high case reaches. Estimated layouts and stale results are badged.
 - **Ship page** (tap a ship): its best layout (other layouts as tabs), every role's score against its
   maximum, which ship fills it, where it goes and the cargo space it uses, its fit source and patch, the
-  rubric rules for that role, spare ships, score history across saved rubric versions, and the
+  rubric rules for that role, extra ships and their notes, score history across saved rubric versions, and the
   patch changes recorded for every ship in the layout. Tap a carried ship to see which layouts use it.
 - **Compare with**: pick an older rubric version to see each ship's old score and change. Totals
   always compare; role scores compare when the old snapshot has the same layout.
@@ -70,10 +70,13 @@ because saving and scoring go through the script.
 - **Layout**: the stats once the carried ships are aboard (cargo left, medical beds, defense, ships
   in each location) and every role's score against the nothing-carried score. **more…** next to a carried ship
   opens its full stats.
-- **Add or edit a layout**: pick built in or a carried ship for each role (the list shows what each
-  adds), its location (hangar, landing pad, cargo hold or vehicle bay; any number of ships
-  each), whether it takes cargo space and how much, the fit source and patch, and whether
-  it may not fit in the low case. Extra ships that fill no role can be added too.
+- **Add or edit a layout**: **Required roles** each need built in, a carried ship (the list shows
+  what each adds) or **No room**, which scores 0 when there's no space left for one. Built in isn't
+  offered for a role the base has nothing for. For a carried ship, pick its location (hangar,
+  landing pad, cargo hold or vehicle bay; any number of ships each), whether it takes cargo space
+  and how much, the fit source and patch, and whether it may not fit in the low case. **Optional
+  roles** (desired) can stay built in. **Extra ships** take the same fields plus a note; they score
+  nothing and aren't checked.
 - **Edit a ship**: a form for every field, with **Range** to split any value into a low and a high
   case, and **Edit as YAML** for anything the form can't show. **Record a change** adds a `changes`
   entry with its patch.
@@ -169,10 +172,12 @@ Keys are camelCase everywhere, including the results file. The viewer shows each
   `hangar`, `pad`, `cargoHold` and `vehicleBay`. A location has no ship count: which ships fit
   together is recorded by the layout and its fit sources. An optional `cargoBay` gives the floor size
   and grid SCU where ships ride on the cargo grid.
-- **Layouts**: each role says `source: native` or a carried ship id, the `location` it goes in,
-  `cargoScu` it takes up (0 unless it sits on
-  the cargo grid), an optional one-line `fit` source and the `patch`. Use `fitsInLowCase: false` for
-  a ship that may not fit at all. `extraShips` lists ships aboard that fill no role.
+- **Layouts**: each role says `source: native`, a carried ship id or `noRoom`. A carried ship also
+  gives the `location` it goes in, `cargoScu` it takes up (0 unless it sits on the cargo grid), an
+  optional one-line `fit` source and the `patch`. Use `fitsInLowCase: false` for a ship that may not
+  fit at all. Every needed role must be filled: `native` only where the base has something built
+  in, otherwise a ship or `noRoom` (scores 0). `extraShips` lists ships aboard that fill no role, with
+  the same fields plus an optional `note`; they score nothing and only raise warnings.
 - **Fit sources**, best first: the maintainer's own in-game test, then a player fit test. Note
   whether the roof or bay door was open or closed; if a player didn't say, mark it about 90%.
 - **changes**: add an entry only when something about the ship changed, with the patch it changed in.

@@ -60,6 +60,21 @@ window.scorecardResults = {
       "text": "A carried ship scores 0.8 of its own score, rounded down, with a minimum of 1 (0.5 for mining) when its own score is above 0."
     },
     {
+      "id": "requiredRoles",
+      "categories": [
+        "mining",
+        "refining",
+        "medical",
+        "salvageRepair",
+        "manufacturing",
+        "defense",
+        "livingQuarters",
+        "cargo",
+        "commuter"
+      ],
+      "text": "Every needed role must be filled by the base itself, a carried ship or No room. A role the base has nothing built in for can't be left as built in. No room scores 0 in that role."
+    },
+    {
       "id": "roleShipUsesSpace",
       "categories": [
         "mining",
@@ -70,7 +85,14 @@ window.scorecardResults = {
         "commuter",
         "engineering"
       ],
-      "text": "A carried ship counts as a role ship only where it beats what the base has built in. Then the cargo space it takes up comes off the base's cargo. A carried ship that adds nothing takes no cargo space."
+      "text": "A carried ship in a role is aboard and its cargo space comes off the base's cargo. The role scores the higher of the base's own and the ship's."
+    },
+    {
+      "id": "extraShips",
+      "categories": [
+        "all"
+      ],
+      "text": "Extra ships fill no role and score nothing, cargo included. They hold a note on what else fits and aren't validated."
     },
     {
       "id": "locations",
@@ -540,7 +562,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [],
           "cargoLeftScu": {
             "low": 576,
             "high": 576
@@ -596,7 +617,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "ca45360fbe3e338c"
+          "fingerprint": "e520861615e9af75"
         }
       ],
       "rank": 1
@@ -723,10 +744,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [
-            "anvlSTerrapinMedic",
-            "miscSGuardianMx"
-          ],
           "cargoLeftScu": {
             "low": 1374,
             "high": 1374
@@ -790,7 +807,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "aa9f2ed5edc27bde"
+          "fingerprint": "9b09ee89d993ee7a"
         }
       ],
       "rank": 2
@@ -917,10 +934,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [
-            "anvlSTerrapinMedic",
-            "miscSGuardianMx"
-          ],
           "cargoLeftScu": {
             "low": 3792,
             "high": 3792
@@ -984,7 +997,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "b61a22c66c13ff5e"
+          "fingerprint": "47d0dc4a912cad95"
         }
       ],
       "rank": 3
@@ -1111,7 +1124,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [],
           "cargoLeftScu": {
             "low": 477,
             "high": 477
@@ -1167,7 +1179,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "44f59bc754d9531b"
+          "fingerprint": "c485050885e16a32"
         }
       ],
       "rank": 4
@@ -1233,10 +1245,10 @@ window.scorecardResults = {
             "salvageRepair": {
               "low": 0,
               "high": 0,
-              "source": "native",
+              "source": "noRoom",
               "sources": {
-                "low": "native",
-                "high": "native"
+                "low": "noRoom",
+                "high": "noRoom"
               }
             },
             "manufacturing": {
@@ -1294,7 +1306,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [],
           "cargoLeftScu": {
             "low": 252,
             "high": 252
@@ -1310,7 +1321,7 @@ window.scorecardResults = {
               "source": "native"
             },
             "salvageRepair": {
-              "source": "native"
+              "source": "noRoom"
             },
             "manufacturing": {
               "source": "native"
@@ -1338,7 +1349,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "030f0993bc386f8f"
+          "fingerprint": "1b8983e7285766d1"
         }
       ],
       "rank": 5
@@ -1465,7 +1476,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [],
           "cargoLeftScu": {
             "low": 64,
             "high": 64
@@ -1514,7 +1524,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "22027558c561924a"
+          "fingerprint": "ca5d4d1e85cea8d7"
         }
       ],
       "rank": 6
@@ -1641,7 +1651,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [],
           "cargoLeftScu": {
             "low": 400,
             "high": 400
@@ -1705,7 +1714,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "fd01916eeb167fd5"
+          "fingerprint": "44bd17853a5442d8"
         }
       ],
       "rank": 7
@@ -1832,7 +1841,6 @@ window.scorecardResults = {
               }
             }
           },
-          "spareShips": [],
           "cargoLeftScu": {
             "low": 226,
             "high": 226
@@ -1888,7 +1896,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.0.0",
           "scriptVersion": "2.0.0",
-          "fingerprint": "f14f0973148703cf"
+          "fingerprint": "51fed91e6f1e2ca4"
         }
       ],
       "rank": 8
