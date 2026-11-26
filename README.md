@@ -12,10 +12,12 @@ score script ranks each carrier by its best layout.
 ```
 index.html                 leaderboard viewer; open it straight from disk, no server needed
 viewer/                    the viewer's script and styles (versioned on its own)
+editor/                    the ship data and layout editor's page (served by scripts/editor.py)
 rubric.yaml                the current rubric
 rubricVersions/            older rubrics, DECISIONS.md (changelog and reasons), results snapshots,
                            index.js (generated list of snapshots for the viewer)
 scripts/score.py           validates the data, scores every layout, writes results/leaderboard.js
+scripts/editor.py          local editor for ship data and layouts; checks and scores with score.py
 results/leaderboard.js     generated data file; don't edit by hand
 ships/<shipId>/
   ship_data.yaml           the ship's own facts: roles, guns, beds, cargo, hangar, sources, changes
@@ -45,6 +47,44 @@ There is no server, build step or internet connection involved: the page loads
 The same page works on GitHub Pages if you turn Pages on for the repo (Settings > Pages > deploy
 from the `main` branch, root folder). The viewer has its own semver in `viewer/viewer.js`
 (`VIEWER_VERSION`); ship data changes never need a viewer change.
+
+## Editing ships and layouts
+
+```
+uv run scripts/editor.py               # opens http://127.0.0.1:8765/ in your browser
+uv run scripts/editor.py --port 9000   # another port
+uv run scripts/editor.py --no-browser  # just serve it
+```
+
+The editor runs on your own computer only (127.0.0.1) and writes straight into `ships/`. It needs
+nothing beyond the PyYAML the scorer already uses. It won't work opened from disk or on a phone,
+because saving and scoring go through the script.
+
+- **Ship list**: filter by name, manufacturer, size (S, L, C) and type (carriers that take layouts,
+  ships that can be carried). **Add ship** builds the id from manufacturer, size and name.
+- **Carrier page**: the stats that move the score (cargo space and manoeuvrability, beds and rec
+  space, the strongest single gun seat, hangar slots), its layouts with their scores, **Add
+  layout**, and its score with nothing carried.
+- **Ship that can't take layouts**: all its stats and its score breakdown, both on its own and what
+  it adds to each role when carried.
+- **Layout**: the stats once the carried ships are aboard (cargo left, medical beds, defense, slots
+  used) and every role's score against the nothing-carried score. **more…** next to a carried ship
+  opens its full stats.
+- **Add or edit a layout**: pick built in or a carried ship for each role (the list shows what each
+  adds), its slot, whether it takes cargo space and how much, the fit source and patch, and whether
+  it may not fit in the low case. Extra ships that fill no role can be added too.
+- **Edit a ship**: a form for every field, with **Range** to split any value into a low and a high
+  case, and **Edit as YAML** for anything the form can't show. **Record a change** adds a `changes`
+  entry with its patch.
+
+Every edit is checked and scored by `scripts/score.py` as you type. **Save stays off while the file
+has an error, or while the change would break another file** (for example, unmarking a ship as a
+hauler that a layout uses for cargo). A save that changes nothing leaves the file untouched. Comments
+inside a saved file aren't kept, apart from its header line, and long notes may re-wrap.
+
+Saving doesn't touch `results/leaderboard.js`. The list page says when the leaderboard is out of date
+and has an **Update leaderboard** button, which runs `scripts/score.py` (the same as `scripts/run.sh`).
+Commit the YAML and the results together as usual.
 
 ## Running the script
 

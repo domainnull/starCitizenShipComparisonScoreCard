@@ -6,6 +6,22 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Script 1.2.0 / editor 1.0.0 (Nov 26 2026): ship data and layout editor
+
+- **Editor 1.0.0**: `uv run scripts/editor.py` serves `editor/` on 127.0.0.1 and writes
+  `ships/<id>/ship_data.yaml` and `ships/<id>/layouts/<name>.yaml`. It never writes `rubric.yaml`;
+  the leaderboard updates only when you press Update leaderboard. Why a local server and not a page
+  opened from disk: a page can't save into the repo, and a JavaScript copy of the rules could drift
+  from this script. The editor scores nothing itself.
+- **Script 1.2.0** (minor, no score or output change): `collect` is split into `load_raw` and
+  `validate_all` so the editor can validate ships and layouts held in memory before saving them.
+  New helpers for the editor: `carried_role_check` (the validator's rule for which ship can fill a
+  role, now shared), `score_both`, `is_carrier`, `ship_stats`, `carried_value`, `ship_breakdown`
+  (a ship scored with nothing carried) and `layout_result`. `score_layout` also returns slot counts.
+  `results/leaderboard.js` gains no fields.
+- Scores checked unchanged: the results file is identical to 1.1.0's apart from `scriptVersion`
+  and the fingerprints, which change because they include `scripts/score.py`.
+
 ## Script 1.1.0 / viewer 1.0.0 (Nov 26 2026): leaderboard viewer
 
 - **Viewer 1.0.0**: `index.html` with `viewer/viewer.js` and `viewer/viewer.css`. Leaderboard, ship
