@@ -8,20 +8,20 @@ patch: '4.5'
 roles:
   mining:
     source: drakSGolem
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Player posts (4.1-4.5, 2025); bay doors not stated, about 90%
     patch: '4.5'
   refining: {source: native}
   medical:
     source: anvlSTerrapinMedic
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Player posts (4.1-4.5, 2025); bay doors not stated, about 90%
     patch: '4.5'
   salvageRepair:
     source: rsiSSalvation
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Player posts (4.1-4.5, 2025); bay doors not stated, about 90%
     patch: '4.5'
@@ -31,14 +31,14 @@ roles:
   cargo: {source: native}
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Player posts (4.1-4.5, 2025); bay doors not stated, about 90%
     patch: '4.5'
   engineering: {source: native}
 extraShips:
 - ship: miscSGuardianMx
-  slot: smallSlot
+  location: hangar
   cargoScu: 0
   fit: 'Player post: fits at the exact height of the hangar, about 90%'
   patch: '4.5'

@@ -8,7 +8,7 @@ patch: 4.10.3
 roles:
   mining:
     source: drakSGolem
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
@@ -16,7 +16,7 @@ roles:
   medical: {source: native}
   salvageRepair:
     source: rsiSSalvation
-    slot: vehicleBay
+    location: cargoHold
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
@@ -25,13 +25,13 @@ roles:
   livingQuarters: {source: native}
   cargo:
     source: drakSGolemOx
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3

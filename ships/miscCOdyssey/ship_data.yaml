@@ -31,7 +31,7 @@ roles:
     maneuverability: {low: 1, high: 2}
   commuter: false
   engineering: false
-hangar: {smallSlot: 1, vehicleBay: 1}
+locations: [hangar, vehicleBay]
 notes:
 - Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).
 - One XS hangar slot; a separate Ursa-sized ground bay. Turret positions unpublished.

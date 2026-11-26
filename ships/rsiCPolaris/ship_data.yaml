@@ -32,7 +32,7 @@ roles:
   cargo: {scu: 576, maneuverability: 1}
   commuter: false
   engineering: false
-hangar: {smallSlot: 4, vehicleBay: 1}
+locations: [hangar, cargoHold]
 notes:
 - Hangar held a Golem, Golem OX and C8X with room for another snub; vehicle area held a Salvation off the cargo
   grid (repo owner's in-game test).

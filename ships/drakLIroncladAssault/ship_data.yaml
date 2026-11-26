@@ -28,9 +28,8 @@ roles:
   cargo: {scu: 1440, maneuverability: 0}
   commuter: false
   engineering: false
-hangar:
-  smallSlot: {low: 4, high: 5}
-  cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 1440}
+locations: [cargoHold]
+cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 1440}
 notes:
 - Ships ride in the cargo bay (40 x 21 x 7.5 m, RSI Q&A Jun 2024), so they take cargo space.
 - Default turret guns are ballistic; mounts scored as energy-capable.

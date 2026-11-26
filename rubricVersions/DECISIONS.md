@@ -6,6 +6,52 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1
+
+- **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts
+  (1 per small slot up to 4, 2 per open pad, 2 per medium slot up to 6). The repo owner's call: room
+  left is about cargo space, which each layout already records per carried ship (`cargoScu`), not
+  hangar space. The cargo line's capacity half already scores cargo left after carried ships, so a
+  separate spare-room line would count it twice; the carrier score is dropped instead (owner
+  confirmed). Why: slot counts were set up before layouts existed, and a hangar holds however many
+  ships its geometry allows, so a fixed count was a guess that penalised every role ship aboard.
+- **Slots become locations** (all carried roles). `hangar: {smallSlot: 4, ...}` in ship data is now
+  `locations: [hangar, cargoHold]`, from `hangar`, `pad`, `cargoHold` and `vehicleBay`, with no ship
+  count. Layout entries say `location:` instead of `slot:`. Which ships fit together is a fact of the
+  layout and its fit sources; the script no longer errors when a location holds "too many" ships.
+  `cargoBay` (floor size and grid SCU) moved to the top level of ship data. Mapping used: small and
+  medium slots to hangar or pad by where they are on the ship (Kraken upper platforms are pads),
+  open pads to pad, the Polaris vehicle area to cargo hold (owner's words), the Ironclads' small
+  slots to cargo hold (ships ride in the cargo bay), other vehicle bays stay vehicle bays.
+- **Shuttle is 0 or 1 and needed** (commuter). It was desired, 10 native or 5 carried (x0.5). Now
+  it is a needed line worth 1 when the base has a commuter, built in or carried. A base without one
+  still ranks; it just misses the point. The Ironclad command module still earns nothing.
+- **Spare ships take no cargo** (cargo). A carried ship that adds nothing over the built-in score
+  takes no cargo space, as before; `extraShips` record what else fits but don't change the score.
+- **Estimated flag**: a layout is estimated when its file says so or the carrier's roles hold a
+  range. Hangar count ranges are gone, so the Liberator's tested layout is no longer a range.
+- **Script 2.0.0** (major): no `carrier` line; layout entries carry `location` instead of `slot`;
+  the editor helpers return `aboard` (ships per location) instead of slot counts. **Viewer 2.0.0**
+  reads script 2.x results and still shows older snapshots' slot names. **Editor 2.0.0**: ships pick
+  their locations with checkboxes, layouts pick a location per ship with no limit.
+- The 2.0.0 rubric and its results are kept in `rubricVersions/2.0.0/`.
+
+Leaderboard, best layout, 2.0.0 then 3.0.0:
+
+| Ship | 2.0.0 | 3.0.0 |
+|---|---|---|
+| RSI Polaris | 27 (3rd) | 24.5 (1st) |
+| Aegis Idris-P | 28.5 (2nd) | 23 (2nd) |
+| Drake Kraken | 25.5-34.5 (1st) | 20-25 (3rd) |
+| Drake Ironclad Assault | 20.5-24.5 (4th) | 19-22 (4th) |
+| MISC Odyssey | 19.5-23.5 (6th) | 18-22 (5th) |
+| RSI Galaxy (Med Bay) | 18.5-23 (7th) | 17-21.5 (6th) |
+| Anvil Liberator | 22-23 (5th) | 17.5 (7th) |
+| Drake Ironclad | 13.5-16.5 (8th) | 12-14 (8th) |
+
+No base now scores lower with its role ships aboard than with nothing carried (under 2.0.0 the
+Kraken and Ironclad did).
+
 ## Script 1.2.0 / editor 1.0.0 (Nov 26 2026): ship data and layout editor
 
 - **Editor 1.0.0**: `uv run scripts/editor.py` serves `editor/` on 127.0.0.1 and writes

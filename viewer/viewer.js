@@ -12,8 +12,8 @@
 (function () {
   "use strict";
 
-  var VIEWER_VERSION = "1.0.0";
-  var SCRIPT_MAJOR_SUPPORTED = 1;   // results written by score script 1.x
+  var VIEWER_VERSION = "2.0.0";
+  var SCRIPT_MAJOR_SUPPORTED = 2;   // results written by score script 2.x
   var MAX_SNAPSHOTS = 5;
 
   var results = window.scorecardResults || null;
@@ -68,7 +68,10 @@
     return h("a", { href: "#/ship/" + encodeURIComponent(id), text: shipName(id) });
   }
 
-  var SLOT_NAMES = { smallSlot: "small slot", openPad: "open pad", mediumSlot: "medium slot", vehicleBay: "vehicle bay" };
+  // Locations (script 2.x) and the older slot names (script 1.x snapshots).
+  var LOCATION_NAMES = { hangar: "hangar", pad: "landing pad", cargoHold: "cargo hold", vehicleBay: "vehicle bay",
+    smallSlot: "small slot", openPad: "open pad", mediumSlot: "medium slot" };
+  function locName(e) { var k = e.location || e.slot; return LOCATION_NAMES[k] || k; }
   var STATUS_NAMES = { flightReady: "Flight ready", concept: "Concept" };
 
   function catName(k) { return (results.categories && results.categories[k]) || k; }
@@ -278,12 +281,12 @@
       ? ["Carried: ", shipLink(src.low)] : [parts.join("")])];
     if (planned) {
       var fitBits = [];
-      if (role.slot) fitBits.push(SLOT_NAMES[role.slot] || role.slot);
+      if (role.location || role.slot) fitBits.push(locName(role));
       if (role.cargoScu) fitBits.push(role.cargoScu + " SCU of cargo space");
       if (role.fit) fitBits.push("Fit: " + role.fit);
       if (role.patch) fitBits.push("patch " + role.patch);
       if (role.fitsInLowCase === false) fitBits.push("may not fit, so left out of the low case");
-      if (!used) kids.push(h("div", { class: "fit", text: shipName(planned) + " is aboard for this role but adds nothing over the built-in score, so its slot counts as spare room." }));
+      if (!used) kids.push(h("div", { class: "fit", text: shipName(planned) + " is aboard for this role but adds nothing over the built-in score, so it takes no cargo space." }));
       if (fitBits.length) kids.push(h("div", { class: "fit", text: (used ? "" : shipName(planned) + ": ") + fitBits.join(" · ") }));
     }
     return kids;
@@ -405,7 +408,7 @@
     out = out.concat(renderCategories(layout, wasLayout));
 
     var extras = (layout.extraShips || []).map(function (e) {
-      var bits = [SLOT_NAMES[e.slot] || e.slot];
+      var bits = [locName(e)];
       if (e.cargoScu) bits.push(e.cargoScu + " SCU of cargo space");
       if (e.fit) bits.push("Fit: " + e.fit);
       if (e.fitsInLowCase === false) bits.push("left out of the low case");
@@ -415,7 +418,7 @@
     out.push(h("h2", { text: "Aboard but not filling a role" }));
     out.push(h("div", { class: "card" }, [
       extras.length ? h("ul", { class: "plain" }, extras) : h("p", { class: "meta", text: "No extra ships in this layout." }),
-      spare.length ? h("p", { class: "meta", style: "margin-top:8px", text: "Counted as spare room: " + spare.map(shipName).join(", ") + "." }) : null,
+      spare.length ? h("p", { class: "meta", style: "margin-top:8px", text: "Aboard but adding nothing, so taking no cargo space: " + spare.map(shipName).join(", ") + "." }) : null,
       layout.cargoLeftScu ? h("p", { class: "meta", style: "margin-top:4px", text: "Cargo left after carried ships: " + fmt(layout.cargoLeftScu) + " SCU." }) : null
     ]));
 

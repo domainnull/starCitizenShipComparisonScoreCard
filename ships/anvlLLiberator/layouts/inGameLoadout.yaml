@@ -8,40 +8,40 @@ patch: 4.10.3
 roles:
   mining:
     source: drakSGolem
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
   refining: {source: native}
   medical:
     source: anvlSTerrapinMedic
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
   salvageRepair:
     source: rsiSSalvation
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
   manufacturing: {source: native}
   defense:
     source: miscSGuardianMx
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
   livingQuarters: {source: native}
   cargo:
     source: drakSGolemOx
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: Repo owner's in-game test
     patch: 4.10.3

@@ -35,11 +35,7 @@ roles:
   cargo: {scu: 3792, maneuverability: 0}
   commuter: false
   engineering: false
-hangar:
-  openPad: 4
-  mediumSlot: 2
-  smallSlot: {low: 0, high: 2}
-  vehicleBay: 1
+locations: [hangar, pad, vehicleBay, cargoHold]
 notes:
 - Four small open pads, two medium upper platforms, two internal multi-purpose hangars (sizes unpublished) and a
   Dragonfly bay. Separate rear cargo hold.

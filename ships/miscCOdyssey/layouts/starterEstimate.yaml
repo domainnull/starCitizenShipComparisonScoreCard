@@ -16,7 +16,7 @@ roles:
   cargo: {source: native}
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: hangar
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null

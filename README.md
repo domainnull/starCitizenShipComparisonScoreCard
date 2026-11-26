@@ -20,8 +20,8 @@ scripts/score.py           validates the data, scores every layout, writes resul
 scripts/editor.py          local editor for ship data and layouts; checks and scores with score.py
 results/leaderboard.js     generated data file; don't edit by hand
 ships/<shipId>/
-  ship_data.yaml           the ship's own facts: roles, guns, beds, cargo, hangar, sources, changes
-  layouts/<name>.yaml      carriers only: which ship covers each role, slot used, cargo taken, fit source
+  ship_data.yaml           the ship's own facts: roles, guns, beds, cargo, locations, sources, changes
+  layouts/<name>.yaml      carriers only: which ship covers each role, location, cargo taken, fit source
 ```
 
 Ships that only ride on other ships (Golem, Salvation, C8X…) have `ship_data.yaml` and no `layouts/`.
@@ -35,7 +35,7 @@ There is no server, build step or internet connection involved: the page loads
 - **Leaderboard**: ships ranked by the middle of their best layout's range, with a bar showing the
   low case and how far the high case reaches. Estimated layouts and stale results are badged.
 - **Ship page** (tap a ship): its best layout (other layouts as tabs), every role's score against its
-  maximum, which ship fills it, the slot and cargo space it uses, its fit source and patch, the
+  maximum, which ship fills it, where it goes and the cargo space it uses, its fit source and patch, the
   rubric rules for that role, spare ships, score history across saved rubric versions, and the
   patch changes recorded for every ship in the layout. Tap a carried ship to see which layouts use it.
 - **Compare with**: pick an older rubric version to see each ship's old score and change. Totals
@@ -63,15 +63,16 @@ because saving and scoring go through the script.
 - **Ship list**: filter by name, manufacturer, size (S, L, C) and type (carriers that take layouts,
   ships that can be carried). **Add ship** builds the id from manufacturer, size and name.
 - **Carrier page**: the stats that move the score (cargo space and manoeuvrability, beds and rec
-  space, the strongest single gun seat, hangar slots), its layouts with their scores, **Add
+  space, the strongest single gun seat, where it carries ships), its layouts with their scores, **Add
   layout**, and its score with nothing carried.
 - **Ship that can't take layouts**: all its stats and its score breakdown, both on its own and what
   it adds to each role when carried.
-- **Layout**: the stats once the carried ships are aboard (cargo left, medical beds, defense, slots
-  used) and every role's score against the nothing-carried score. **more…** next to a carried ship
+- **Layout**: the stats once the carried ships are aboard (cargo left, medical beds, defense, ships
+  in each location) and every role's score against the nothing-carried score. **more…** next to a carried ship
   opens its full stats.
 - **Add or edit a layout**: pick built in or a carried ship for each role (the list shows what each
-  adds), its slot, whether it takes cargo space and how much, the fit source and patch, and whether
+  adds), its location (hangar, landing pad, cargo hold or vehicle bay; any number of ships
+  each), whether it takes cargo space and how much, the fit source and patch, and whether
   it may not fit in the low case. Extra ships that fill no role can be added too.
 - **Edit a ship**: a form for every field, with **Range** to split any value into a low and a high
   case, and **Edit as YAML** for anything the form can't show. **Record a change** adds a `changes`
@@ -164,8 +165,12 @@ Keys are camelCase everywhere, including the results file. The viewer shows each
 
 - **Ranges**: any value can be `{low: X, high: Y}` where it rests on marketing or an estimate. The
   script scores the low case and the high case.
-- **Layouts**: each role says `source: native` or a carried ship id, the `slot` it uses
-  (`smallSlot`, `openPad`, `mediumSlot`, `vehicleBay`), `cargoScu` it takes up (0 unless it sits on
+- **Locations**: a carrier lists where it carries ships, e.g. `locations: [hangar, cargoHold]`, from
+  `hangar`, `pad`, `cargoHold` and `vehicleBay`. A location has no ship count: which ships fit
+  together is recorded by the layout and its fit sources. An optional `cargoBay` gives the floor size
+  and grid SCU where ships ride on the cargo grid.
+- **Layouts**: each role says `source: native` or a carried ship id, the `location` it goes in,
+  `cargoScu` it takes up (0 unless it sits on
   the cargo grid), an optional one-line `fit` source and the `patch`. Use `fitsInLowCase: false` for
   a ship that may not fit at all. `extraShips` lists ships aboard that fill no role.
 - **Fit sources**, best first: the maintainer's own in-game test, then a player fit test. Note

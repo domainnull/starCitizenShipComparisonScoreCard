@@ -7,20 +7,20 @@ patch: null
 roles:
   mining:
     source: drakSGolem
-    slot: mediumSlot
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
   refining: {source: native}
   medical:
     source: anvlSTerrapinMedic
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
   salvageRepair:
     source: rsiSSalvation
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
@@ -30,14 +30,14 @@ roles:
   cargo: {source: native}
   commuter:
     source: anvlSC8x
-    slot: openPad
+    location: pad
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
   engineering: {source: native}
 extraShips:
 - ship: miscSGuardianMx
-  slot: mediumSlot
+  location: pad
   cargoScu: 0
   fit: 'Estimated: concept ship, sizes unpublished'
   patch: null

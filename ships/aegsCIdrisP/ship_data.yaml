@@ -48,7 +48,7 @@ roles:
   cargo: {scu: 1374, maneuverability: 0}
   commuter: false
   engineering: false
-hangar: {smallSlot: 8}
+locations: [hangar]
 notes:
 - 'Main bay has held eight small ships at once (player posts, 4.1-4.5, doors not stated, ~90%). Belly bay not counted:
   ships fall out when it opens.'

@@ -10,20 +10,20 @@ cargoScuMethod: 'estimate: ship floor area (L x W from game data) as a share of 
 roles:
   mining:
     source: drakSGolem
-    slot: smallSlot
+    location: cargoHold
     cargoScu: 284
     fit: Player post with Golem OX, Salvation and L-22 aboard, roof closed (stated)
     patch: '4.8'
   refining: {source: native}
   medical:
     source: anvlSTerrapinMedic
-    slot: smallSlot
+    location: cargoHold
     cargoScu: 864
     fit: 'Fit-test video (Assault bay, same room): two fit, roof closed (stated)'
     patch: '4.8'
   salvageRepair:
     source: rsiSSalvation
-    slot: smallSlot
+    location: cargoHold
     cargoScu: 323
     fit: Player post with Golem, Golem OX and L-22 aboard, roof closed (stated)
     patch: '4.8'
@@ -33,7 +33,7 @@ roles:
   cargo: {source: native}
   commuter:
     source: anvlSC8x
-    slot: smallSlot
+    location: cargoHold
     cargoScu: 503
     fit: Repo owner's word that a C8 fits; roof not stated
     patch: 4.10.3
