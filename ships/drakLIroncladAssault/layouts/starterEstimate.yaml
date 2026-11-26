@@ -11,20 +11,15 @@ roles:
   mining:
     source: drakSGolem
     location: cargoHold
-    cargoScu: 186
+    cargoScu: 250
     fit: 'Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%'
     patch: '4.8'
   refining: {source: native}
-  medical:
-    source: anvlSTerrapinMedic
-    location: cargoHold
-    cargoScu: 566
-    fit: 'Fit-test video: two fit, roof closed (stated)'
-    patch: '4.8'
+  medical: {source: noRoom}
   salvageRepair:
     source: rsiSSalvation
     location: cargoHold
-    cargoScu: 211
+    cargoScu: 200
     fit: 'Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%'
     patch: '4.8'
   manufacturing: {source: native}
@@ -33,13 +28,13 @@ roles:
   cargo:
     source: drakSGolemOx
     location: cargoHold
-    cargoScu: 186
+    cargoScu: 300
     fit: 'Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem''s'
     patch: '4.8'
   commuter:
     source: anvlSC8x
     location: cargoHold
-    cargoScu: 0
+    cargoScu: 150
     fit: 'Fit-test video: a C8R (same hull) in the side space, roof not stated, about 90%'
     patch: '4.8'
   exploration: {source: native}

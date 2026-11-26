@@ -24,13 +24,12 @@ roles:
     - name: Ventral remote turret
       guns: [S3]
   livingQuarters: {beds: 2, recSpace: true}
-  cargo: {scu: 400, maneuverability: 1}
+  cargo: {scu: 800, maneuverability: 1}
   commuter: false
   exploration: {radarSize: 2, level: none}
 locations: [hangar, pad]
 notes:
-- Internal garage plus side bays (side bays hold one or two small ships, estimate) and three exterior pads (two
-  top, one front).
+- Internal garage plus side bays (side bays hold one or two small ships, estimate) and three exterior pads (two top, one front).
 - Garage repairs, refuels and rearms carried ships; pads had no services in 4.10.3.
 - Remote S3 turret gun counts not recorded; they don't affect the best seat.
 - Cargo manoeuvrability is a judgement score.

@@ -1109,30 +1109,30 @@ window.scorecardResults = {
       "rank": 3
     },
     {
-      "id": "drakLIroncladAssault",
-      "name": "Drake Ironclad Assault",
-      "manufacturer": "DRAK",
+      "id": "anvlLLiberator",
+      "name": "Anvil Liberator",
+      "manufacturer": "ANVL",
       "size": "L",
       "status": "flightReady",
-      "bestLayout": "starterEstimate",
+      "bestLayout": "inGameLoadout",
       "total": {
-        "low": 25.5,
-        "high": 28.5
+        "low": 25,
+        "high": 25
       },
       "layouts": [
         {
-          "layout": "starterEstimate",
-          "file": "ships/drakLIroncladAssault/layouts/starterEstimate.yaml",
-          "description": "Starter layout ported from the scorecard doc (rev 73). Each ship has fit in player tests, but not all four together. Cargo taken is an estimate.",
-          "estimated": true,
-          "patch": "4.8",
+          "layout": "inGameLoadout",
+          "file": "ships/anvlLLiberator/layouts/inGameLoadout.yaml",
+          "description": "The tested Liberator loadout: C8X, Golem, Golem OX and Salvation inside; Guardian MX and Terrapin Medic on the top pads. Front pad and internal side bays free.",
+          "estimated": false,
+          "patch": "4.10.3",
           "total": {
-            "low": 25.5,
-            "high": 28.5
+            "low": 25,
+            "high": 25
           },
           "needed": {
-            "low": 25.5,
-            "high": 28.5
+            "low": 25,
+            "high": 25
           },
           "desired": {
             "low": 0,
@@ -1149,7 +1149,7 @@ window.scorecardResults = {
               }
             },
             "refining": {
-              "low": 0,
+              "low": 1,
               "high": 1,
               "source": "native",
               "sources": {
@@ -1167,17 +1167,17 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 2,
-              "high": 2,
-              "source": "rsiSSalvation",
+              "low": 3,
+              "high": 3,
+              "source": "drakSVulture",
               "sources": {
-                "low": "rsiSSalvation",
-                "high": "rsiSSalvation"
+                "low": "drakSVulture",
+                "high": "drakSVulture"
               }
             },
             "manufacturing": {
-              "low": 2,
-              "high": 4,
+              "low": 1,
+              "high": 1,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1185,17 +1185,17 @@ window.scorecardResults = {
               }
             },
             "defense": {
-              "low": 4,
-              "high": 4,
-              "source": "native",
+              "low": 3.5,
+              "high": 3.5,
+              "source": "miscSGuardianMx",
               "sources": {
-                "low": "native",
-                "high": "native"
+                "low": "miscSGuardianMx",
+                "high": "miscSGuardianMx"
               }
             },
             "livingQuarters": {
-              "low": 5,
-              "high": 5,
+              "low": 3,
+              "high": 3,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1212,8 +1212,8 @@ window.scorecardResults = {
               }
             },
             "cargoCapacity": {
-              "low": 1.5,
-              "high": 1.5,
+              "low": 3,
+              "high": 3,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1230,8 +1230,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 2,
-              "high": 2,
+              "low": 1.5,
+              "high": 1.5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1249,56 +1249,60 @@ window.scorecardResults = {
             }
           },
           "cargoLeftScu": {
-            "low": 291,
-            "high": 291
+            "low": 800,
+            "high": 800
           },
           "roles": {
             "mining": {
               "source": "drakSGolem",
-              "location": "cargoHold",
-              "cargoScu": 186,
-              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
-              "patch": "4.8"
+              "location": "hangar",
+              "cargoScu": 0,
+              "fit": "Repo owner's in-game test",
+              "patch": "4.10.3"
             },
             "refining": {
               "source": "native"
             },
             "medical": {
               "source": "anvlSTerrapinMedic",
-              "location": "cargoHold",
-              "cargoScu": 566,
-              "fit": "Fit-test video: two fit, roof closed (stated)",
-              "patch": "4.8"
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Repo owner's in-game test",
+              "patch": "4.10.3"
             },
             "salvageRepair": {
-              "source": "rsiSSalvation",
-              "location": "cargoHold",
-              "cargoScu": 211,
-              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
-              "patch": "4.8"
+              "source": "drakSVulture",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Repo owner's in-game test",
+              "patch": "4.10.3"
             },
             "manufacturing": {
               "source": "native"
             },
             "defense": {
-              "source": "native"
+              "source": "miscSGuardianMx",
+              "location": "pad",
+              "cargoScu": 0,
+              "fit": "Repo owner's in-game test",
+              "patch": "4.10.3"
             },
             "livingQuarters": {
               "source": "native"
             },
             "cargo": {
               "source": "drakSGolemOx",
-              "location": "cargoHold",
-              "cargoScu": 186,
-              "fit": "Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem's",
-              "patch": "4.8"
+              "location": "hangar",
+              "cargoScu": 0,
+              "fit": "Repo owner's in-game test",
+              "patch": "4.10.3"
             },
             "commuter": {
               "source": "anvlSC8x",
-              "location": "cargoHold",
+              "location": "hangar",
               "cargoScu": 0,
-              "fit": "Fit-test video: a C8R (same hull) in the side space, roof not stated, about 90%",
-              "patch": "4.8"
+              "fit": "Repo owner's in-game test",
+              "patch": "4.10.3"
             },
             "exploration": {
               "source": "native"
@@ -1307,7 +1311,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "dcfe4507ce80df9e"
+          "fingerprint": "97abcdc711ee7d55"
         }
       ],
       "rank": 4
@@ -1501,30 +1505,30 @@ window.scorecardResults = {
       "rank": 5
     },
     {
-      "id": "anvlLLiberator",
-      "name": "Anvil Liberator",
-      "manufacturer": "ANVL",
+      "id": "drakLIroncladAssault",
+      "name": "Drake Ironclad Assault",
+      "manufacturer": "DRAK",
       "size": "L",
       "status": "flightReady",
-      "bestLayout": "inGameLoadout",
+      "bestLayout": "starterEstimate",
       "total": {
         "low": 23,
-        "high": 23
+        "high": 26
       },
       "layouts": [
         {
-          "layout": "inGameLoadout",
-          "file": "ships/anvlLLiberator/layouts/inGameLoadout.yaml",
-          "description": "The tested Liberator loadout: C8X, Golem, Golem OX and Salvation inside; Guardian MX and Terrapin Medic on the top pads. Front pad and internal side bays free.",
-          "estimated": false,
-          "patch": "4.10.3",
+          "layout": "starterEstimate",
+          "file": "ships/drakLIroncladAssault/layouts/starterEstimate.yaml",
+          "description": "Starter layout ported from the scorecard doc (rev 73). Each ship has fit in player tests, but not all four together. Cargo taken is an estimate.",
+          "estimated": true,
+          "patch": "4.8",
           "total": {
             "low": 23,
-            "high": 23
+            "high": 26
           },
           "needed": {
             "low": 23,
-            "high": 23
+            "high": 26
           },
           "desired": {
             "low": 0,
@@ -1541,7 +1545,7 @@ window.scorecardResults = {
               }
             },
             "refining": {
-              "low": 1,
+              "low": 0,
               "high": 1,
               "source": "native",
               "sources": {
@@ -1550,12 +1554,12 @@ window.scorecardResults = {
               }
             },
             "medical": {
-              "low": 3,
-              "high": 3,
-              "source": "anvlSTerrapinMedic",
+              "low": 0,
+              "high": 0,
+              "source": "noRoom",
               "sources": {
-                "low": "anvlSTerrapinMedic",
-                "high": "anvlSTerrapinMedic"
+                "low": "noRoom",
+                "high": "noRoom"
               }
             },
             "salvageRepair": {
@@ -1568,8 +1572,8 @@ window.scorecardResults = {
               }
             },
             "manufacturing": {
-              "low": 1,
-              "high": 1,
+              "low": 2,
+              "high": 4,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1577,17 +1581,17 @@ window.scorecardResults = {
               }
             },
             "defense": {
-              "low": 3.5,
-              "high": 3.5,
-              "source": "miscSGuardianMx",
+              "low": 4,
+              "high": 4,
+              "source": "native",
               "sources": {
-                "low": "miscSGuardianMx",
-                "high": "miscSGuardianMx"
+                "low": "native",
+                "high": "native"
               }
             },
             "livingQuarters": {
-              "low": 3,
-              "high": 3,
+              "low": 5,
+              "high": 5,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1622,8 +1626,8 @@ window.scorecardResults = {
               }
             },
             "exploration": {
-              "low": 1.5,
-              "high": 1.5,
+              "low": 2,
+              "high": 2,
               "source": "native",
               "sources": {
                 "low": "native",
@@ -1641,60 +1645,52 @@ window.scorecardResults = {
             }
           },
           "cargoLeftScu": {
-            "low": 400,
-            "high": 400
+            "low": 540,
+            "high": 540
           },
           "roles": {
             "mining": {
               "source": "drakSGolem",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Repo owner's in-game test",
-              "patch": "4.10.3"
+              "location": "cargoHold",
+              "cargoScu": 250,
+              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
+              "patch": "4.8"
             },
             "refining": {
               "source": "native"
             },
             "medical": {
-              "source": "anvlSTerrapinMedic",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Repo owner's in-game test",
-              "patch": "4.10.3"
+              "source": "noRoom"
             },
             "salvageRepair": {
               "source": "rsiSSalvation",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Repo owner's in-game test",
-              "patch": "4.10.3"
+              "location": "cargoHold",
+              "cargoScu": 200,
+              "fit": "Player comment: Golem, Salvation, Fury and Ursa together; variant and roof not stated, about 90%",
+              "patch": "4.8"
             },
             "manufacturing": {
               "source": "native"
             },
             "defense": {
-              "source": "miscSGuardianMx",
-              "location": "pad",
-              "cargoScu": 0,
-              "fit": "Repo owner's in-game test",
-              "patch": "4.10.3"
+              "source": "native"
             },
             "livingQuarters": {
               "source": "native"
             },
             "cargo": {
               "source": "drakSGolemOx",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Repo owner's in-game test",
-              "patch": "4.10.3"
+              "location": "cargoHold",
+              "cargoScu": 300,
+              "fit": "Estimated: same frame as the Golem, which a player reports fits here; cargo taken estimated as the Golem's",
+              "patch": "4.8"
             },
             "commuter": {
               "source": "anvlSC8x",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Repo owner's in-game test",
-              "patch": "4.10.3"
+              "location": "cargoHold",
+              "cargoScu": 150,
+              "fit": "Fit-test video: a C8R (same hull) in the side space, roof not stated, about 90%",
+              "patch": "4.8"
             },
             "exploration": {
               "source": "native"
@@ -1703,7 +1699,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.1.0",
           "scriptVersion": "2.1.0",
-          "fingerprint": "061089474371e087"
+          "fingerprint": "5e3a1366d1f88318"
         }
       ],
       "rank": 6
