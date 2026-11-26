@@ -30,11 +30,12 @@ roles:
     scu: 252
     maneuverability: {low: 1, high: 2}
   commuter: false
-  engineering: false
+  exploration: explorer
 locations: [hangar, vehicleBay]
 notes:
 - Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).
 - One XS hangar slot; a separate Ursa-sized ground bay. Turret positions unpublished.
+- Marketed as a long-range explorer, so exploration is scored at the explorer level (placeholder role).
 sources:
 - https://starcitizen.tools/Odyssey
 changes: []

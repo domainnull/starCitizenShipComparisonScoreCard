@@ -76,8 +76,9 @@
     return { hangar: "hangar", pad: "landing pad", cargoHold: "cargo hold", vehicleBay: "vehicle bay" }[s] || s;
   }
   function locTitle(s) { var n = locName(s); return n.charAt(0).toUpperCase() + n.slice(1); }
-  function shipName(id) { return id === "noRoom" ? "No room" : byId[id] ? (byId[id].data.name || id) : id; }
-  function isShip(src) { return !!src && src !== "native" && src !== "noRoom"; }
+  function shipName(id) { return id === "noRoom" ? "No room" : id === "experimental" ? "Experimental" : byId[id] ? (byId[id].data.name || id) : id; }
+  function isShip(src) { return !!src && src !== "native" && src !== "noRoom" && src !== "experimental"; }
+  function builtInOnly(k) { return k === "livingQuarters"; }
   function isRequired(k) { return R.tiers.needed.categories.indexOf(k) >= 0; }
   function go(hash) { location.hash = hash; }
   function readPref(k, d) { try { var v = sessionStorage.getItem("editor." + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
@@ -540,6 +541,9 @@
         who = h("span", { class: "meta", text: "not a role: cargo left after role ships, " + fmtR(score.cargoLeftScu) + " SCU" });
       } else if (e && e.source === "noRoom") {
         who = h("span", { class: "meta", text: "No room (scores " + num(R.noRoomScore) + ")" });
+      } else if (e && e.source === "experimental") {
+        who = h("div", null, [h("span", { text: "Experimental " + num(e.score) + " / " + R.categories[cat].max }),
+          h("div", { class: "meta", text: "counts in the high case only" }), e.note ? h("div", { class: "meta", text: e.note }) : null].filter(Boolean));
       } else if (e && isShip(e.source)) {
         var bits = [h("span", { text: shipName(e.source) + " " }), moreLink(e.source)];
         var meta = [locName(e.location), e.cargoScu ? e.cargoScu + " SCU of cargo" : null, e.fitsInLowCase === false ? "may not fit (low case)" : null];
@@ -701,7 +705,7 @@
     mining: "none", refining: "none", manufacturing: "none",
     medical: { level: "none", beds: 0 }, salvageRepair: { level: "none", repair: "none" },
     defense: { seats: [] }, livingQuarters: { beds: 0, recSpace: false }, cargo: { scu: 0, maneuverability: 0 },
-    commuter: false, engineering: false, hauler: true, fighter: true,
+    commuter: false, exploration: "none", hauler: true, fighter: true,
   };
 
   function idSuffix(name, maker) {
@@ -742,7 +746,7 @@
       [["Ships", "#/"], [s.data.name || id, "#/ship/" + encodeURIComponent(id)], ["Edit"]]));
     app.appendChild(h("h1", { text: isNew ? "Add ship" : "Edit " + (s.data.name || id) }));
     app.appendChild(h("p", { class: "meta", text: isNew
-      ? "Saved to ships/<id>/ship_data.yaml. A ship that only rides on others needs just the roles it fills; a carrier needs every role from mining to engineering before it can take a layout."
+      ? "Saved to ships/<id>/ship_data.yaml. A ship that only rides on others needs just the roles it fills; a carrier needs every role from mining to exploration before it can take a layout."
       : "Saved to " + s.file + ". Comments inside the file other than the header line are not kept." }));
 
     var modeBar = h("div", { class: "toolbar" });
@@ -874,7 +878,7 @@
         inner.innerHTML = "";
         if (!(k in roles)) return;
         var p = ["roles", k];
-        if (k === "mining" || k === "refining" || k === "manufacturing") {
+        if (k === "mining" || k === "refining" || k === "manufacturing" || k === "exploration") {
           inner.appendChild(row("Level", bind(p, selectInput(R.categories[k].levels))));
         } else if (k === "medical") {
           inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.medical.levels))));
@@ -892,8 +896,8 @@
           inner.appendChild(row("Cargo (SCU)", bind(p.concat("scu"), numberInput(false))));
           inner.appendChild(row("Manoeuvrability", bind(p.concat("maneuverability"), numberInput(false)), "0-" + R.maneuverabilityMax + ", judgement"));
         } else {
-          inner.appendChild(row(k === "commuter" ? "Native shuttle" : k === "engineering" ? "Native engineering ship" : title,
-            bind(p, boolInput(k === "commuter" || k === "engineering" ? "built in" : "yes"))));
+          inner.appendChild(row(k === "commuter" ? "Native shuttle" : title,
+            bind(p, boolInput(k === "commuter" ? "built in" : "yes"))));
         }
       }
       drawInner();
@@ -1158,9 +1162,11 @@
           if (nativeEmpty && current === "native") first.unshift(h("option", { value: "", text: "Choose…" }));
           first.push(h("option", { value: "noRoom", text: "No room (scores " + num(R.noRoomScore) + ")" }));
         }
+        if (!builtInOnly(k)) first.push(h("option", { value: "experimental", text: "Experimental (set a score)" }));
         var sel = h("select", { "aria-label": catName(k) + " source", onchange: function () {
           if (sel.value === "native" || sel.value === "") draft.roles[k] = { source: "native" };
           else if (sel.value === "noRoom") draft.roles[k] = { source: "noRoom" };
+          else if (sel.value === "experimental") draft.roles[k] = { source: "experimental", score: Math.min(3, R.categories[k].max) };
           else {
             var prev = draft.roles[k];
             draft.roles[k] = { source: sel.value, location: prev.location || defaultLocation(sel.value), cargoScu: prev.cargoScu || 0,
@@ -1176,14 +1182,28 @@
         sel.value = required && nativeEmpty && current === "native" ? "" : (current || "native");
         var head = [h("strong", { text: catName(k) }), sel];
         if (isShip(current)) head.push(moreLink(current));
-        if (k === "livingQuarters") head.push(h("span", { class: "meta", text: "carried ships don't add beds" }));
+        if (builtInOnly(k)) head.push(h("span", { class: "meta", text: "built in only: no ship can fill this" }));
         else if (!opts.length) head.push(h("span", { class: "meta", text: "no carried ship has this role yet" }));
         if (required && nativeEmpty && current === "native") head.push(h("span", { class: "meta", text: "needs a choice: the base has nothing built in" }));
         block.appendChild(h("div", { class: "roleHead" }, head));
         if (isShip(current)) block.appendChild(entryEditor(e, "source", k, draw));
+        if (current === "experimental") block.appendChild(experimentalEditor(e, k));
       }
       draw();
       return block;
+    }
+
+    function experimentalEditor(e, k) {
+      var wrap = h("div", { class: "roleBody" });
+      var max = R.categories[k].max;
+      var out = h("span", { class: "rangeLbl", text: num(e.score) + " / " + max });
+      var slider = h("input", { type: "range", min: "0", max: String(max), step: max > 1 ? "0.5" : "1", value: String(e.score),
+        "aria-label": catName(k) + " experimental score", oninput: function () {
+          e.score = Number(slider.value); out.textContent = num(e.score) + " / " + max; changed(); } });
+      wrap.appendChild(row("Experimental score", [slider, out], "Your own score for a capability no ship has yet. Counts in the high case only."));
+      wrap.appendChild(row("Note", textInput("What this stands for", 40)(e.note, function (x) {
+        if (x) e.note = x; else delete e.note; changed(); })));
+      return wrap;
     }
 
     function defaultLocation(sid) {

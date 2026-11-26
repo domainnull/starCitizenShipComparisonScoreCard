@@ -20,5 +20,5 @@ roles:
     cargoScu: 0
     fit: 'Estimated: concept ship, sizes unpublished'
     patch: null
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips: []

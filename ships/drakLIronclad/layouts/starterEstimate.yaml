@@ -42,5 +42,5 @@ roles:
     cargoScu: 503
     fit: Repo owner's word that a C8 fits; roof not stated
     patch: 4.10.3
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips: []

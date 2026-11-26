@@ -42,7 +42,7 @@ SCENARIOS = ("low", "high")
 MANUFACTURERS = {"AEGS", "ANVL", "ARGO", "BANU", "CNOU", "CRUS", "DRAK", "ESPR", "GAMA",
                  "GRIN", "KRIG", "MISC", "ORIG", "RSI", "TMBL", "XNAA"}
 ROLE_KEYS = ["mining", "refining", "medical", "salvageRepair", "manufacturing", "defense",
-             "livingQuarters", "cargo", "commuter", "engineering"]
+             "livingQuarters", "cargo", "commuter", "exploration"]
 # Where a carried ship can go. A location holds any number of ships; the layout says which fit together.
 LOCATIONS = ["hangar", "pad", "cargoHold", "vehicleBay"]
 # Order the score lines are shown in.
@@ -51,6 +51,10 @@ LINE_ORDER = [k for k in ROLE_KEYS]
 LINE_ORDER.insert(LINE_ORDER.index("cargo") + 1, "cargoCapacity")
 # A required role's source when the base has no room left for a ship that would fill it.
 NO_ROOM = "noRoom"
+# A role filled by a capability no ship has yet, with a score the maintainer sets.
+EXPERIMENTAL = "experimental"
+# Roles only the base itself can fill: no carried ship and no experimental score.
+BUILT_IN_ONLY = ["livingQuarters"]
 GUN_RE = re.compile(r"^S[1-9]$")
 SHIP_ID_RE = re.compile(r"^(aegs|anvl|argo|banu|cnou|crus|drak|espr|gama|grin|krig|misc|orig|rsi|tmbl|xnaa)"
                         r"([SLC])([A-Z][A-Za-z0-9]*)$")
@@ -176,7 +180,7 @@ def validate_roles(path, roles, rubric, report, full):
             report.warn(path, f"roles.{k}", "extra field", "ignored, not graded")
     v = roles
     f = "roles."
-    for key in ("mining", "refining", "manufacturing"):
+    for key in ("mining", "refining", "manufacturing", "exploration"):
         if key in v:
             ok &= validate_value(path, f + key, v[key], level_check(cats[key]["levels"]), report)
     if "medical" in v:
@@ -226,7 +230,7 @@ def validate_roles(path, roles, rubric, report, full):
             if x["scu"] < 0 or not 0 <= x["maneuverability"] <= mmax:
                 return f"scu must be 0 or more and maneuverability 0-{mmax}"
         ok &= validate_value(path, f + "cargo", v["cargo"], car, report)
-    for key in ("commuter", "engineering", "hauler", "fighter"):
+    for key in ("commuter", "hauler", "fighter"):
         if key in v:
             ok &= validate_value(path, f + key, v[key], lambda x: None if isinstance(x, bool) else "must be true or false", report)
     return ok
@@ -325,8 +329,8 @@ def carried_role_check(role, sid, sroles):
     elif role == "defense":
         if "defense" not in sroles:
             return "error", f"{sid} has no defense data"
-    elif role == "livingQuarters":
-        return "warning", "living quarters only score native beds; carried ship ignored"
+    elif role in BUILT_IN_ONLY:
+        return "error", "living quarters are built in only; no ship can fill them"
     elif role not in sroles or sroles.get(role) in (False, "none"):
         return "error", f"{sid} has no {role} data"
     return None, None
@@ -363,6 +367,10 @@ def validate_layout(path, data, carrier, ships, report, rubric):
         if e.get(ship_key) in ("native", NO_ROOM) and ship_key == "source":
             check_fields(path, e, ["source"], [], report, where)
             return
+        if e.get(ship_key) == EXPERIMENTAL and ship_key == "source":
+            if not check_fields(path, e, ["source", "score"], ["note"], report, where):
+                ok = False
+            return
         if not check_fields(path, e, [ship_key, "location", "cargoScu"], ["fit", "patch", "fitsInLowCase"], report, where):
             ok = False
         sid = e.get(ship_key)
@@ -392,7 +400,7 @@ def validate_layout(path, data, carrier, ships, report, rubric):
         for k in ROLE_KEYS:
             if k not in roles:
                 report.error(path, f"roles.{k}", "missing field",
-                             f"say native, a carried ship id{' or ' + NO_ROOM if k in required else ''}")
+                             f"say native, a carried ship id, {EXPERIMENTAL}{' or ' + NO_ROOM if k in required else ''}")
                 ok = False
         for k, e in roles.items():
             if k not in ROLE_KEYS:
@@ -407,12 +415,22 @@ def validate_layout(path, data, carrier, ships, report, rubric):
             if sid == NO_ROOM and k not in required:
                 report.error(path, f"roles.{k}.source", "bad value", f"{NO_ROOM} is only for required roles; use native")
                 ok = False
+            if sid == EXPERIMENTAL:
+                if k in BUILT_IN_ONLY:
+                    report.error(path, f"roles.{k}.source", "bad value", f"{k} is built in only; no experimental score")
+                    ok = False
+                else:
+                    top = rubric["categories"][k]["max"]
+                    sc = e.get("score")
+                    if "score" in e and (isinstance(sc, bool) or not isinstance(sc, (int, float)) or not 0 <= sc <= top):
+                        report.error(path, f"roles.{k}.score", "bad value", f"must be a number from 0 to {top}")
+                        ok = False
             if sid == "native" and k in required and carrier in ships and \
                     all(native[s][k] == 0 for s in SCENARIOS):
                 report.error(path, f"roles.{k}.source", "missing field",
-                             f"required role: the base has none built in, so pick a carried ship or {NO_ROOM}")
+                             f"required role: the base has none built in, so pick a carried ship, {EXPERIMENTAL} or {NO_ROOM}")
                 ok = False
-            if sid and sid != "native" and sid in ships:
+            if sid and sid not in ("native", NO_ROOM, EXPERIMENTAL) and sid in ships:
                 kind, problem = carried_role_check(k, sid, ships[sid].get("roles", {}) or {})
                 if kind == "error":
                     report.error(path, f"roles.{k}.source", "bad value", problem)
@@ -535,11 +553,11 @@ class Scorer:
             s = max(s, cfg["carried"])
         return s
 
-    def engineering(self, n, c):
-        cfg = self.cats["engineering"]
-        s = cfg["native"] if n.get("engineering") else 0
-        if c and c.get("engineering"):
-            s = max(s, cfg["carried"])
+    def exploration(self, n, c):
+        lv = self.cats["exploration"]["levels"]
+        s = lv[n.get("exploration", "none")]
+        if c:
+            s = max(s, lv[c.get("exploration", "none")])
         return s
 
     def line(self, cat, n, c, carrier_id):
@@ -566,6 +584,14 @@ class Scorer:
             if sid == NO_ROOM:
                 lines[cat] = self.r["noRoom"]["score"]
                 sources[cat] = NO_ROOM
+                continue
+            if sid == EXPERIMENTAL:
+                # Counts only in the high case: the low case keeps what the base has today.
+                without = self.line(cat, n, None, carrier_id)
+                if scenario in self.r["experimental"]["countsIn"] and e["score"] > without:
+                    lines[cat], sources[cat] = e["score"], EXPERIMENTAL
+                else:
+                    lines[cat], sources[cat] = without, "native"
                 continue
             if sid == "native" or not aboard(e):
                 lines[cat] = self.line(cat, n, None, carrier_id)
@@ -791,7 +817,8 @@ def build(rubric, ships, ship_paths, layouts, report):
                 "layout": layout["layout"],
                 "file": str(lp.relative_to(ROOT)),
                 "description": layout["description"],
-                "estimated": bool(layout["estimated"]) or has_range(carrier["roles"]),
+                "estimated": bool(layout["estimated"]) or has_range(carrier["roles"]) or
+                             any(isinstance(e, dict) and e.get("source") == EXPERIMENTAL for e in layout["roles"].values()),
                 "patch": layout["patch"],
                 "total": {"low": res["low"]["total"], "high": res["high"]["total"]},
                 "needed": {"low": res["low"]["needed"], "high": res["high"]["needed"]},
@@ -843,6 +870,11 @@ def layout_entry(e, ship_key):
         return {"source": "native"}
     if e.get(ship_key) == NO_ROOM:
         return {"source": NO_ROOM}
+    if e.get(ship_key) == EXPERIMENTAL:
+        out = {"source": EXPERIMENTAL, "score": e["score"]}
+        if e.get("note"):
+            out["note"] = e["note"]
+        return out
     out = {"source": e[ship_key], "location": e["location"], "cargoScu": e["cargoScu"],
            "fit": e.get("fit"), "patch": e.get("patch")}
     if "fitsInLowCase" in e:

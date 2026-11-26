@@ -6,7 +6,7 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships
+## Rubric 3.0.0 / script 2.0.0 / editor 2.0.0 / viewer 2.0.0 (Nov 26 2026): no carrier score, locations, commuter 0 or 1, required roles, cargo split, full-value carried ships, experimental roles, exploration
 
 - **Carrier category removed** (carrier, cargo). Spare room was scored from hangar slot counts
   (1 per small slot up to 4, 2 per open pad, 2 per medium slot up to 6). The repo owner's call: room
@@ -57,6 +57,24 @@ snapshot.
   built in, 3 carried), engineering (5 built in, 4 carried), defense (a carried fighter scores
   2 x its gun - 0.5 and nothing on large bases, built in gets +1 there), living quarters (carried
   beds don't count). Shuttle is 1 either way.
+- **Hold-size scale approved** by the owner as proposed. Hauler scoring stays on manoeuvrability
+  for now; a future score from max cargo, container size and ease of loading is issue #7 (the
+  Golem OX takes 32 SCU containers where the Hull A, with the same 64 SCU, can't).
+- **Experimental option** (every role but living quarters). `source: experimental` with a `score`
+  from 0 to the role's max, set by the owner (a slider in the editor), and an optional `note`, for a
+  capability no ship has yet (owner's ask). It counts only in the high case, like other marketing
+  promises, so the low case is never self-graded; a layout with one is estimated. That rule is a
+  proposal the owner can change.
+- **Living quarters are built in only** (livingQuarters). A carried ship there was a warning; it's
+  now an error, and the editor offers no ship or experimental option.
+- **Engineering dropped** (engineering). It came from the owner's Nov 24 role list as a desired
+  "dedicated engineering ship, if one is announced". No ship or gameplay loop exists, and every base
+  scored 0, so no total moved.
+- **Exploration added** as a desired role (weight 0.5), a placeholder until the gameplay exists,
+  scored as marketed: 5 for a ship built and sold for long-range exploration, 3 for a dedicated
+  scout or pathfinder, 0 for none; a carried scout counts at full value, or the role can be
+  experimental. The steps are proposals. The Odyssey is marketed as an explorer, so it scores 5
+  (+2.5 total); no other ship in the repo has exploration yet.
 - **Estimated flag**: a layout is estimated when its file says so or the carrier's roles hold a
   range. Hangar count ranges are gone, so the Liberator's tested layout is no longer a range.
 - **Script 2.0.0** (major): no `carrier` line; layout entries carry `location` instead of `slot`;
@@ -73,8 +91,8 @@ Leaderboard, best layout, 2.0.0 then 3.0.0:
 | RSI Polaris | 27 (3rd) | 26.5 (2nd) |
 | Aegis Idris-P | 28.5 (2nd) | 25.5 (3rd) |
 | Drake Ironclad Assault | 20.5-24.5 (4th) | 23.5-26.5 (4th) |
-| Anvil Liberator | 22-23 (5th) | 21.5 (5th) |
-| MISC Odyssey | 19.5-23.5 (6th) | 19-23 (6th) |
+| MISC Odyssey | 19.5-23.5 (6th) | 21.5-25.5 (5th) |
+| Anvil Liberator | 22-23 (5th) | 21.5 (6th) |
 | RSI Galaxy (Med Bay) | 18.5-23 (7th) | 17-22 (7th) |
 | Drake Ironclad | 13.5-16.5 (8th) | 17-19 (8th) |
 

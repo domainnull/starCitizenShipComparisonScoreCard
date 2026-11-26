@@ -40,7 +40,7 @@ roles:
     cargoScu: 0
     fit: Player posts (4.1-4.5, 2025); bay doors not stated, about 90%
     patch: '4.5'
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips:
 - ship: miscSGuardianMx
   location: hangar

@@ -26,5 +26,5 @@ roles:
     cargoScu: 0
     fit: 'Estimated: the C8X is rated XXS and the pad is XXS'
     patch: 4.10.3
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips: []

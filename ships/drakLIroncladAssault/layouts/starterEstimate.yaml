@@ -42,5 +42,5 @@ roles:
     cargoScu: 0
     fit: 'Fit-test video: a C8R (same hull) in the side space, roof not stated, about 90%'
     patch: '4.8'
-  engineering: {source: native}
+  exploration: {source: native}
 extraShips: []

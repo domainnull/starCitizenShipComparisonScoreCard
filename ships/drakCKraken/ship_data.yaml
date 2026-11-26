@@ -34,7 +34,7 @@ roles:
     recSpace: false
   cargo: {scu: 3792, maneuverability: 0}
   commuter: false
-  engineering: false
+  exploration: none
 locations: [hangar, pad, vehicleBay, cargoHold]
 notes:
 - Four small open pads, two medium upper platforms, two internal multi-purpose hangars (sizes unpublished) and a
