@@ -1,0 +1,48 @@
+# Drake Ironclad. Numbers come from the linked sources; text is our own.
+id: drakLIronclad
+name: Drake Ironclad
+manufacturer: DRAK
+size: L
+cigSize: 5
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 117, width: 50, height: 25}
+carrierSize: none
+roles:
+  mining: none
+  refining: {low: none, high: roomForLater}
+  medical: {level: none, beds: 0}
+  salvageRepair: {level: none, repair: none}
+  manufacturing: roomForLater
+  defense:
+    seats:
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S3, S3]
+    - name: Remote turret
+      guns: [S3]
+    - name: Remote turret
+      guns: [S3]
+    - name: Internal turret
+      guns: [S2]
+  livingQuarters:
+    beds: 7
+    recSpace: {low: false, high: true}
+  cargo: {scu: 2200, maneuverability: 0}
+  commuter: false
+  engineering: false
+hangar:
+  smallSlot: {low: 4, high: 5}
+  cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 2200}
+notes:
+- Ships ride in the cargo bay (40 x 21 x 7.5 m, RSI Q&A Jun 2024), so they take cargo space.
+- Default turret guns are ballistic; mounts scored as energy-capable.
+- The command module detaches the bridge and earns no shuttle points (repo owner's call, Nov 2026).
+- Carried ships have vanished after logging out in a bed (player reports).
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Ironclad
+- https://starcitizen.tools/Ironclad_Assault
+changes:
+- {patch: 4.8.0, change: First flyable.}

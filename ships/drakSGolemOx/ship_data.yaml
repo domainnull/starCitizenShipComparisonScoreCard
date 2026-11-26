@@ -1,0 +1,20 @@
+# Drake Golem OX. Numbers come from the linked sources; text is our own.
+id: drakSGolemOx
+name: Drake Golem OX
+manufacturer: DRAK
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 15.5, width: 7, height: 5}
+carrierSize: small
+roles:
+  cargo: {scu: 64, maneuverability: 3}
+  hauler: true
+notes:
+- Scored as a carried hauler (64 SCU). Mining ability not recorded here yet.
+- Manoeuvrability is a judgement score.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Golem_OX
+changes: []

@@ -1,0 +1,39 @@
+# Layout: which ship covers each role. Scores are written to results/, not here.
+layout: inGameLoadout
+carrier: rsiCPolaris
+description: 'The tested Polaris loadout: Golem, Golem OX and C8X in the hangar (room for one more snub); Salvation in the
+  vehicle area off the cargo grid.'
+estimated: false
+patch: 4.10.3
+roles:
+  mining:
+    source: drakSGolem
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  refining: {source: native}
+  medical: {source: native}
+  salvageRepair:
+    source: rsiSSalvation
+    slot: vehicleBay
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  manufacturing: {source: native}
+  defense: {source: native}
+  livingQuarters: {source: native}
+  cargo:
+    source: drakSGolemOx
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  commuter:
+    source: anvlSC8x
+    slot: smallSlot
+    cargoScu: 0
+    fit: Repo owner's in-game test
+    patch: 4.10.3
+  engineering: {source: native}
+extraShips: []

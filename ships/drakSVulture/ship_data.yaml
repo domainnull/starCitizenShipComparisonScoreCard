@@ -1,0 +1,18 @@
+# Drake Vulture. Numbers come from the linked sources; text is our own.
+id: drakSVulture
+name: Drake Vulture
+manufacturer: DRAK
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 34, width: 16, height: 9}
+carrierSize: small
+roles:
+  salvageRepair: {level: rubbleMedium, repair: none}
+notes:
+- Not in any layout yet.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Vulture
+changes: []

@@ -1,0 +1,51 @@
+# Drake Kraken. Numbers come from the linked sources; text is our own.
+id: drakCKraken
+name: Drake Kraken
+manufacturer: DRAK
+size: C
+cigSize: null
+sizeOverride: 'Not in game data (concept). C assigned by judgement: 260 m carrier.'
+status: concept
+patch: null
+dimensions: {length: 260}
+carrierSize: none
+roles:
+  mining: none
+  refining: roomForLater
+  medical:
+    level: {low: none, high: tier1}
+    beds: {low: 0, high: 2}
+  salvageRepair: {level: none, repair: smallShips}
+  manufacturing: roomForLater
+  defense:
+    seats:
+    - name: S8 crewed turret
+      guns:
+        low: [S5, S5]
+        high: [S7]
+    - name: S6 crewed turret
+      guns:
+        low: [S5, S5]
+        high: [S6, S6]
+    - name: Remote S5 turret
+      guns: [S5]
+  livingQuarters:
+    beds: {low: 6, high: 12}
+    recSpace: false
+  cargo: {scu: 3792, maneuverability: 0}
+  commuter: false
+  engineering: false
+hangar:
+  openPad: 4
+  mediumSlot: 2
+  smallSlot: {low: 0, high: 2}
+  vehicleBay: 1
+notes:
+- Four small open pads, two medium upper platforms, two internal multi-purpose hangars (sizes unpublished) and a
+  Dragonfly bay. Separate rear cargo hold.
+- 'Medical: wiki lists two med beds of unstated tier; an older Q&A said none.'
+- Turret gun loadouts unpublished, so the S8 and S6 turrets are ranges. Four S6 crewed and four S5 remote turrets
+  in all.
+sources:
+- https://starcitizen.tools/Kraken
+changes: []

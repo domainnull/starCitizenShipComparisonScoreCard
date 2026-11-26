@@ -1,0 +1,46 @@
+# Drake Ironclad Assault. Numbers come from the linked sources; text is our own.
+id: drakLIroncladAssault
+name: Drake Ironclad Assault
+manufacturer: DRAK
+size: L
+cigSize: 5
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 117, width: 50, height: 25}
+carrierSize: none
+roles:
+  mining: none
+  refining: {low: none, high: roomForLater}
+  medical: {level: none, beds: 0}
+  salvageRepair: {level: none, repair: smallShips}
+  manufacturing: {low: limitedStation, high: component}
+  defense:
+    seats:
+    - name: Belly turret
+      guns: [S5, S5, S5, S5]
+    - name: Bow turret
+      guns: [S3]
+    - name: Top turret
+      guns: [S3]
+    - name: Under-bow turret
+      guns: [S3]
+  livingQuarters: {beds: 9, recSpace: true}
+  cargo: {scu: 1440, maneuverability: 0}
+  commuter: false
+  engineering: false
+hangar:
+  smallSlot: {low: 4, high: 5}
+  cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 1440}
+notes:
+- Ships ride in the cargo bay (40 x 21 x 7.5 m, RSI Q&A Jun 2024), so they take cargo space.
+- Default turret guns are ballistic; mounts scored as energy-capable.
+- The command module detaches the bridge and earns no shuttle points (repo owner's call, Nov 2026).
+- Carried ships have vanished after logging out in a bed (player reports).
+- Service bay repairs ships and vehicles and fabricates components; fabricator limits unstated, so manufacturing
+  is a range.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Ironclad_Assault
+- https://starcitizen.tools/Ironclad
+changes:
+- {patch: 4.8.0, change: First flyable.}

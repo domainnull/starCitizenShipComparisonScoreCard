@@ -1,0 +1,64 @@
+# Aegis Idris-P. Numbers come from the linked sources; text is our own.
+id: aegsCIdrisP
+name: Aegis Idris-P
+manufacturer: AEGS
+size: C
+cigSize: 6
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 243, width: 127, height: 57.5}
+carrierSize: none
+roles:
+  mining: none
+  refining: roomForLater
+  medical: {level: tier2, beds: 5}
+  salvageRepair: {level: none, repair: smallShips}
+  manufacturing: roomForLater
+  defense:
+    seats:
+    - name: Front crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Crewed turret
+      guns: [S5, S5]
+    - name: Bridge remote turret
+      guns: [S4, S4]
+      energyCapable: false
+    - name: Bridge remote turret
+      guns: [S4, S4]
+      energyCapable: false
+    - name: Bridge remote turret
+      guns: [S4, S4]
+      energyCapable: false
+    - name: Bridge remote turret
+      guns: [S4, S4]
+      energyCapable: false
+  livingQuarters: {beds: 22, recSpace: true}
+  cargo: {scu: 1374, maneuverability: 0}
+  commuter: false
+  engineering: false
+hangar: {smallSlot: 8}
+notes:
+- 'Main bay has held eight small ships at once (player posts, 4.1-4.5, doors not stated, ~90%). Belly bay not counted:
+  ships fall out when it opens.'
+- 'Medical: one tier 2 bed and four tier 3.'
+- Repairs, refuels and rearms ships aboard since 4.8.
+- Cargo grids line the main hangar; repo owner judges they leave a clear way in and out, so carried ships take no
+  cargo (untested).
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Idris-P
+changes:
+- {patch: 4.1.1, change: First flyable.}
+- {patch: 4.8.0, change: 'Repairs, refuels and rearms ships aboard.'}

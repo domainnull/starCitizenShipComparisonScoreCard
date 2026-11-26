@@ -1,0 +1,17 @@
+# Anvil C8X Pisces Expedition. Numbers come from the linked sources; text is our own.
+id: anvlSC8x
+name: Anvil C8X Pisces Expedition
+manufacturer: ANVL
+size: S
+cigSize: 1
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 16, width: 12, height: 8}
+carrierSize: small
+roles: {commuter: true}
+notes:
+- Has a quantum drive, so it works as a shuttle.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/C8X_Pisces_Expedition
+changes: []

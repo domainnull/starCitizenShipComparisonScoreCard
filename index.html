@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ship Scorecard</title>
+  <style>
+    :root { --bg: #ffffff; --fg: #1d1d1f; --muted: #6e6e73; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #111114; --fg: #f2f2f5; --muted: #a1a1a8; } }
+    body { margin: 0; padding: 32px 16px; background: var(--bg); color: var(--fg);
+           font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 640px; margin: 0 auto; }
+    p { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Mobile base ship scorecard</h1>
+    <p>Placeholder. The leaderboard viewer comes later. It will read <code>results/leaderboard.js</code>
+       through a plain script tag, so it opens straight from disk (file://) or GitHub Pages with no server.</p>
+    <p id="status">Loading results…</p>
+  </main>
+  <!-- Data file written by scripts/score.py. It sets window.scorecardResults. -->
+  <script src="results/leaderboard.js"></script>
+  <script>
+    var r = window.scorecardResults;
+    document.getElementById("status").textContent = r
+      ? "Results found: " + r.ships.length + " ships, rubric " + r.rubricVersion + ", script " + r.scriptVersion + "."
+      : "No results yet. Run python3 scripts/score.py.";
+  </script>
+</body>
+</html>
