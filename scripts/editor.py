@@ -35,7 +35,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import score  # noqa: E402  (scripts/score.py)
 
-EDITOR_VERSION = "2.1.0"
+EDITOR_VERSION = "2.1.1"
 
 ROOT = score.ROOT
 SHIPS_DIR = score.SHIPS_DIR
