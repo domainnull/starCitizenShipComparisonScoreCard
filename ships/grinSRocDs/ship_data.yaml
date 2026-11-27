@@ -8,9 +8,12 @@ status: flightReady
 patch: 4.10.3
 dimensions: {length: 6.6, width: 5, height: 3.5}
 carrierSize: vehicle
-roles: {mining: roc}
+roles:
+  mining: {headPower: 0.8, moduleSlots: 0, heads: 1}
 notes:
 - Ground vehicle.
+- Fixed S0 Hofstede head; game data gives S0 heads power on another scale (0.8), so any power scores the
+  bottom mining tier.
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
 - https://starcitizen.tools/ROC-DS

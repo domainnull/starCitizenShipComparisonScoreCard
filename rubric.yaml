@@ -5,13 +5,13 @@
 # Versioning (semver): major = old scores are not comparable, minor = new rule or
 # category, patch = fix. Every version gets a git tag (rubric-vX.Y.Z) and an entry in
 # rubricVersions/DECISIONS.md. Old rubric files live in rubricVersions/.
-rubricVersion: 3.1.0
+rubricVersion: 4.0.0
 
 # Tiers and weights. Each line scores 0-5 unless it says otherwise.
 tiers:
   needed:
     weight: 1.0
-    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration, extraShips]
+    categories: [mining, refining, medical, salvageRepair, repair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration, extraShips]
   desired:
     weight: 0.5
     categories: []
@@ -20,7 +20,13 @@ categories:
   mining:
     displayName: Mining
     max: 5
-    levels: {capital: 5, mole: 4, prospector: 3, golem: 2, roc: 1, none: 0}
+    # Passive power: the best head the ship can fit, with every module slot holding the
+    # strongest passive power module (multiplier per module, stacked by multiplying).
+    passiveModuleMultiplier: 1.25     # Rieger-C3, +25% mining laser power
+    # Score for passive power above 0, then at or above each threshold.
+    powerTiers: {0: 1, 5000: 2, 8000: 3, 12000: 4}
+    # Bonus for more mining heads (at least this many heads).
+    headBonus: {2: 1, 3: 2}
   refining:
     displayName: Refining
     max: 5
@@ -34,10 +40,23 @@ categories:
     levels: {tier1: 4, tier2: 3, tier3: 2, medArea: 1, none: 0}
     multipleBedsBonus: 1        # two or more medical beds, native and carried together
   salvageRepair:
-    displayName: Salvage and repair
+    displayName: Salvage
+    max: 6                      # heads (2) + tractor beam (1) + high grade material (3)
+    # Salvage counts the salvage heads (up to maxHeads, since the owner plays solo), whether the
+    # ship has a tractor beam (one is enough), and the grade of construction material it makes
+    # (game data: Construction Rubble low, Construction Pieces medium, Construction Salvage high).
+    # Hopper and cargo size don't count. Repair is its own category now.
+    perHead: 1
+    maxHeads: 2
+    tractorBeam: 1
+    materialGrade: {none: 0, low: 1, medium: 2, high: 3}
+  repair:
+    # Not a role, and theoretical for now: no ship repairs in game yet. Each base gets a score
+    # the maintainer sets by hand (0-5, default 0, `repair:` in its ship data). Like every
+    # theoretical value it counts in the high case only.
+    displayName: Repair
     max: 5
-    levels: {constructionSalvage: 4, constructionPieces: 3, rubbleMedium: 2, rubbleSmall: 1, none: 0}
-    repairBonus: {none: 0, smallShips: 1, base: 2}
+    default: 0
   manufacturing:
     displayName: Manufacturing
     max: 5
@@ -45,9 +64,14 @@ categories:
   defense:
     displayName: Defense
     max: 5
-    # Energy-capable mounts only, no missiles. Ballistic-by-default mounts count when the
-    # mount can take energy guns (record `energyCapable: false` otherwise).
+    # Swappable guns score by size, whatever they ship with, since they can take energy guns.
+    # Bespoke guns (built for the ship, can't be swapped) score by size too, but a bespoke gun
+    # that needs ammo (ammoWeaponTypes) loses bespokeAmmoPenalty per gun for rearming, never
+    # below 0 per gun. No missiles.
     gunScore: {S1: 0, S2: 0, S3: 0.25, S4: 0.5, S5: 1, S6: 2.5, S7: 5}
+    bespokeAmmoPenalty: 0.5
+    ammoWeaponTypes: [ballistic]
+    weaponTypes: [energy, ballistic, distortion]
     largeBaseToughnessBonus: 1
     # The "Polaris and larger" group is its own list, not CIG size.
     largeBases: [rsiCPolaris, aegsCIdrisP, drakCKraken]
@@ -106,7 +130,7 @@ theoretical:
   countsIn: [high]
 
 rounding:
-  halfPoints: [defense, cargoCapacity, extraShips]   # these lines keep half points, rounded down
+  halfPoints: [defense, cargoCapacity, extraShips, repair]   # these lines keep half points, rounded down
 
 # Rules in words, tagged with the categories they touch. The script implements each one.
 rules:
@@ -133,7 +157,13 @@ rules:
     text: Carried roles count only from one layout whose ships fit together. A ship ranks by its best layout.
   - id: bestSeat
     categories: [defense]
-    text: Defense counts the best single seat (pilot or one turret). Energy-capable mounts only; missiles never count.
+    text: Defense counts the best single seat (pilot or one turret). Swappable guns score by size, since they can take energy guns; missiles never count.
+  - id: miningPower
+    categories: [mining]
+    text: Mining scores the best head's power with passive modules only (each module slot holding a Rieger-C3, +25%), so ships with the same head and slots score the same. Power above 0 scores 1, 5,000 or more 2, 8,000 or more 3, 12,000 or more 4. Two heads add 1 and three or more add 2, capped at 5.
+  - id: bespokeGuns
+    categories: [defense]
+    text: Bespoke guns (built for the ship, can't be swapped) score by size. A bespoke ballistic gun, such as the Polaris's Maris cannons, scores 0.5 less per gun because it needs rearming, never below 0 per gun (an S6 scores 2, an S4 0).
   - id: carriedFighter
     categories: [defense]
     text: On a base not in largeBases, a carried fighter scores 2 x its own best-seat gun score - 0.5, and defense takes the higher of the base and the fighter.
@@ -143,9 +173,12 @@ rules:
   - id: multipleBeds
     categories: [medical]
     text: +1 medical when the base and its carried ships hold two or more medical beds in total.
-  - id: repairBonus
+  - id: salvageHeads
     categories: [salvageRepair]
-    text: +1 when the base repairs, refuels and rearms the small ships it carries, +2 when it repairs itself or larger ships. Line capped at 5.
+    text: Salvage scores 1 per salvage head (2 at most, since one person crews it), 1 if the ship has a tractor beam, and the construction material grade it makes (low 1, medium 2, high 3). Hopper and cargo size don't count. The base's own salvage and its carried salvage ship don't add up; the better one counts.
+  - id: repairTheoretical
+    categories: [repair]
+    text: Repair is its own line, separate from salvage. No ship repairs in game yet, so each base's repair score (0-5, default 0) is set by hand and counts in the high case only.
   - id: exploration
     categories: [exploration]
     text: Exploration is a needed placeholder until the gameplay exists. The line is the larger of the radar score (radar size 1 = 1, 2 = 1.5, 3 = 2, 4 = 2.5; every ship has one) and the marketed level (explorer 5, scout 3). A marketed level that isn't in game yet goes in as a range from none, so it counts in the high case only. A carried scout counts at full value.

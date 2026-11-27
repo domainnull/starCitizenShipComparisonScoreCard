@@ -9,9 +9,11 @@ patch: 4.10.3
 dimensions: {length: 14.5, width: 8.5, height: 4}
 carrierSize: small
 roles:
-  salvageRepair: {level: rubbleSmall, repair: none}
+  salvageRepair: {heads: 2, tractorBeam: false, materialGrade: low}
 notes:
-- Scraper modules are hardware-locked.
+- Two Salvation salvage heads, each with one fixed scraper socket; the scraper module can be swapped
+  (Hart or Comer), the heads can't. No tractor beam. Makes low grade construction material (Construction
+  Rubble, per game data's salvage hopper).
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
 - https://starcitizen.tools/Salvation

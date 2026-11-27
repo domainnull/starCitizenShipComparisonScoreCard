@@ -135,10 +135,14 @@
     return JSON.stringify(a) === JSON.stringify(b) ? a : { low: a, high: b };
   }
 
+  function bespokeText(seat) {
+    return seat.bespoke ? " (bespoke " + (seat.weaponType || "?") + ")" : "";
+  }
+
   function seatText(seat) {
     if (!seat) return "no guns that count";
     return seat.name + ": " + (seat.guns.length ? seat.guns.join(", ") : "no guns") +
-      (seat.energyCapable === false ? " (not energy-capable)" : "");
+      bespokeText(seat);
   }
 
   // ------------------------------------------------------------------ router
@@ -412,7 +416,7 @@
       if (k === "defense") {
         var seats = (v && v.seats) || [];
         text = h("div", null, seats.length ? seats.map(function (seat) {
-          return h("div", { text: seat.name + ": " + fmtR(seat.guns) + (seat.energyCapable === false ? " (not energy-capable)" : "") });
+          return h("div", { text: seat.name + ": " + fmtR(seat.guns) + bespokeText(seat) });
         }) : ["no seats"]);
       } else if (v && typeof v === "object" && !isRange(v)) {
         text = Object.keys(v).map(function (kk) { return words(kk) + " " + fmtR(v[kk]); }).join(", ");
@@ -709,8 +713,8 @@
   // ------------------------------------------------------------------ ship form
 
   var ROLE_DEFAULTS = {
-    mining: "none", refining: "none", manufacturing: "none",
-    medical: { level: "none", beds: 0 }, salvageRepair: { level: "none", repair: "none" },
+    mining: { headPower: 0, moduleSlots: 0, heads: 1 }, refining: "none", manufacturing: "none",
+    medical: { level: "none", beds: 0 }, salvageRepair: { heads: 0, tractorBeam: false, materialGrade: "none" },
     defense: { seats: [] }, livingQuarters: { beds: 0, recSpace: false }, cargo: { scu: 0, maneuverability: 0 },
     commuter: false, exploration: { radarSize: 1, level: "none" }, hauler: true, fighter: true,
   };
@@ -725,7 +729,7 @@
   // Whether the structured form can show this ship without losing anything.
   function formCanShow(d) {
     var roles = d.roles || {};
-    var objRoles = ["medical", "salvageRepair", "defense", "livingQuarters", "cargo"];
+    var objRoles = ["mining", "medical", "salvageRepair", "defense", "livingQuarters", "cargo"];
     for (var i = 0; i < objRoles.length; i++) {
       var v = roles[objRoles[i]];
       if (v !== undefined && (isRange(v) || typeof v !== "object" || Array.isArray(v))) return false;
@@ -829,12 +833,27 @@
       body.appendChild(roleGrid);
       body.appendChild(h("h2", { text: "Hangar" }));
       body.appendChild(hangarBlock());
+      body.appendChild(h("h2", { text: "Repair" }));
+      body.appendChild(repairBlock());
       body.appendChild(h("h2", { text: "Notes, sources and changes" }));
       body.appendChild(textBlocks());
     }
 
     function bind(path, make, opts) {
       return leaf(function () { return getPath(draft, path); }, function (v) { setPath(draft, path, v); changed(); }, make, opts);
+    }
+
+    function repairBlock() {
+      var max = R.repair.max;
+      var cur = typeof draft.repair === "number" ? draft.repair : R.repair.default;
+      var out = h("span", { class: "rangeLbl", text: num(cur) + " / " + max });
+      var slider = h("input", { type: "range", min: "0", max: String(max), step: "0.5", value: String(cur),
+        "aria-label": "Repair score", oninput: function () {
+          draft.repair = Number(slider.value); out.textContent = num(draft.repair) + " / " + max; changed(); } });
+      var f = h("div", { class: "form" });
+      f.appendChild(row("Repair score", [slider, out], "Theoretical: no ship repairs in game yet. Your own score for how well this base repairs, " +
+        "0 to " + max + ". It counts in the high case only."));
+      return f;
     }
 
     function basics() {
@@ -887,7 +906,13 @@
         inner.innerHTML = "";
         if (!(k in roles)) return;
         var p = ["roles", k];
-        if (k === "mining" || k === "refining" || k === "manufacturing") {
+        if (k === "mining") {
+          inner.appendChild(row("Head power", bind(p.concat("headPower"), numberInput(false)),
+            "Best head the ship can fit, before modules (game data's mining laser power)"));
+          inner.appendChild(row("Module slots", bind(p.concat("moduleSlots"), numberInput(true)),
+            "Each holds a passive power module (x" + R.miningModule + ")"));
+          inner.appendChild(row("Mining heads", bind(p.concat("heads"), numberInput(true)), "2 heads add 1, 3 or more add 2"));
+        } else if (k === "refining" || k === "manufacturing") {
           inner.appendChild(row("Level", bind(p, selectInput(R.categories[k].levels))));
         } else if (k === "exploration") {
           inner.appendChild(row("Radar size", bind(p.concat("radarSize"), function (v, set) {
@@ -900,9 +925,12 @@
           inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.medical.levels))));
           inner.appendChild(row("Medical beds", bind(p.concat("beds"), numberInput(true))));
         } else if (k === "salvageRepair") {
-          inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.salvageRepair.levels))));
-          inner.appendChild(row("Repairs", bind(p.concat("repair"), selectInput(R.repairLevels,
-            R.repairLevels.map(function (x) { return { none: "nothing", smallShips: "small ships it carries", base: "itself or larger ships" }[x] || words(x); })))));
+          inner.appendChild(row("Salvage heads", bind(p.concat("heads"), numberInput(true)),
+            R.salvage.perHead + " each, " + R.salvage.maxHeads + " at most"));
+          inner.appendChild(row("Tractor beam", bind(p.concat("tractorBeam"), boolInput("has a tractor beam")),
+            "adds " + R.salvage.tractorBeam + "; one is enough"));
+          inner.appendChild(row("Construction material", bind(p.concat("materialGrade"), selectInput(R.salvage.materialGrades,
+            R.salvage.materialGrades.map(function (x) { return { none: "none", low: "low grade (rubble)", medium: "medium grade (pieces)", high: "high grade (salvage)" }[x] || words(x); })))));
         } else if (k === "defense") {
           inner.appendChild(seatsEditor());
         } else if (k === "livingQuarters") {
@@ -928,15 +956,20 @@
         seats.forEach(function (seat, i) {
           var nm = textInput("Pilot", 18)(seat.name, function (x) { seat.name = x; changed(); });
           var guns = leaf(function () { return seat.guns; }, function (v) { seat.guns = v; changed(); }, gunsInput);
-          var ec = h("input", { type: "checkbox", checked: seat.energyCapable !== false, onchange: function () {
-            if (ec.checked) delete seat.energyCapable; else seat.energyCapable = false; changed(); } });
+          var wt = h("select", { "aria-label": "Weapon type", hidden: !seat.bespoke, onchange: function () {
+            seat.weaponType = wt.value; changed(); } }, R.weaponTypes.map(function (t) {
+            return h("option", { value: t, text: t, selected: seat.weaponType === t }); }));
+          var bs = h("input", { type: "checkbox", checked: !!seat.bespoke, onchange: function () {
+            if (bs.checked) { seat.bespoke = true; seat.weaponType = seat.weaponType || wt.value; }
+            else { delete seat.bespoke; delete seat.weaponType; }
+            wt.hidden = !bs.checked; changed(); } });
           wrap.appendChild(h("div", { class: "seat" }, [nm, h("span", { class: "rangeLbl", text: "guns" }), guns,
-            h("label", { class: "check" }, [ec, "energy-capable"]),
+            h("label", { class: "check" }, [bs, "bespoke (can't swap)"]), wt,
             h("button", { class: "btn small", type: "button", text: "Remove", onclick: function () { seats.splice(i, 1); draw(); changed(); } })]));
         });
         wrap.appendChild(h("button", { class: "btn small", type: "button", text: "Add seat", onclick: function () {
           seats.push({ name: seats.length ? "Turret" : "Pilot", guns: [] }); draw(); changed(); } }));
-        wrap.appendChild(h("p", { class: "meta", text: "One line per seat (pilot or a single turret). Guns as sizes, e.g. S5, S5. Missiles never count." }));
+        wrap.appendChild(h("p", { class: "meta", text: "One line per seat (pilot or a single turret). Guns as sizes, e.g. S5, S5. Missiles never count. Tick bespoke for guns that can't be swapped: they still score by size, but a bespoke ballistic gun scores " + R.bespokeAmmoPenalty + " less per gun (never below 0) since it needs rearming." }));
       }
       draw();
       return wrap;
@@ -1021,6 +1054,19 @@
     if (role === "cargo") return !!r.hauler;
     if (role === "defense") return "defense" in r;
     if (role === "livingQuarters") return !!r.livingQuarters;
+    if (role === "salvageRepair") {
+      var v = r.salvageRepair;
+      if (!v || typeof v !== "object") return false;
+      return isRange(v.heads) ? (v.heads.low > 0 || v.heads.high > 0) : v.heads > 0;
+    }
+    if (role === "mining") {
+      var m = r.mining;
+      if (!m || typeof m !== "object") return false;
+      return ["low", "high"].some(function (s) {
+        var pick = function (x) { return isRange(x) ? x[s] : x; };
+        return pick(m.heads) > 0 && pick(m.headPower) > 0;
+      });
+    }
     return role in r && r[role] !== false && r[role] !== "none";
   }
 

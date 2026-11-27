@@ -9,10 +9,10 @@ patch: 4.10.3
 dimensions: {length: 117, width: 50, height: 25}
 carrierSize: none
 roles:
-  mining: none
+  mining: {headPower: 0, moduleSlots: 0, heads: 0}
   refining: {low: none, high: roomForLater}
   medical: {level: none, beds: 0}
-  salvageRepair: {level: none, repair: smallShips}
+  salvageRepair: {heads: 0, tractorBeam: false, materialGrade: none}
   manufacturing: {low: limitedStation, high: component}
   defense:
     seats:
@@ -28,6 +28,7 @@ roles:
   cargo: {scu: 1440, maneuverability: 0}
   commuter: false
   exploration: {radarSize: 3, level: none}
+repair: 0
 locations: [cargoHold]
 cargoBay: {floorLength: 40, floorWidth: 21, gridScu: 1440}
 notes:

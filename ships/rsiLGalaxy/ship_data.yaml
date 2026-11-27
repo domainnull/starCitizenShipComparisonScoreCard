@@ -9,12 +9,13 @@ patch: 4.10.3
 dimensions: {length: 110, width: 60, height: 25}
 carrierSize: none
 roles:
-  mining: none
+  mining: {headPower: 0, moduleSlots: 0, heads: 0}
   refining: roomForLater
   medical: {level: tier1, beds: 3}
   salvageRepair:
-    level: none
-    repair: {low: none, high: smallShips}
+    heads: 0
+    tractorBeam: false
+    materialGrade: none
   manufacturing: roomForLater
   defense:
     seats:
@@ -32,6 +33,7 @@ roles:
   cargo: {scu: 64, maneuverability: 2}
   commuter: false
   exploration: {radarSize: 3, level: none}
+repair: 0
 locations: [hangar, vehicleBay]
 notes:
 - Scored with the Med Bay module (tier 1, 2 and 3 beds). Modules swap only at a shop.

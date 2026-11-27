@@ -27,7 +27,7 @@ from pathlib import Path
 
 import yaml
 
-SCRIPT_VERSION = "2.1.0"
+SCRIPT_VERSION = "3.0.0"
 
 ROOT = Path(__file__).resolve().parent.parent
 RUBRIC_PATH = ROOT / "rubric.yaml"
@@ -49,6 +49,7 @@ LOCATIONS = ["hangar", "pad", "cargoHold", "vehicleBay"]
 # Lines scored: every role, plus cargo capacity, which no layout fills.
 LINE_ORDER = [k for k in ROLE_KEYS]
 LINE_ORDER.insert(LINE_ORDER.index("cargo") + 1, "cargoCapacity")
+LINE_ORDER.insert(LINE_ORDER.index("salvageRepair") + 1, "repair")
 LINE_ORDER.append("extraShips")
 # A required role's source when the base has no room left for a ship that would fill it.
 NO_ROOM = "noRoom"
@@ -196,7 +197,17 @@ def validate_roles(path, roles, rubric, report, full):
             report.warn(path, f"roles.{k}", "extra field", "ignored, not graded")
     v = roles
     f = "roles."
-    for key in ("mining", "refining", "manufacturing"):
+    if "mining" in v:
+        def mine(x):
+            if not isinstance(x, dict) or set(x) != {"headPower", "moduleSlots", "heads"}:
+                return "needs headPower, moduleSlots and heads"
+            if not isinstance(x["headPower"], (int, float)) or isinstance(x["headPower"], bool) or x["headPower"] < 0:
+                return "headPower must be a number, 0 or more"
+            for k in ("moduleSlots", "heads"):
+                if not isinstance(x[k], int) or isinstance(x[k], bool) or x[k] < 0:
+                    return f"{k} must be a whole number, 0 or more"
+        ok &= validate_value(path, f + "mining", v["mining"], mine, report)
+    for key in ("refining", "manufacturing"):
         if key in v:
             ok &= validate_value(path, f + key, v[key], level_check(cats[key]["levels"]), report)
     if "exploration" in v:
@@ -220,12 +231,14 @@ def validate_roles(path, roles, rubric, report, full):
         ok &= validate_value(path, f + "medical", v["medical"], med, report)
     if "salvageRepair" in v:
         def sal(x):
-            if not isinstance(x, dict) or "level" not in x or "repair" not in x:
-                return "needs level and repair"
-            if x["level"] not in cats["salvageRepair"]["levels"]:
-                return f"level {x['level']!r} is not one of {', '.join(cats['salvageRepair']['levels'])}"
-            if x["repair"] not in cats["salvageRepair"]["repairBonus"]:
-                return f"repair {x['repair']!r} is not one of {', '.join(cats['salvageRepair']['repairBonus'])}"
+            if not isinstance(x, dict) or set(x) != {"heads", "tractorBeam", "materialGrade"}:
+                return "needs heads, tractorBeam and materialGrade"
+            if not isinstance(x["heads"], int) or isinstance(x["heads"], bool) or x["heads"] < 0:
+                return "heads must be a whole number, 0 or more"
+            if not isinstance(x["tractorBeam"], bool):
+                return "tractorBeam must be true or false"
+            if x["materialGrade"] not in cats["salvageRepair"]["materialGrade"]:
+                return f"materialGrade {x['materialGrade']!r} is not one of {', '.join(cats['salvageRepair']['materialGrade'])}"
         ok &= validate_value(path, f + "salvageRepair", v["salvageRepair"], sal, report)
     if "defense" in v:
         def dfn(x):
@@ -234,9 +247,15 @@ def validate_roles(path, roles, rubric, report, full):
             for i, seat in enumerate(x["seats"]):
                 if not isinstance(seat, dict) or "guns" not in seat or "name" not in seat:
                     return f"seat {i} needs name and guns"
-                extra = set(seat) - {"name", "guns", "energyCapable"}
+                extra = set(seat) - {"name", "guns", "bespoke", "weaponType"}
                 if extra:
                     return f"seat {i} has unknown keys {sorted(extra)}"
+                if "bespoke" in seat and not isinstance(seat["bespoke"], bool):
+                    return f"seat {i} bespoke must be true or false"
+                if "weaponType" in seat and seat["weaponType"] not in cats["defense"]["weaponTypes"]:
+                    return f"seat {i} weaponType must be one of {', '.join(cats['defense']['weaponTypes'])}"
+                if seat.get("bespoke") and "weaponType" not in seat:
+                    return f"seat {i} is bespoke, so it needs a weaponType"
                 if not isinstance(seat["guns"], list) or not all(isinstance(g, str) and GUN_RE.match(g) for g in seat["guns"]):
                     return f"seat {i} guns must be a list like [S5, S5]"
                 for g in seat["guns"]:
@@ -264,7 +283,7 @@ def validate_roles(path, roles, rubric, report, full):
 
 def validate_ship(path, data, rubric, report, has_layouts):
     required = ["id", "name", "manufacturer", "size", "cigSize", "status", "roles", "sources", "changes"]
-    optional = ["sizeOverride", "patch", "dimensions", "carrierSize", "locations", "cargoBay", "notes"]
+    optional = ["sizeOverride", "patch", "dimensions", "carrierSize", "locations", "cargoBay", "notes", "repair"]
     if has_layouts:
         required = required + ["locations"]
         optional = [o for o in optional if o != "locations"]
@@ -319,6 +338,11 @@ def validate_ship(path, data, rubric, report, has_layouts):
                 if not isinstance(c, dict) or "patch" not in c or "change" not in c:
                     report.error(path, f"changes[{i}]", "missing field", "each entry needs patch and change")
                     ok = False
+    if "repair" in data:
+        rv, rmax = data["repair"], rubric["categories"]["repair"]["max"]
+        if not isinstance(rv, (int, float)) or isinstance(rv, bool) or not 0 <= rv <= rmax:
+            report.error(path, "repair", "bad value", f"must be a number from 0 to {rmax}")
+            ok = False
     if "locations" in data:
         locs = data["locations"]
         if not isinstance(locs, list) or not locs:
@@ -355,6 +379,15 @@ def carried_role_check(role, sid, sroles):
     elif role == "defense":
         if "defense" not in sroles:
             return "error", f"{sid} has no defense data"
+    elif role == "salvageRepair":
+        v = sroles.get("salvageRepair")
+        if not isinstance(v, dict) or not any((resolve(v, s).get("heads") or 0) > 0 for s in SCENARIOS):
+            return "error", f"{sid} has no salvage head"
+    elif role == "mining":
+        m = sroles.get("mining")
+        if not isinstance(m, dict) or not any(
+                (resolve(m, s).get("heads") or 0) > 0 and (resolve(m, s).get("headPower") or 0) > 0 for s in SCENARIOS):
+            return "error", f"{sid} has no mining head"
     elif role not in sroles or sroles.get(role) in (False, "none"):
         return "error", f"{sid} has no {role} data"
     return None, None
@@ -499,20 +532,35 @@ class Scorer:
         self.cats = rubric["categories"]
 
     def seat_score(self, seat):
-        if seat.get("energyCapable") is False:
-            return 0
-        return sum(self.cats["defense"]["gunScore"][g] for g in seat["guns"])
+        cfg = self.cats["defense"]
+        if seat.get("bespoke") and seat.get("weaponType") in cfg["ammoWeaponTypes"]:
+            return sum(max(0, cfg["gunScore"][g] - cfg["bespokeAmmoPenalty"]) for g in seat["guns"])
+        return sum(cfg["gunScore"][g] for g in seat["guns"])
 
     def best_seat(self, roles):
         seats = (roles.get("defense") or {}).get("seats", [])
         return max([self.seat_score(s) for s in seats] or [0])
 
     # Each line function returns the score given the carried ship roles (or None).
+    def mining_power(self, m):
+        """Best head's power with every module slot holding the best passive module."""
+        if not isinstance(m, dict) or not m.get("heads"):
+            return 0
+        return m.get("headPower", 0) * self.cats["mining"]["passiveModuleMultiplier"] ** m.get("moduleSlots", 0)
+
+    def mining_one(self, m):
+        cfg = self.cats["mining"]
+        power = self.mining_power(m)
+        if power <= 0:
+            return 0
+        s = max(sc for mn, sc in cfg["powerTiers"].items() if power >= mn and (mn > 0 or power > 0))
+        s += max([b for k, b in cfg["headBonus"].items() if m["heads"] >= k] or [0])
+        return min(s, cfg["max"])
+
     def mining(self, n, c):
-        lv = self.cats["mining"]["levels"]
-        s = lv[n.get("mining", "none")]
+        s = self.mining_one(n.get("mining"))
         if c:
-            s = max(s, lv[c.get("mining", "none")])
+            s = max(s, self.mining_one(c.get("mining")))
         return s
 
     def refining(self, n, c):
@@ -534,13 +582,21 @@ class Scorer:
             s += cfg["multipleBedsBonus"]
         return min(s, cfg["max"])
 
+    def salvage_one(self, v):
+        """Heads (capped), tractor beam and construction material grade."""
+        if not isinstance(v, dict) or not v.get("heads"):
+            return 0
+        cfg = self.cats["salvageRepair"]
+        return (cfg["perHead"] * min(v["heads"], cfg["maxHeads"])
+                + (cfg["tractorBeam"] if v.get("tractorBeam") else 0)
+                + cfg["materialGrade"][v.get("materialGrade", "none")])
+
     def salvageRepair(self, n, c):
         cfg = self.cats["salvageRepair"]
-        ns = n.get("salvageRepair") or {"level": "none", "repair": "none"}
-        s = cfg["levels"][ns["level"]]
-        if c and c.get("salvageRepair"):
-            s = max(s, cfg["levels"][c["salvageRepair"]["level"]])
-        s += cfg["repairBonus"][ns["repair"]]
+        ns = n.get("salvageRepair") or {}
+        s = self.salvage_one(ns)
+        if c:
+            s = max(s, self.salvage_one(c.get("salvageRepair")))
         return min(s, cfg["max"])
 
     def manufacturing(self, n, c):
@@ -664,6 +720,12 @@ class Scorer:
         lines["extraShips"] = floor_half(min(extra_total, xcfg["max"]))
         sources["extraShips"] = "native"
 
+        # Repair: theoretical, set by hand per base, high case only.
+        rcfg = self.cats["repair"]
+        rv = carrier.get("repair", rcfg["default"])
+        lines["repair"] = floor_half(min(rv, rcfg["max"])) if scenario in self.r["theoretical"]["countsIn"] else 0
+        sources["repair"] = THEORETICAL if lines["repair"] else "native"
+
         scu = max((n.get("cargo") or {}).get("scu", 0) - aboard_cargo, 0)
         lines["cargoCapacity"] = self.capacity(scu)
         sources["cargoCapacity"] = "native"
@@ -705,7 +767,7 @@ def ship_stats(rubric, ship):
             sc = scorer.seat_score(seat)
             if best is None or sc > best["score"]:
                 best = {"name": seat.get("name"), "guns": list(seat.get("guns") or []), "score": sc,
-                        "energyCapable": seat.get("energyCapable", True)}
+                        "bespoke": bool(seat.get("bespoke")), "weaponType": seat.get("weaponType")}
         cargo = n.get("cargo") or {}
         lq = n.get("livingQuarters") or {}
         med = n.get("medical") or {}

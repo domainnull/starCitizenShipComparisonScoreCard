@@ -1,0 +1,21 @@
+# MISC Fortune. Numbers come from the linked sources; text is our own.
+id: miscSFortune
+name: MISC Fortune
+manufacturer: MISC
+size: S
+cigSize: 2
+status: flightReady
+patch: 4.10.3
+dimensions: {length: 26.5, width: 16.5, height: 8}
+carrierSize: small
+roles:
+  salvageRepair: {heads: 1, tractorBeam: true, materialGrade: low}
+notes:
+- One Baler salvage head on a fixed arm (the head can't be swapped), 2 module sockets holding a tractor beam
+  and a scraper. Makes low grade construction material (Construction Rubble, per game data's salvage
+  hopper).
+- Not in any layout yet.
+sources:
+- https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
+- https://starcitizen.tools/Fortune
+changes: []

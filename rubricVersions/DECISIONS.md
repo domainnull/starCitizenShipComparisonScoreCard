@@ -6,6 +6,105 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Rubric 4.0.0 / script 3.0.0 / editor 3.0.0 / viewer 2.2.0 (Nov 27 2026): bespoke guns, mining by passive power, salvage by heads, repair split out
+
+**Major**: the salvage cap goes to 6 and a new needed category (repair) is added, so the maximum
+total changes and 4.0.0 scores aren't comparable with 3.x. The script follows (3.0.0), and the editor
+too (3.0.0, since the mining and salvage data formats changed). The viewer reads both 2.x and 3.x
+results (2.2.0). 3.2.0 was never merged; its changes ship here. The 3.1.0 rubric and results stay in
+`rubricVersions/3.1.0/`.
+
+### Salvage by heads, tractor beam and material grade
+
+- **Salvage** (salvageRepair, shown as "Salvage"). The named levels are gone. A ship's salvage is
+  `{heads, tractorBeam, materialGrade}`. It scores 1 per salvage head, capped at `maxHeads` (2)
+  because the owner plays solo; `tractorBeam` (1) if the ship has at least one tractor beam, since
+  more add nothing; and the construction material grade it makes (`materialGrade`: low 1, medium 2,
+  high 3). Hopper and cargo size don't count, because the mothership covers them. Owner's words: head
+  count (max 2, solo), a tractor beam (1 point, they don't need more than one), and the strength of
+  construction material (1-3, low/medium/high grade).
+- **Cap 6.** Heads, tractor and high grade add up to 6, so the cap is 6. Owner: "The odd cap is fine, I
+  am more interested in capturing an accurate category as this is a needed role." Raising caps on other
+  categories is tracked in issue 23.
+- Grades come from each ship's salvage hopper in scunpacked-data: Construction Rubble (low) for the
+  Salvation, Vulture and Fortune; Construction Pieces (medium) for the Moth; Construction Salvage (high)
+  for the Reclaimer. Owner, Nov 27: Fortune 1 head, Vulture 2, both with tractor beams; the Salvation
+  has none and swaps its scraper module, not its heads.
+- Ship scores: Vulture 2 + 1 + 1 = 4; Salvation 2 + 0 + 1 = 3; Fortune 1 + 1 + 1 = 3 (new ship,
+  miscSFortune). Reference only, not in the ship data: Moth 4-5 (5 with a tractor module), Reclaimer 6.
+  Estimates are in issue 21.
+- An earlier draft the same day scored heads, tractor heads and scraper modules (0.25 each); the owner
+  replaced it before merge.
+
+### Repair split out
+
+- **Repair** (new category, needed tier, weight 1.0, max 5). Repair no longer adds to salvage. No ship
+  repairs in game yet, so it's theoretical: each base has `repair:` in its ship data (0-5, default 0,
+  a slider in the editor), counting in the high case only. Every base is at 0. Owner's words: split
+  repair into a new category, entirely theoretical for now, a slider 0-5, most have 0. Issue 22.
+- The old repair bonus (+1 small ships, +2 itself or larger) is gone. Bases that had +1: Idris-P,
+  Liberator, Kraken, Ironclad Assault, Polaris; Galaxy 0-1.
+- The Galaxy (Med Bay) layout now lists salvage as No room: it has no salvage of its own, and before,
+  only its repair range filled the role.
+
+### Scores that moved (from 3.1.0)
+
+| Layout | 3.1.0 | 4.0.0 | Salvage line |
+|---|---|---|---|
+| Kraken | 28-32.5 | 29-33.5 | 2 -> 3 (Salvation, no repair bonus) |
+| Polaris | 29 | 30 | 2 -> 3 |
+| Idris-P | 28.5 | 29.5 | 2 -> 3 |
+| Liberator | 25 | 26 | 3 -> 4 (Vulture) |
+| Ironclad Assault | 23-26 | 24-27 | 2 -> 3 |
+| Odyssey | 21-28 | 21-27 | 0 (mining high 3 -> 2) |
+| Ironclad | 19-21 | 21-23 | 1 -> 3 |
+| Galaxy (Med Bay) | 19-24 | 19-23 | 0-1 -> 0 (repair moved out) |
+
+The Ironclad now ranks above the Galaxy.
+
+### Mining by passive power
+
+- **Mining by passive power** (mining). The named levels (capital 5, MOLE 4, Prospector 3, Golem 2,
+  ROC 1) are gone. A ship's mining is now `{headPower, moduleSlots, heads}`: the best head it can fit,
+  its module slots, and how many heads it has. Power is `headPower x passiveModuleMultiplier ^
+  moduleSlots`, with every slot holding the best passive power module (Rieger-C3, x1.25), so active
+  modules never count. Owner's words: Golem and Prospector should come out the same, they favour high
+  power passive, and a ship like the MOLE with several heads deserves an extra point or two. Confirmed
+  Nov 27: passive modules only; heads score by their power with modules, since heads have different
+  numbers of module slots. A carried MOLE is tracked in issue 20.
+- Tiers (`powerTiers`, maintainer's defaults): above 0 scores 1, 5,000+ 2, 8,000+ 3, 12,000+ 4.
+  `headBonus`: 2 heads +1, 3 or more +2. Capped at 5.
+- Owner, Nov 27: every snub industrial's head is unlocked in game now, so the Golem counts the best
+  S1 head (Pitman and Helix I are both 3,900 power with 2 slots). If that changes, it gets adjusted.
+- Data from scunpacked-data: Pitman and Helix I 3,900 / 2 slots (6,094 passive, score 2); Helix II S2
+  4,930 / 3 slots (9,629, so a MOLE would score 3 + 2 = 5, not in the ship data yet); ROC-DS fixed S0
+  head at 0.8 on another scale (score 1). Odyssey's arm head is estimated, ROC-class to S1.
+- Unverified (issue 19): module stacking assumed multiplicative, S0 power scale, Odyssey arm head,
+  and the thresholds.
+- Scores that moved: Prospector mining 3 -> 2 (not in any layout). Odyssey mining high 3 -> 2, total
+  21-28 -> 21-27. Every Golem layout stays at 2, Galaxy's ROC-DS stays at 0-1.
+
+### Bespoke guns
+
+- **Bespoke guns** (defense). A seat can be marked `bespoke: true` with a `weaponType` (energy,
+  ballistic or distortion) for guns built for the ship that can't be swapped. Swappable guns keep
+  scoring by size whatever they ship with, since they can take energy guns. Bespoke guns also score
+  by size, but a bespoke gun that needs ammo (`ammoWeaponTypes`, ballistic for now) scores
+  `bespokeAmmoPenalty` (0.5) less per gun, because it needs rearming. Owner's words: they would use
+  them, but rearming isn't in the game yet. Bespoke distortion guns score by size, since they don't
+  need ammo.
+- Each gun is floored at 0, so a bespoke ballistic S3 (0.25) can't go negative and an S4 lands on 0.
+  This floor is the maintainer's default and hasn't been confirmed.
+- `energyCapable: false` is removed in favour of `bespoke` and `weaponType`.
+- Data checked in scunpacked-data: only the Polaris front turret's two S6 Maris cannons are bespoke
+  ballistic (Polaris-only mounts, locked weapon ports). The Idris-P bridge remote turrets were marked
+  not energy-capable, but their gun ports take any S4 gun, so they are now swappable. The Kraken and
+  Odyssey turrets are assumed swappable until they are in game (issue 17).
+- Scores that moved: none. The Polaris front seat drops from 5 to 4 (2 x (2.5 - 0.5)), but the
+  Polaris is in `largeBases`, so its +1 still caps defense at 5 and it stays at 29.
+- On its own this was a minor change (a new rule, no score incomparable); it ships in 4.0.0 with the
+  rest.
+
 ## Rubric 3.1.0 / script 2.1.0 / editor 2.1.0 / viewer 2.1.0 (Nov 26 2026): extra ships score and take cargo space
 
 - **Extra ships' cargo comes off the hold** (cargoCapacity). An extra ship still fills no role and

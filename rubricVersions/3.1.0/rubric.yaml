@@ -1,0 +1,166 @@
+# Mobile base scorecard rubric.
+# A ship is scored as a solo mobile base: mine, salvage, defend and sleep off-planet,
+# hidden in space, as a thought experiment where the marketing comes true.
+#
+# Versioning (semver): major = old scores are not comparable, minor = new rule or
+# category, patch = fix. Every version gets a git tag (rubric-vX.Y.Z) and an entry in
+# rubricVersions/DECISIONS.md. Old rubric files live in rubricVersions/.
+rubricVersion: 3.1.0
+
+# Tiers and weights. Each line scores 0-5 unless it says otherwise.
+tiers:
+  needed:
+    weight: 1.0
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration, extraShips]
+  desired:
+    weight: 0.5
+    categories: []
+
+categories:
+  mining:
+    displayName: Mining
+    max: 5
+    levels: {capital: 5, mole: 4, prospector: 3, golem: 2, roc: 1, none: 0}
+  refining:
+    displayName: Refining
+    max: 5
+    # oreAndFuel = refines ore and makes fuel; oreOrFuel = one of the two;
+    # fuelOnlyPartial = some fuel only; roomForLater = room for a future refinery ship.
+    levels: {oreAndFuel: 5, oreOrFuel: 4, fuelOnlyPartial: 2, roomForLater: 1, none: 0}
+    carriedRefineryScore: 3
+  medical:
+    displayName: Medical
+    max: 5
+    levels: {tier1: 4, tier2: 3, tier3: 2, medArea: 1, none: 0}
+    multipleBedsBonus: 1        # two or more medical beds, native and carried together
+  salvageRepair:
+    displayName: Salvage and repair
+    max: 5
+    levels: {constructionSalvage: 4, constructionPieces: 3, rubbleMedium: 2, rubbleSmall: 1, none: 0}
+    repairBonus: {none: 0, smallShips: 1, base: 2}
+  manufacturing:
+    displayName: Manufacturing
+    max: 5
+    levels: {largeFabricator: 5, component: 4, personalGear: 3, limitedStation: 2, roomForLater: 1, none: 0}
+  defense:
+    displayName: Defense
+    max: 5
+    # Energy-capable mounts only, no missiles. Ballistic-by-default mounts count when the
+    # mount can take energy guns (record `energyCapable: false` otherwise).
+    gunScore: {S1: 0, S2: 0, S3: 0.25, S4: 0.5, S5: 1, S6: 2.5, S7: 5}
+    largeBaseToughnessBonus: 1
+    # The "Polaris and larger" group is its own list, not CIG size.
+    largeBases: [rsiCPolaris, aegsCIdrisP, drakCKraken]
+    fighter:
+      multiplier: 2
+      offset: -0.5
+  livingQuarters:
+    displayName: Living quarters
+    max: 5
+    perBed: 1
+    maxBedPoints: 4
+    recSpace: 1
+  cargo:
+    # A role: the ship that moves cargo between the base and stations. Layouts fill it.
+    displayName: Cargo hauler
+    max: 5
+    maneuverabilityMax: 5       # anchors: Constellation Andromeda 5, Ironclad 0
+  cargoCapacity:
+    # Not a role: scored from the base's cargo space left after its role ships.
+    displayName: Cargo capacity
+    max: 5
+    # 0 at baseScu or less, +1 per doubling: 200 SCU 1, 400 2, 800 3, 1600 4, 3200 5.
+    baseScu: 100
+  commuter:
+    displayName: Shuttle
+    max: 1                      # has one or not; needed, but a base without one still ranks
+    native: 1
+    carried: 1
+  exploration:
+    # A placeholder until exploration gameplay exists. The low end is the ship's radar size, a
+    # stand-in for scanning (every ship has a radar, so at least 1). The high end adds what the
+    # ship is marketed for: explorer = built and sold for the long-range exploration loop;
+    # scout = a dedicated scout or scanning ship. Put a marketed level that isn't in game yet in
+    # as a range, e.g. level: {low: none, high: explorer}, so it counts in the high case only.
+    displayName: Exploration
+    max: 5
+    radarScore: {1: 1, 2: 1.5, 3: 2, 4: 2.5}   # radar component size -> score; stays under a scout
+    levels: {explorer: 5, scout: 3, none: 0}
+  extraShips:
+    # Not a role: ships aboard that fill no role. The maintainer sets each one's worth (1-5,
+    # floor 1 so a base that carries a lot gets weight for it). The line is their sum, capped,
+    # so listing more ships can't run away with the score. Proposed cap and weight; change them here.
+    displayName: Extra ships
+    max: 5                      # cap on the line, however many extra ships
+    perShip: {min: 1, max: 5, default: 1}
+
+# A required role (the needed tier) must be filled by the base, a carried ship or "noRoom".
+# noRoom means the base has no room left for a ship that would fill it.
+noRoom:
+  score: 0
+
+# Any role can be "theoretical": a capability no ship has in game yet, with a score the
+# maintainer sets (0 to the role's max). Like every theoretical range, it counts only in the
+# high case, so the low case stays what's in game today.
+theoretical:
+  countsIn: [high]
+
+rounding:
+  halfPoints: [defense, cargoCapacity, extraShips]   # these lines keep half points, rounded down
+
+# Rules in words, tagged with the categories they touch. The script implements each one.
+rules:
+  - id: carriedRoleShip
+    categories: [mining, medical, salvageRepair, manufacturing, livingQuarters, exploration]
+    text: A carried ship scores its own full score in the role it fills.
+  - id: requiredRoles
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter, exploration]
+    text: Every needed role must be filled by the base itself, a carried ship, a theoretical score or No room. A role the base has nothing built in for can't be left as built in. No room scores 0 in that role.
+  - id: roleShipUsesSpace
+    categories: [mining, medical, salvageRepair, defense, livingQuarters, cargo, cargoCapacity, commuter, exploration]
+    text: A carried ship in a role is aboard and its cargo space comes off the base's cargo. The role scores the higher of the base's own and the ship's.
+  - id: theoretical
+    categories: [mining, refining, medical, salvageRepair, manufacturing, defense, livingQuarters, cargo, commuter, exploration]
+    text: A role can be Theoretical, for a capability no ship has in game yet, with a score from 0 to the role's max that the maintainer sets. Like every theoretical range, it counts only in the high case; the low case keeps what the base has built in. A layout with a theoretical role is estimated.
+  - id: extraShips
+    categories: [extraShips, cargoCapacity]
+    text: Extra ships fill no role. Each one gets a score from 1 to 5 that the maintainer sets (1 if left out); the Extra ships line is their sum, capped at 5, in the needed tier. Cargo space one takes comes off the hold before cargo capacity is scored, the same as a role ship (a 400 SCU hold with a 100 SCU extra ship scores as 300 SCU). A ship that may not fit counts in the high case only. They hold a note on what else fits and aren't validated.
+  - id: locations
+    categories: [all]
+    text: A carried ship goes in one of the base's locations (hangar, landing pad, cargo hold, vehicle bay). Locations have no ship count; which ships fit together is a fact of the layout.
+  - id: loadoutOnly
+    categories: [mining, medical, salvageRepair, defense, livingQuarters, cargo, commuter, exploration]
+    text: Carried roles count only from one layout whose ships fit together. A ship ranks by its best layout.
+  - id: bestSeat
+    categories: [defense]
+    text: Defense counts the best single seat (pilot or one turret). Energy-capable mounts only; missiles never count.
+  - id: carriedFighter
+    categories: [defense]
+    text: On a base not in largeBases, a carried fighter scores 2 x its own best-seat gun score - 0.5, and defense takes the higher of the base and the fighter.
+  - id: largeBaseToughness
+    categories: [defense]
+    text: Bases in largeBases get +1 on their own best seat (cap 5). Carried fighters score nothing there.
+  - id: multipleBeds
+    categories: [medical]
+    text: +1 medical when the base and its carried ships hold two or more medical beds in total.
+  - id: repairBonus
+    categories: [salvageRepair]
+    text: +1 when the base repairs, refuels and rearms the small ships it carries, +2 when it repairs itself or larger ships. Line capped at 5.
+  - id: exploration
+    categories: [exploration]
+    text: Exploration is a needed placeholder until the gameplay exists. The line is the larger of the radar score (radar size 1 = 1, 2 = 1.5, 3 = 2, 4 = 2.5; every ship has one) and the marketed level (explorer 5, scout 3). A marketed level that isn't in game yet goes in as a range from none, so it counts in the high case only. A carried scout counts at full value.
+  - id: livingQuarters
+    categories: [livingQuarters]
+    text: 1 point per bed, up to 4, plus 1 for rec space. A carried ship such as a luxury ship can fill the role; it scores the higher of the base and the ship.
+  - id: cargoHauler
+    categories: [cargo]
+    text: Cargo hauler is 0-5, the manoeuvrability of whatever moves the cargo (judgement, Andromeda 5, Ironclad 0), the higher of the base and a carried hauler at full value.
+  - id: cargoCapacity
+    categories: [cargoCapacity]
+    text: Cargo capacity is 0-5 from the base's cargo space after subtracting what the layout's carried ships take up. 0 at 100 SCU or less, then 1 point per doubling (200 SCU 1, 400 2, 800 3, 1600 4, 3200 or more 5), in half points rounded down. It isn't a role, so No room on the hauler leaves it alone. This is also the spare-room score, since room left means cargo space left.
+  - id: commuter
+    categories: [commuter]
+    text: Shuttle is 1 when the base has a commuter, built in or carried, and 0 when it has none. A command module that only detaches the bridge earns nothing.
+  - id: ranges
+    categories: [all]
+    text: Values that rest on marketing or estimated fits are written as {low, high}. The script scores the low case and the high case.

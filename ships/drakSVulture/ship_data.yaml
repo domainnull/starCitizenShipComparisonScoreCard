@@ -9,9 +9,10 @@ patch: 4.10.3
 dimensions: {length: 34, width: 16, height: 9}
 carrierSize: small
 roles:
-  salvageRepair: {level: rubbleMedium, repair: none}
+  salvageRepair: {heads: 2, tractorBeam: true, materialGrade: low}
 notes:
-- Not in any layout yet.
+- Two Baler salvage heads with tractor beam modules. Makes low grade construction material (Construction
+  Rubble, per game data's salvage hopper).
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
 - https://starcitizen.tools/Vulture

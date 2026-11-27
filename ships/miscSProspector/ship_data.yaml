@@ -8,9 +8,11 @@ status: flightReady
 patch: 4.10.3
 dimensions: {length: 26.5, width: 16.5, height: 8}
 carrierSize: small
-roles: {mining: prospector}
+roles:
+  mining: {headPower: 3900, moduleSlots: 2, heads: 1}
 notes:
 - Not in any layout yet.
+- Best S1 head is the Helix I (3,900 power, 2 module slots).
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
 - https://starcitizen.tools/Prospector
