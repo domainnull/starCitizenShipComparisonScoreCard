@@ -12,8 +12,8 @@
 (function () {
   "use strict";
 
-  var VIEWER_VERSION = "2.1.0";
-  var SCRIPT_MAJOR_SUPPORTED = 2;   // results written by score script 2.x
+  var VIEWER_VERSION = "2.2.0";
+  var SCRIPT_MAJORS_SUPPORTED = [2, 3];   // results written by score script 2.x or 3.x (same format)
   var MAX_SNAPSHOTS = 5;
 
   var results = window.scorecardResults || null;
@@ -143,10 +143,10 @@
   function banners() {
     var out = [];
     var sv = major(results.scriptVersion);
-    if (!isNaN(sv) && sv !== SCRIPT_MAJOR_SUPPORTED) {
+    if (!isNaN(sv) && SCRIPT_MAJORS_SUPPORTED.indexOf(sv) < 0) {
       out.push(h("div", { class: "banner error" }, [
         "These results come from score script " + results.scriptVersion + ", but viewer " + VIEWER_VERSION +
-        " reads script " + SCRIPT_MAJOR_SUPPORTED + ".x results. Some parts may be missing or wrong until the viewer is updated."
+        " reads script " + SCRIPT_MAJORS_SUPPORTED.join(".x or ") + ".x results. Some parts may be missing or wrong until the viewer is updated."
       ]));
     } else if (!results.shipInfo || !results.tiers) {
       out.push(h("div", { class: "banner warn" }, [
@@ -271,6 +271,7 @@
 
   function sourceLine(cat, line, role) {
     if (cat === "extraShips") return [h("div", { class: "src", text: "Not a role: each extra ship's own score (1-5), added up and capped" })];
+    if (cat === "repair") return [h("div", { class: "src", text: "Not a role: theoretical, set by hand per base, high case only" })];
     if (cat === "cargoCapacity") return [h("div", { class: "src", text: "Not a role: the base's cargo space left after its carried ships, extra ships included" })];
     var src = line.sources || { low: line.source, high: line.source };
     var parts = [];

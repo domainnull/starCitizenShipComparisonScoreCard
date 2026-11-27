@@ -6,32 +6,61 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.2.0 / script 2.2.0 / editor 2.2.0 (Nov 27 2026): bespoke guns, mining by passive power, salvage by heads
+## Rubric 4.0.0 / script 3.0.0 / editor 3.0.0 / viewer 2.2.0 (Nov 27 2026): bespoke guns, mining by passive power, salvage by heads, repair split out
 
-### Salvage by heads, tractor beams and scraper modules
+**Major**: the salvage cap goes to 6 and a new needed category (repair) is added, so the maximum
+total changes and 4.0.0 scores aren't comparable with 3.x. The script follows (3.0.0), and the editor
+too (3.0.0, since the mining and salvage data formats changed). The viewer reads both 2.x and 3.x
+results (2.2.0). 3.2.0 was never merged; its changes ship here. The 3.1.0 rubric and results stay in
+`rubricVersions/3.1.0/`.
 
-- **Salvage by heads** (salvageRepair). The named levels (constructionSalvage 4, constructionPieces 3,
-  rubbleMedium 2, rubbleSmall 1) are gone. A ship's salvage is now `{heads, tractorHeads,
-  scraperModules, repair}`. It scores `perHead` (1) per salvage head, `perTractorHead` (0.5) more per
-  head with a tractor beam module, and `perScraperModule` (0.25) per scraper module. A socket holding a
-  tractor beam isn't a scraper. The base's own salvage and its carried ship don't add up; the better
-  one counts. The repair bonus is unchanged, and the line is capped at 5. Owner's words: grade salvage
-  on the number of heads, the type of head (whether it has a tractor beam) and the scraper modules.
-  The three values are the coordinator's defaults.
-- Owner, Nov 27: the Fortune has one head and the Vulture two, both with a tractor beam per head; the
-  Salvation has none. The Salvation swaps its scraper module, not its heads.
-- Data from scunpacked-data: the Baler head (Vulture, Fortune) has 2 module sockets and the Salvation
-  head 1 fixed socket. Vulture 2 heads, 2 tractor heads, 2 scrapers = 3.5 (game data's default fit
-  has one tractor and 3 scrapers = 3.25). Fortune 1 head, 1 tractor, 1 scraper = 1.75. Salvation 2
-  heads, 0 tractors, 2 scrapers = 2.5.
-- **MISC Fortune added** (miscSFortune), carried-only, in no layout yet.
-- Capacity and auto-boxing are not scored.
-- Estimates and open questions (Salvation outscoring the Fortune, Baler socket count, capital
-  salvagers) are in issue 21.
-- Scores that moved: salvage +1.5 on every layout carrying a Salvation or the Vulture. Kraken 28-32.5
-  -> 29.5-34, Polaris 29 -> 30.5, Idris-P 28.5 -> 30, Liberator 25 -> 26.5, Ironclad Assault 23-26 ->
-  24.5-27.5, Ironclad 19-21 -> 20.5-22.5. Odyssey (no room) and Galaxy (nothing carried) don't move.
-  Ranks are unchanged.
+### Salvage by heads, tractor beam and material grade
+
+- **Salvage** (salvageRepair, shown as "Salvage"). The named levels are gone. A ship's salvage is
+  `{heads, tractorBeam, materialGrade}`. It scores 1 per salvage head, capped at `maxHeads` (2)
+  because the owner plays solo; `tractorBeam` (1) if the ship has at least one tractor beam, since
+  more add nothing; and the construction material grade it makes (`materialGrade`: low 1, medium 2,
+  high 3). Hopper and cargo size don't count, because the mothership covers them. Owner's words: head
+  count (max 2, solo), a tractor beam (1 point, they don't need more than one), and the strength of
+  construction material (1-3, low/medium/high grade).
+- **Cap 6.** Heads, tractor and high grade add up to 6, so the cap is 6. Owner: "The odd cap is fine, I
+  am more interested in capturing an accurate category as this is a needed role." Raising caps on other
+  categories is tracked in issue 23.
+- Grades come from each ship's salvage hopper in scunpacked-data: Construction Rubble (low) for the
+  Salvation, Vulture and Fortune; Construction Pieces (medium) for the Moth; Construction Salvage (high)
+  for the Reclaimer. Owner, Nov 27: Fortune 1 head, Vulture 2, both with tractor beams; the Salvation
+  has none and swaps its scraper module, not its heads.
+- Ship scores: Vulture 2 + 1 + 1 = 4; Salvation 2 + 0 + 1 = 3; Fortune 1 + 1 + 1 = 3 (new ship,
+  miscSFortune). Reference only, not in the ship data: Moth 4-5 (5 with a tractor module), Reclaimer 6.
+  Estimates are in issue 21.
+- An earlier draft the same day scored heads, tractor heads and scraper modules (0.25 each); the owner
+  replaced it before merge.
+
+### Repair split out
+
+- **Repair** (new category, needed tier, weight 1.0, max 5). Repair no longer adds to salvage. No ship
+  repairs in game yet, so it's theoretical: each base has `repair:` in its ship data (0-5, default 0,
+  a slider in the editor), counting in the high case only. Every base is at 0. Owner's words: split
+  repair into a new category, entirely theoretical for now, a slider 0-5, most have 0. Issue 22.
+- The old repair bonus (+1 small ships, +2 itself or larger) is gone. Bases that had +1: Idris-P,
+  Liberator, Kraken, Ironclad Assault, Polaris; Galaxy 0-1.
+- The Galaxy (Med Bay) layout now lists salvage as No room: it has no salvage of its own, and before,
+  only its repair range filled the role.
+
+### Scores that moved (from 3.1.0)
+
+| Layout | 3.1.0 | 4.0.0 | Salvage line |
+|---|---|---|---|
+| Kraken | 28-32.5 | 29-33.5 | 2 -> 3 (Salvation, no repair bonus) |
+| Polaris | 29 | 30 | 2 -> 3 |
+| Idris-P | 28.5 | 29.5 | 2 -> 3 |
+| Liberator | 25 | 26 | 3 -> 4 (Vulture) |
+| Ironclad Assault | 23-26 | 24-27 | 2 -> 3 |
+| Odyssey | 21-28 | 21-27 | 0 (mining high 3 -> 2) |
+| Ironclad | 19-21 | 21-23 | 1 -> 3 |
+| Galaxy (Med Bay) | 19-24 | 19-23 | 0-1 -> 0 (repair moved out) |
+
+The Ironclad now ranks above the Galaxy.
 
 ### Mining by passive power
 
@@ -73,8 +102,8 @@ snapshot.
   Odyssey turrets are assumed swappable until they are in game (issue 17).
 - Scores that moved: none. The Polaris front seat drops from 5 to 4 (2 x (2.5 - 0.5)), but the
   Polaris is in `largeBases`, so its +1 still caps defense at 5 and it stays at 29.
-- **Minor**: a new rule, and no score is incomparable. The 3.1.0 rubric and results are kept in
-  `rubricVersions/3.1.0/`.
+- On its own this was a minor change (a new rule, no score incomparable); it ships in 4.0.0 with the
+  rest.
 
 ## Rubric 3.1.0 / script 2.1.0 / editor 2.1.0 / viewer 2.1.0 (Nov 26 2026): extra ships score and take cargo space
 

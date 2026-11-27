@@ -27,7 +27,7 @@ from pathlib import Path
 
 import yaml
 
-SCRIPT_VERSION = "2.2.0"
+SCRIPT_VERSION = "3.0.0"
 
 ROOT = Path(__file__).resolve().parent.parent
 RUBRIC_PATH = ROOT / "rubric.yaml"
@@ -49,6 +49,7 @@ LOCATIONS = ["hangar", "pad", "cargoHold", "vehicleBay"]
 # Lines scored: every role, plus cargo capacity, which no layout fills.
 LINE_ORDER = [k for k in ROLE_KEYS]
 LINE_ORDER.insert(LINE_ORDER.index("cargo") + 1, "cargoCapacity")
+LINE_ORDER.insert(LINE_ORDER.index("salvageRepair") + 1, "repair")
 LINE_ORDER.append("extraShips")
 # A required role's source when the base has no room left for a ship that would fill it.
 NO_ROOM = "noRoom"
@@ -230,15 +231,14 @@ def validate_roles(path, roles, rubric, report, full):
         ok &= validate_value(path, f + "medical", v["medical"], med, report)
     if "salvageRepair" in v:
         def sal(x):
-            if not isinstance(x, dict) or set(x) != {"heads", "tractorHeads", "scraperModules", "repair"}:
-                return "needs heads, tractorHeads, scraperModules and repair"
-            for k in ("heads", "tractorHeads", "scraperModules"):
-                if not isinstance(x[k], int) or isinstance(x[k], bool) or x[k] < 0:
-                    return f"{k} must be a whole number, 0 or more"
-            if x["tractorHeads"] > x["heads"]:
-                return "tractorHeads can't be more than heads"
-            if x["repair"] not in cats["salvageRepair"]["repairBonus"]:
-                return f"repair {x['repair']!r} is not one of {', '.join(cats['salvageRepair']['repairBonus'])}"
+            if not isinstance(x, dict) or set(x) != {"heads", "tractorBeam", "materialGrade"}:
+                return "needs heads, tractorBeam and materialGrade"
+            if not isinstance(x["heads"], int) or isinstance(x["heads"], bool) or x["heads"] < 0:
+                return "heads must be a whole number, 0 or more"
+            if not isinstance(x["tractorBeam"], bool):
+                return "tractorBeam must be true or false"
+            if x["materialGrade"] not in cats["salvageRepair"]["materialGrade"]:
+                return f"materialGrade {x['materialGrade']!r} is not one of {', '.join(cats['salvageRepair']['materialGrade'])}"
         ok &= validate_value(path, f + "salvageRepair", v["salvageRepair"], sal, report)
     if "defense" in v:
         def dfn(x):
@@ -283,7 +283,7 @@ def validate_roles(path, roles, rubric, report, full):
 
 def validate_ship(path, data, rubric, report, has_layouts):
     required = ["id", "name", "manufacturer", "size", "cigSize", "status", "roles", "sources", "changes"]
-    optional = ["sizeOverride", "patch", "dimensions", "carrierSize", "locations", "cargoBay", "notes"]
+    optional = ["sizeOverride", "patch", "dimensions", "carrierSize", "locations", "cargoBay", "notes", "repair"]
     if has_layouts:
         required = required + ["locations"]
         optional = [o for o in optional if o != "locations"]
@@ -338,6 +338,11 @@ def validate_ship(path, data, rubric, report, has_layouts):
                 if not isinstance(c, dict) or "patch" not in c or "change" not in c:
                     report.error(path, f"changes[{i}]", "missing field", "each entry needs patch and change")
                     ok = False
+    if "repair" in data:
+        rv, rmax = data["repair"], rubric["categories"]["repair"]["max"]
+        if not isinstance(rv, (int, float)) or isinstance(rv, bool) or not 0 <= rv <= rmax:
+            report.error(path, "repair", "bad value", f"must be a number from 0 to {rmax}")
+            ok = False
     if "locations" in data:
         locs = data["locations"]
         if not isinstance(locs, list) or not locs:
@@ -578,12 +583,13 @@ class Scorer:
         return min(s, cfg["max"])
 
     def salvage_one(self, v):
-        """Heads, tractor-beam heads and scraper modules, before repair."""
-        if not isinstance(v, dict):
+        """Heads (capped), tractor beam and construction material grade."""
+        if not isinstance(v, dict) or not v.get("heads"):
             return 0
         cfg = self.cats["salvageRepair"]
-        return (cfg["perHead"] * v.get("heads", 0) + cfg["perTractorHead"] * v.get("tractorHeads", 0)
-                + cfg["perScraperModule"] * v.get("scraperModules", 0))
+        return (cfg["perHead"] * min(v["heads"], cfg["maxHeads"])
+                + (cfg["tractorBeam"] if v.get("tractorBeam") else 0)
+                + cfg["materialGrade"][v.get("materialGrade", "none")])
 
     def salvageRepair(self, n, c):
         cfg = self.cats["salvageRepair"]
@@ -591,7 +597,6 @@ class Scorer:
         s = self.salvage_one(ns)
         if c:
             s = max(s, self.salvage_one(c.get("salvageRepair")))
-        s += cfg["repairBonus"][ns.get("repair", "none")]
         return min(s, cfg["max"])
 
     def manufacturing(self, n, c):
@@ -714,6 +719,12 @@ class Scorer:
             extra_total += xcfg["perShip"]["default"] if s is None else s
         lines["extraShips"] = floor_half(min(extra_total, xcfg["max"]))
         sources["extraShips"] = "native"
+
+        # Repair: theoretical, set by hand per base, high case only.
+        rcfg = self.cats["repair"]
+        rv = carrier.get("repair", rcfg["default"])
+        lines["repair"] = floor_half(min(rv, rcfg["max"])) if scenario in self.r["theoretical"]["countsIn"] else 0
+        sources["repair"] = THEORETICAL if lines["repair"] else "native"
 
         scu = max((n.get("cargo") or {}).get("scu", 0) - aboard_cargo, 0)
         lines["cargoCapacity"] = self.capacity(scu)

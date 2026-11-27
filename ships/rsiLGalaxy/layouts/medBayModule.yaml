@@ -15,7 +15,7 @@ roles:
     fitsInLowCase: false
   refining: {source: native}
   medical: {source: native}
-  salvageRepair: {source: native}
+  salvageRepair: {source: noRoom}
   manufacturing: {source: native}
   defense: {source: native}
   livingQuarters: {source: native}

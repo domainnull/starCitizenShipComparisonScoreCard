@@ -13,7 +13,7 @@ roles:
   mining: {headPower: 0, moduleSlots: 0, heads: 0}
   refining: roomForLater
   medical: {level: none, beds: 0}
-  salvageRepair: {heads: 0, tractorHeads: 0, scraperModules: 0, repair: smallShips}
+  salvageRepair: {heads: 0, tractorBeam: false, materialGrade: none}
   manufacturing: roomForLater
   defense:
     seats:
@@ -27,6 +27,7 @@ roles:
   cargo: {scu: 800, maneuverability: 1}
   commuter: false
   exploration: {radarSize: 2, level: none}
+repair: 0
 locations: [hangar, pad]
 notes:
 - Internal garage plus side bays (side bays hold one or two small ships, estimate) and three exterior pads (two top, one front).

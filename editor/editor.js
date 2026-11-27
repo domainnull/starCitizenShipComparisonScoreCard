@@ -714,7 +714,7 @@
 
   var ROLE_DEFAULTS = {
     mining: { headPower: 0, moduleSlots: 0, heads: 1 }, refining: "none", manufacturing: "none",
-    medical: { level: "none", beds: 0 }, salvageRepair: { heads: 0, tractorHeads: 0, scraperModules: 0, repair: "none" },
+    medical: { level: "none", beds: 0 }, salvageRepair: { heads: 0, tractorBeam: false, materialGrade: "none" },
     defense: { seats: [] }, livingQuarters: { beds: 0, recSpace: false }, cargo: { scu: 0, maneuverability: 0 },
     commuter: false, exploration: { radarSize: 1, level: "none" }, hauler: true, fighter: true,
   };
@@ -833,12 +833,27 @@
       body.appendChild(roleGrid);
       body.appendChild(h("h2", { text: "Hangar" }));
       body.appendChild(hangarBlock());
+      body.appendChild(h("h2", { text: "Repair" }));
+      body.appendChild(repairBlock());
       body.appendChild(h("h2", { text: "Notes, sources and changes" }));
       body.appendChild(textBlocks());
     }
 
     function bind(path, make, opts) {
       return leaf(function () { return getPath(draft, path); }, function (v) { setPath(draft, path, v); changed(); }, make, opts);
+    }
+
+    function repairBlock() {
+      var max = R.repair.max;
+      var cur = typeof draft.repair === "number" ? draft.repair : R.repair.default;
+      var out = h("span", { class: "rangeLbl", text: num(cur) + " / " + max });
+      var slider = h("input", { type: "range", min: "0", max: String(max), step: "0.5", value: String(cur),
+        "aria-label": "Repair score", oninput: function () {
+          draft.repair = Number(slider.value); out.textContent = num(draft.repair) + " / " + max; changed(); } });
+      var f = h("div", { class: "form" });
+      f.appendChild(row("Repair score", [slider, out], "Theoretical: no ship repairs in game yet. Your own score for how well this base repairs, " +
+        "0 to " + max + ". It counts in the high case only."));
+      return f;
     }
 
     function basics() {
@@ -910,13 +925,12 @@
           inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.medical.levels))));
           inner.appendChild(row("Medical beds", bind(p.concat("beds"), numberInput(true))));
         } else if (k === "salvageRepair") {
-          inner.appendChild(row("Salvage heads", bind(p.concat("heads"), numberInput(true)), R.salvage.perHead + " each"));
-          inner.appendChild(row("Heads with a tractor beam", bind(p.concat("tractorHeads"), numberInput(true)),
-            R.salvage.perTractorHead + " more each"));
-          inner.appendChild(row("Scraper modules", bind(p.concat("scraperModules"), numberInput(true)),
-            R.salvage.perScraperModule + " each; a socket holding a tractor beam isn't one"));
-          inner.appendChild(row("Repairs", bind(p.concat("repair"), selectInput(R.repairLevels,
-            R.repairLevels.map(function (x) { return { none: "nothing", smallShips: "small ships it carries", base: "itself or larger ships" }[x] || words(x); })))));
+          inner.appendChild(row("Salvage heads", bind(p.concat("heads"), numberInput(true)),
+            R.salvage.perHead + " each, " + R.salvage.maxHeads + " at most"));
+          inner.appendChild(row("Tractor beam", bind(p.concat("tractorBeam"), boolInput("has a tractor beam")),
+            "adds " + R.salvage.tractorBeam + "; one is enough"));
+          inner.appendChild(row("Construction material", bind(p.concat("materialGrade"), selectInput(R.salvage.materialGrades,
+            R.salvage.materialGrades.map(function (x) { return { none: "none", low: "low grade (rubble)", medium: "medium grade (pieces)", high: "high grade (salvage)" }[x] || words(x); })))));
         } else if (k === "defense") {
           inner.appendChild(seatsEditor());
         } else if (k === "livingQuarters") {

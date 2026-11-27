@@ -14,9 +14,8 @@ roles:
   medical: {level: tier1, beds: 3}
   salvageRepair:
     heads: 0
-    tractorHeads: 0
-    scraperModules: 0
-    repair: {low: none, high: smallShips}
+    tractorBeam: false
+    materialGrade: none
   manufacturing: roomForLater
   defense:
     seats:
@@ -34,6 +33,7 @@ roles:
   cargo: {scu: 64, maneuverability: 2}
   commuter: false
   exploration: {radarSize: 3, level: none}
+repair: 0
 locations: [hangar, vehicleBay]
 notes:
 - Scored with the Med Bay module (tier 1, 2 and 3 beds). Modules swap only at a shop.

@@ -15,7 +15,7 @@ roles:
   medical:
     level: tier2
     beds: {low: 1, high: 2}
-  salvageRepair: {heads: 0, tractorHeads: 0, scraperModules: 0, repair: none}
+  salvageRepair: {heads: 0, tractorBeam: false, materialGrade: none}
   manufacturing: roomForLater
   defense:
     seats:
@@ -33,6 +33,7 @@ roles:
   exploration:
     radarSize: {low: 3, high: 4}
     level: {low: none, high: explorer}
+repair: 0
 locations: [hangar, vehicleBay]
 notes:
 - Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).

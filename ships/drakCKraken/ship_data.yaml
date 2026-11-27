@@ -15,7 +15,7 @@ roles:
   medical:
     level: {low: none, high: tier1}
     beds: {low: 0, high: 2}
-  salvageRepair: {heads: 0, tractorHeads: 0, scraperModules: 0, repair: smallShips}
+  salvageRepair: {heads: 0, tractorBeam: false, materialGrade: none}
   manufacturing: roomForLater
   defense:
     seats:
@@ -37,6 +37,7 @@ roles:
   exploration:
     radarSize: {low: 3, high: 4}
     level: none
+repair: 0
 locations: [hangar, pad, vehicleBay, cargoHold]
 notes:
 - Four small open pads, two medium upper platforms, two internal multi-purpose hangars (sizes unpublished) and a

@@ -35,7 +35,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import score  # noqa: E402  (scripts/score.py)
 
-EDITOR_VERSION = "2.2.0"
+EDITOR_VERSION = "3.0.0"
 
 ROOT = score.ROOT
 SHIPS_DIR = score.SHIPS_DIR
@@ -50,7 +50,7 @@ LAYOUT_HEADER = "# Layout: which ship covers each role. Scores are written to re
 
 # Key order the data files use, so a saved file reads like the hand-written ones.
 SHIP_ORDER = ["id", "name", "manufacturer", "size", "cigSize", "sizeOverride", "status", "patch",
-              "dimensions", "carrierSize", "roles", "locations", "cargoBay", "notes", "sources", "changes"]
+              "dimensions", "carrierSize", "roles", "repair", "locations", "cargoBay", "notes", "sources", "changes"]
 ROLE_ORDER = score.ROLE_KEYS + ["hauler", "fighter"]
 LAYOUT_ORDER = ["layout", "carrier", "description", "estimated", "patch", "cargoScuMethod", "roles", "extraShips"]
 ENTRY_ORDER = ["source", "ship", "location", "cargoScu", "fit", "patch", "fitsInLowCase", "score", "note"]
@@ -223,8 +223,10 @@ def rubric_info(rubric):
         "manufacturers": {k: MANUFACTURER_NAMES.get(k, k) for k in sorted(score.MANUFACTURERS)},
         "categories": {k: {"displayName": v["displayName"], "max": v.get("max"),
                            "levels": list((v.get("levels") or {}).keys())} for k, v in cats.items()},
-        "repairLevels": list(cats["salvageRepair"]["repairBonus"].keys()),
-        "salvage": {k: cats["salvageRepair"][k] for k in ("perHead", "perTractorHead", "perScraperModule")},
+        "repair": {"max": cats["repair"]["max"], "default": cats["repair"]["default"]},
+        "salvage": {"perHead": cats["salvageRepair"]["perHead"], "maxHeads": cats["salvageRepair"]["maxHeads"],
+                    "tractorBeam": cats["salvageRepair"]["tractorBeam"],
+                    "materialGrades": list(cats["salvageRepair"]["materialGrade"].keys())},
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
         "weaponTypes": cats["defense"]["weaponTypes"],
         "miningModule": cats["mining"]["passiveModuleMultiplier"],
