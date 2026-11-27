@@ -34,16 +34,12 @@ roles:
       guns: [S5, S5]
     - name: Bridge remote turret
       guns: [S4, S4]
-      energyCapable: false
     - name: Bridge remote turret
       guns: [S4, S4]
-      energyCapable: false
     - name: Bridge remote turret
       guns: [S4, S4]
-      energyCapable: false
     - name: Bridge remote turret
       guns: [S4, S4]
-      energyCapable: false
   livingQuarters: {beds: 22, recSpace: true}
   cargo: {scu: 1374, maneuverability: 0}
   commuter: false
@@ -54,6 +50,7 @@ notes:
   ships fall out when it opens.'
 - 'Medical: one tier 2 bed and four tier 3.'
 - Repairs, refuels and rearms ships aboard since 4.8.
+- Bridge remote turrets ship with ballistic S4 guns but take any S4 gun (scunpacked-data), so they score by size.
 - Cargo grids line the main hangar; repo owner judges they leave a clear way in and out, so carried ships take no
   cargo (untested).
 sources:

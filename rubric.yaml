@@ -5,7 +5,7 @@
 # Versioning (semver): major = old scores are not comparable, minor = new rule or
 # category, patch = fix. Every version gets a git tag (rubric-vX.Y.Z) and an entry in
 # rubricVersions/DECISIONS.md. Old rubric files live in rubricVersions/.
-rubricVersion: 3.1.0
+rubricVersion: 3.2.0
 
 # Tiers and weights. Each line scores 0-5 unless it says otherwise.
 tiers:
@@ -45,9 +45,14 @@ categories:
   defense:
     displayName: Defense
     max: 5
-    # Energy-capable mounts only, no missiles. Ballistic-by-default mounts count when the
-    # mount can take energy guns (record `energyCapable: false` otherwise).
+    # Swappable guns score by size, whatever they ship with, since they can take energy guns.
+    # Bespoke guns (built for the ship, can't be swapped) score by size too, but a bespoke gun
+    # that needs ammo (ammoWeaponTypes) loses bespokeAmmoPenalty per gun for rearming, never
+    # below 0 per gun. No missiles.
     gunScore: {S1: 0, S2: 0, S3: 0.25, S4: 0.5, S5: 1, S6: 2.5, S7: 5}
+    bespokeAmmoPenalty: 0.5
+    ammoWeaponTypes: [ballistic]
+    weaponTypes: [energy, ballistic, distortion]
     largeBaseToughnessBonus: 1
     # The "Polaris and larger" group is its own list, not CIG size.
     largeBases: [rsiCPolaris, aegsCIdrisP, drakCKraken]
@@ -133,7 +138,10 @@ rules:
     text: Carried roles count only from one layout whose ships fit together. A ship ranks by its best layout.
   - id: bestSeat
     categories: [defense]
-    text: Defense counts the best single seat (pilot or one turret). Energy-capable mounts only; missiles never count.
+    text: Defense counts the best single seat (pilot or one turret). Swappable guns score by size, since they can take energy guns; missiles never count.
+  - id: bespokeGuns
+    categories: [defense]
+    text: Bespoke guns (built for the ship, can't be swapped) score by size. A bespoke ballistic gun, such as the Polaris's Maris cannons, scores 0.5 less per gun because it needs rearming, never below 0 per gun (an S6 scores 2, an S4 0).
   - id: carriedFighter
     categories: [defense]
     text: On a base not in largeBases, a carried fighter scores 2 x its own best-seat gun score - 0.5, and defense takes the higher of the base and the fighter.

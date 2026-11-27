@@ -37,6 +37,7 @@ locations: [hangar, vehicleBay]
 notes:
 - Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).
 - One XS hangar slot; a separate Ursa-sized ground bay. Turret positions unpublished.
+- Turret guns assumed swappable (not bespoke) until the ship is in game; see issue 17.
 - Marketed as a long-range explorer: explorer level in the high case only, since the exploration loop is not in game.
 - Radar not in game data (concept); size 3 to 4 estimated from ships its size (Carrack and Ironclad carry size 3, Polaris size 4).
 sources:

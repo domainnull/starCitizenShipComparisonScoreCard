@@ -35,7 +35,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import score  # noqa: E402  (scripts/score.py)
 
-EDITOR_VERSION = "2.1.1"
+EDITOR_VERSION = "2.2.0"
 
 ROOT = score.ROOT
 SHIPS_DIR = score.SHIPS_DIR
@@ -225,6 +225,8 @@ def rubric_info(rubric):
                            "levels": list((v.get("levels") or {}).keys())} for k, v in cats.items()},
         "repairLevels": list(cats["salvageRepair"]["repairBonus"].keys()),
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
+        "weaponTypes": cats["defense"]["weaponTypes"],
+        "bespokeAmmoPenalty": cats["defense"]["bespokeAmmoPenalty"],
         "radarSizes": list(cats["exploration"]["radarScore"].keys()),
         "maneuverabilityMax": cats["cargo"]["maneuverabilityMax"],
         "largeBases": list(cats["defense"].get("largeBases") or []),

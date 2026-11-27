@@ -26,6 +26,8 @@ roles:
       guns: [S3, S3, S3, S3]
     - name: Front low turret
       guns: [S6, S6]
+      bespoke: true
+      weaponType: ballistic
     - name: Remote bottom turret
       guns: [S3, S3, S3, S3]
   livingQuarters: {beds: 13, recSpace: true}
@@ -36,7 +38,8 @@ locations: [hangar, cargoHold]
 notes:
 - Hangar held a Golem, Golem OX and C8X with room for another snub; vehicle area held a Salvation off the cargo
   grid (repo owner's in-game test).
-- Front S6 cannons are ballistic by default; scored as energy-capable.
+- Front S6 Maris cannons are bespoke ballistic guns that can't be swapped (Polaris-only mounts and locked weapon
+  ports in scunpacked-data), so each scores 0.5 below its size for rearming.
 - Torpedoes and missiles don't count. Cargo manoeuvrability is a judgement score.
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json

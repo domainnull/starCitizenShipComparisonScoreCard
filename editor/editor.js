@@ -135,10 +135,14 @@
     return JSON.stringify(a) === JSON.stringify(b) ? a : { low: a, high: b };
   }
 
+  function bespokeText(seat) {
+    return seat.bespoke ? " (bespoke " + (seat.weaponType || "?") + ")" : "";
+  }
+
   function seatText(seat) {
     if (!seat) return "no guns that count";
     return seat.name + ": " + (seat.guns.length ? seat.guns.join(", ") : "no guns") +
-      (seat.energyCapable === false ? " (not energy-capable)" : "");
+      bespokeText(seat);
   }
 
   // ------------------------------------------------------------------ router
@@ -412,7 +416,7 @@
       if (k === "defense") {
         var seats = (v && v.seats) || [];
         text = h("div", null, seats.length ? seats.map(function (seat) {
-          return h("div", { text: seat.name + ": " + fmtR(seat.guns) + (seat.energyCapable === false ? " (not energy-capable)" : "") });
+          return h("div", { text: seat.name + ": " + fmtR(seat.guns) + bespokeText(seat) });
         }) : ["no seats"]);
       } else if (v && typeof v === "object" && !isRange(v)) {
         text = Object.keys(v).map(function (kk) { return words(kk) + " " + fmtR(v[kk]); }).join(", ");
@@ -928,15 +932,20 @@
         seats.forEach(function (seat, i) {
           var nm = textInput("Pilot", 18)(seat.name, function (x) { seat.name = x; changed(); });
           var guns = leaf(function () { return seat.guns; }, function (v) { seat.guns = v; changed(); }, gunsInput);
-          var ec = h("input", { type: "checkbox", checked: seat.energyCapable !== false, onchange: function () {
-            if (ec.checked) delete seat.energyCapable; else seat.energyCapable = false; changed(); } });
+          var wt = h("select", { "aria-label": "Weapon type", hidden: !seat.bespoke, onchange: function () {
+            seat.weaponType = wt.value; changed(); } }, R.weaponTypes.map(function (t) {
+            return h("option", { value: t, text: t, selected: seat.weaponType === t }); }));
+          var bs = h("input", { type: "checkbox", checked: !!seat.bespoke, onchange: function () {
+            if (bs.checked) { seat.bespoke = true; seat.weaponType = seat.weaponType || wt.value; }
+            else { delete seat.bespoke; delete seat.weaponType; }
+            wt.hidden = !bs.checked; changed(); } });
           wrap.appendChild(h("div", { class: "seat" }, [nm, h("span", { class: "rangeLbl", text: "guns" }), guns,
-            h("label", { class: "check" }, [ec, "energy-capable"]),
+            h("label", { class: "check" }, [bs, "bespoke (can't swap)"]), wt,
             h("button", { class: "btn small", type: "button", text: "Remove", onclick: function () { seats.splice(i, 1); draw(); changed(); } })]));
         });
         wrap.appendChild(h("button", { class: "btn small", type: "button", text: "Add seat", onclick: function () {
           seats.push({ name: seats.length ? "Turret" : "Pilot", guns: [] }); draw(); changed(); } }));
-        wrap.appendChild(h("p", { class: "meta", text: "One line per seat (pilot or a single turret). Guns as sizes, e.g. S5, S5. Missiles never count." }));
+        wrap.appendChild(h("p", { class: "meta", text: "One line per seat (pilot or a single turret). Guns as sizes, e.g. S5, S5. Missiles never count. Tick bespoke for guns that can't be swapped: they still score by size, but a bespoke ballistic gun scores " + R.bespokeAmmoPenalty + " less per gun (never below 0) since it needs rearming." }));
       }
       draw();
       return wrap;

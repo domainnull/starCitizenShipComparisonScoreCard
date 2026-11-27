@@ -6,6 +6,27 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
+## Rubric 3.2.0 / script 2.2.0 / editor 2.2.0 (Nov 27 2026): bespoke guns
+
+- **Bespoke guns** (defense). A seat can be marked `bespoke: true` with a `weaponType` (energy,
+  ballistic or distortion) for guns built for the ship that can't be swapped. Swappable guns keep
+  scoring by size whatever they ship with, since they can take energy guns. Bespoke guns also score
+  by size, but a bespoke gun that needs ammo (`ammoWeaponTypes`, ballistic for now) scores
+  `bespokeAmmoPenalty` (0.5) less per gun, because it needs rearming. Owner's words: they would use
+  them, but rearming isn't in the game yet. Bespoke distortion guns score by size, since they don't
+  need ammo.
+- Each gun is floored at 0, so a bespoke ballistic S3 (0.25) can't go negative and an S4 lands on 0.
+  This floor is the maintainer's default and hasn't been confirmed.
+- `energyCapable: false` is removed in favour of `bespoke` and `weaponType`.
+- Data checked in scunpacked-data: only the Polaris front turret's two S6 Maris cannons are bespoke
+  ballistic (Polaris-only mounts, locked weapon ports). The Idris-P bridge remote turrets were marked
+  not energy-capable, but their gun ports take any S4 gun, so they are now swappable. The Kraken and
+  Odyssey turrets are assumed swappable until they are in game (issue 17).
+- Scores that moved: none. The Polaris front seat drops from 5 to 4 (2 x (2.5 - 0.5)), but the
+  Polaris is in `largeBases`, so its +1 still caps defense at 5 and it stays at 29.
+- **Minor**: a new rule, and no score is incomparable. The 3.1.0 rubric and results are kept in
+  `rubricVersions/3.1.0/`.
+
 ## Rubric 3.1.0 / script 2.1.0 / editor 2.1.0 / viewer 2.1.0 (Nov 26 2026): extra ships score and take cargo space
 
 - **Extra ships' cargo comes off the hold** (cargoCapacity). An extra ship still fills no role and

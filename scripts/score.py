@@ -27,7 +27,7 @@ from pathlib import Path
 
 import yaml
 
-SCRIPT_VERSION = "2.1.0"
+SCRIPT_VERSION = "2.2.0"
 
 ROOT = Path(__file__).resolve().parent.parent
 RUBRIC_PATH = ROOT / "rubric.yaml"
@@ -234,9 +234,15 @@ def validate_roles(path, roles, rubric, report, full):
             for i, seat in enumerate(x["seats"]):
                 if not isinstance(seat, dict) or "guns" not in seat or "name" not in seat:
                     return f"seat {i} needs name and guns"
-                extra = set(seat) - {"name", "guns", "energyCapable"}
+                extra = set(seat) - {"name", "guns", "bespoke", "weaponType"}
                 if extra:
                     return f"seat {i} has unknown keys {sorted(extra)}"
+                if "bespoke" in seat and not isinstance(seat["bespoke"], bool):
+                    return f"seat {i} bespoke must be true or false"
+                if "weaponType" in seat and seat["weaponType"] not in cats["defense"]["weaponTypes"]:
+                    return f"seat {i} weaponType must be one of {', '.join(cats['defense']['weaponTypes'])}"
+                if seat.get("bespoke") and "weaponType" not in seat:
+                    return f"seat {i} is bespoke, so it needs a weaponType"
                 if not isinstance(seat["guns"], list) or not all(isinstance(g, str) and GUN_RE.match(g) for g in seat["guns"]):
                     return f"seat {i} guns must be a list like [S5, S5]"
                 for g in seat["guns"]:
@@ -499,9 +505,10 @@ class Scorer:
         self.cats = rubric["categories"]
 
     def seat_score(self, seat):
-        if seat.get("energyCapable") is False:
-            return 0
-        return sum(self.cats["defense"]["gunScore"][g] for g in seat["guns"])
+        cfg = self.cats["defense"]
+        if seat.get("bespoke") and seat.get("weaponType") in cfg["ammoWeaponTypes"]:
+            return sum(max(0, cfg["gunScore"][g] - cfg["bespokeAmmoPenalty"]) for g in seat["guns"])
+        return sum(cfg["gunScore"][g] for g in seat["guns"])
 
     def best_seat(self, roles):
         seats = (roles.get("defense") or {}).get("seats", [])
@@ -705,7 +712,7 @@ def ship_stats(rubric, ship):
             sc = scorer.seat_score(seat)
             if best is None or sc > best["score"]:
                 best = {"name": seat.get("name"), "guns": list(seat.get("guns") or []), "score": sc,
-                        "energyCapable": seat.get("energyCapable", True)}
+                        "bespoke": bool(seat.get("bespoke")), "weaponType": seat.get("weaponType")}
         cargo = n.get("cargo") or {}
         lq = n.get("livingQuarters") or {}
         med = n.get("medical") or {}
