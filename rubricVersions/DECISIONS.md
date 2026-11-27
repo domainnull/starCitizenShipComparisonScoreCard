@@ -6,14 +6,43 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.2.0 / script 2.2.0 / editor 2.2.0 (Nov 27 2026): bespoke guns, mining by passive power
+## Rubric 3.2.0 / script 2.2.0 / editor 2.2.0 (Nov 27 2026): bespoke guns, mining by passive power, salvage by heads
+
+### Salvage by heads, tractor beams and scraper modules
+
+- **Salvage by heads** (salvageRepair). The named levels (constructionSalvage 4, constructionPieces 3,
+  rubbleMedium 2, rubbleSmall 1) are gone. A ship's salvage is now `{heads, tractorHeads,
+  scraperModules, repair}`. It scores `perHead` (1) per salvage head, `perTractorHead` (0.5) more per
+  head with a tractor beam module, and `perScraperModule` (0.25) per scraper module. A socket holding a
+  tractor beam isn't a scraper. The base's own salvage and its carried ship don't add up; the better
+  one counts. The repair bonus is unchanged, and the line is capped at 5. Owner's words: grade salvage
+  on the number of heads, the type of head (whether it has a tractor beam) and the scraper modules.
+  The three values are the coordinator's defaults.
+- Owner, Nov 27: the Fortune has one head and the Vulture two, both with a tractor beam per head; the
+  Salvation has none. The Salvation swaps its scraper module, not its heads.
+- Data from scunpacked-data: the Baler head (Vulture, Fortune) has 2 module sockets and the Salvation
+  head 1 fixed socket. Vulture 2 heads, 2 tractor heads, 2 scrapers = 3.5 (game data's default fit
+  has one tractor and 3 scrapers = 3.25). Fortune 1 head, 1 tractor, 1 scraper = 1.75. Salvation 2
+  heads, 0 tractors, 2 scrapers = 2.5.
+- **MISC Fortune added** (miscSFortune), carried-only, in no layout yet.
+- Capacity and auto-boxing are not scored.
+- Estimates and open questions (Salvation outscoring the Fortune, Baler socket count, capital
+  salvagers) are in issue 21.
+- Scores that moved: salvage +1.5 on every layout carrying a Salvation or the Vulture. Kraken 28-32.5
+  -> 29.5-34, Polaris 29 -> 30.5, Idris-P 28.5 -> 30, Liberator 25 -> 26.5, Ironclad Assault 23-26 ->
+  24.5-27.5, Ironclad 19-21 -> 20.5-22.5. Odyssey (no room) and Galaxy (nothing carried) don't move.
+  Ranks are unchanged.
+
+### Mining by passive power
 
 - **Mining by passive power** (mining). The named levels (capital 5, MOLE 4, Prospector 3, Golem 2,
   ROC 1) are gone. A ship's mining is now `{headPower, moduleSlots, heads}`: the best head it can fit,
   its module slots, and how many heads it has. Power is `headPower x passiveModuleMultiplier ^
   moduleSlots`, with every slot holding the best passive power module (Rieger-C3, x1.25), so active
   modules never count. Owner's words: Golem and Prospector should come out the same, they favour high
-  power passive, and a ship like the MOLE with several heads deserves an extra point or two.
+  power passive, and a ship like the MOLE with several heads deserves an extra point or two. Confirmed
+  Nov 27: passive modules only; heads score by their power with modules, since heads have different
+  numbers of module slots. A carried MOLE is tracked in issue 20.
 - Tiers (`powerTiers`, maintainer's defaults): above 0 scores 1, 5,000+ 2, 8,000+ 3, 12,000+ 4.
   `headBonus`: 2 heads +1, 3 or more +2. Capped at 5.
 - Owner, Nov 27: every snub industrial's head is unlocked in game now, so the Golem counts the best

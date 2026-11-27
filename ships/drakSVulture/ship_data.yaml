@@ -9,9 +9,10 @@ patch: 4.10.3
 dimensions: {length: 34, width: 16, height: 9}
 carrierSize: small
 roles:
-  salvageRepair: {level: rubbleMedium, repair: none}
+  salvageRepair: {heads: 2, tractorHeads: 2, scraperModules: 2, repair: none}
 notes:
-- Not in any layout yet.
+- Two Baler salvage heads, 2 module sockets each. The owner says each head carries a tractor beam,
+  leaving 2 scraper sockets. Game data's default fit has one tractor beam and 3 scrapers (would score 3.25, not 3.5).
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
 - https://starcitizen.tools/Vulture

@@ -15,7 +15,7 @@ roles:
   medical:
     level: tier2
     beds: {low: 1, high: 2}
-  salvageRepair: {level: none, repair: none}
+  salvageRepair: {heads: 0, tractorHeads: 0, scraperModules: 0, repair: none}
   manufacturing: roomForLater
   defense:
     seats:

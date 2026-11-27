@@ -42,7 +42,11 @@ categories:
   salvageRepair:
     displayName: Salvage and repair
     max: 5
-    levels: {constructionSalvage: 4, constructionPieces: 3, rubbleMedium: 2, rubbleSmall: 1, none: 0}
+    # Salvage counts the salvage heads, the heads that carry a tractor beam module, and the
+    # scraper modules (a socket holding a tractor beam isn't a scraper). Repair adds on top.
+    perHead: 1
+    perTractorHead: 0.5
+    perScraperModule: 0.25
     repairBonus: {none: 0, smallShips: 1, base: 2}
   manufacturing:
     displayName: Manufacturing
@@ -160,6 +164,9 @@ rules:
   - id: multipleBeds
     categories: [medical]
     text: +1 medical when the base and its carried ships hold two or more medical beds in total.
+  - id: salvageHeads
+    categories: [salvageRepair]
+    text: Salvage scores 1 per salvage head, 0.5 more per head with a tractor beam module, and 0.25 per scraper module. The base's own salvage and its carried salvage ship don't add up; the better one counts.
   - id: repairBonus
     categories: [salvageRepair]
     text: +1 when the base repairs, refuels and rearms the small ships it carries, +2 when it repairs itself or larger ships. Line capped at 5.

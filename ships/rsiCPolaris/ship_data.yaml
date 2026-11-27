@@ -12,7 +12,7 @@ roles:
   mining: {headPower: 0, moduleSlots: 0, heads: 0}
   refining: roomForLater
   medical: {level: tier2, beds: 4}
-  salvageRepair: {level: none, repair: smallShips}
+  salvageRepair: {heads: 0, tractorHeads: 0, scraperModules: 0, repair: smallShips}
   manufacturing: roomForLater
   defense:
     seats:

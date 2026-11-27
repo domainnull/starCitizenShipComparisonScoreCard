@@ -13,7 +13,9 @@ roles:
   refining: roomForLater
   medical: {level: tier1, beds: 3}
   salvageRepair:
-    level: none
+    heads: 0
+    tractorHeads: 0
+    scraperModules: 0
     repair: {low: none, high: smallShips}
   manufacturing: roomForLater
   defense:

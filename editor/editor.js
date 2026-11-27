@@ -714,7 +714,7 @@
 
   var ROLE_DEFAULTS = {
     mining: { headPower: 0, moduleSlots: 0, heads: 1 }, refining: "none", manufacturing: "none",
-    medical: { level: "none", beds: 0 }, salvageRepair: { level: "none", repair: "none" },
+    medical: { level: "none", beds: 0 }, salvageRepair: { heads: 0, tractorHeads: 0, scraperModules: 0, repair: "none" },
     defense: { seats: [] }, livingQuarters: { beds: 0, recSpace: false }, cargo: { scu: 0, maneuverability: 0 },
     commuter: false, exploration: { radarSize: 1, level: "none" }, hauler: true, fighter: true,
   };
@@ -910,7 +910,11 @@
           inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.medical.levels))));
           inner.appendChild(row("Medical beds", bind(p.concat("beds"), numberInput(true))));
         } else if (k === "salvageRepair") {
-          inner.appendChild(row("Level", bind(p.concat("level"), selectInput(R.categories.salvageRepair.levels))));
+          inner.appendChild(row("Salvage heads", bind(p.concat("heads"), numberInput(true)), R.salvage.perHead + " each"));
+          inner.appendChild(row("Heads with a tractor beam", bind(p.concat("tractorHeads"), numberInput(true)),
+            R.salvage.perTractorHead + " more each"));
+          inner.appendChild(row("Scraper modules", bind(p.concat("scraperModules"), numberInput(true)),
+            R.salvage.perScraperModule + " each; a socket holding a tractor beam isn't one"));
           inner.appendChild(row("Repairs", bind(p.concat("repair"), selectInput(R.repairLevels,
             R.repairLevels.map(function (x) { return { none: "nothing", smallShips: "small ships it carries", base: "itself or larger ships" }[x] || words(x); })))));
         } else if (k === "defense") {
@@ -1036,6 +1040,11 @@
     if (role === "cargo") return !!r.hauler;
     if (role === "defense") return "defense" in r;
     if (role === "livingQuarters") return !!r.livingQuarters;
+    if (role === "salvageRepair") {
+      var v = r.salvageRepair;
+      if (!v || typeof v !== "object") return false;
+      return isRange(v.heads) ? (v.heads.low > 0 || v.heads.high > 0) : v.heads > 0;
+    }
     if (role === "mining") {
       var m = r.mining;
       if (!m || typeof m !== "object") return false;

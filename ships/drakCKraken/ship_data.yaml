@@ -15,7 +15,7 @@ roles:
   medical:
     level: {low: none, high: tier1}
     beds: {low: 0, high: 2}
-  salvageRepair: {level: none, repair: smallShips}
+  salvageRepair: {heads: 0, tractorHeads: 0, scraperModules: 0, repair: smallShips}
   manufacturing: roomForLater
   defense:
     seats:

@@ -224,6 +224,7 @@ def rubric_info(rubric):
         "categories": {k: {"displayName": v["displayName"], "max": v.get("max"),
                            "levels": list((v.get("levels") or {}).keys())} for k, v in cats.items()},
         "repairLevels": list(cats["salvageRepair"]["repairBonus"].keys()),
+        "salvage": {k: cats["salvageRepair"][k] for k in ("perHead", "perTractorHead", "perScraperModule")},
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
         "weaponTypes": cats["defense"]["weaponTypes"],
         "miningModule": cats["mining"]["passiveModuleMultiplier"],

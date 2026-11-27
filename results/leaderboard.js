@@ -185,6 +185,13 @@ window.scorecardResults = {
       "text": "+1 medical when the base and its carried ships hold two or more medical beds in total."
     },
     {
+      "id": "salvageHeads",
+      "categories": [
+        "salvageRepair"
+      ],
+      "text": "Salvage scores 1 per salvage head, 0.5 more per head with a tractor beam module, and 0.25 per scraper module. The base's own salvage and its carried salvage ship don't add up; the better one counts."
+    },
+    {
       "id": "repairBonus",
       "categories": [
         "salvageRepair"
@@ -415,6 +422,19 @@ window.scorecardResults = {
       ],
       "changes": []
     },
+    "miscSFortune": {
+      "name": "MISC Fortune",
+      "manufacturer": "MISC",
+      "size": "S",
+      "status": "flightReady",
+      "patch": "4.10.3",
+      "file": "ships/miscSFortune/ship_data.yaml",
+      "sources": [
+        "https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json",
+        "https://starcitizen.tools/Fortune"
+      ],
+      "changes": []
+    },
     "miscSGuardianMx": {
       "name": "Mirai Guardian MX",
       "manufacturer": "MISC",
@@ -504,8 +524,8 @@ window.scorecardResults = {
       "status": "concept",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 28,
-        "high": 32.5
+        "low": 29.5,
+        "high": 34
       },
       "layouts": [
         {
@@ -515,12 +535,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": null,
           "total": {
-            "low": 28,
-            "high": 32.5
+            "low": 29.5,
+            "high": 34
           },
           "needed": {
-            "low": 28,
-            "high": 32.5
+            "low": 29.5,
+            "high": 34
           },
           "desired": {
             "low": 0,
@@ -555,8 +575,8 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 2,
-              "high": 2,
+              "low": 3.5,
+              "high": 3.5,
               "source": "rsiSSalvation",
               "sources": {
                 "low": "rsiSSalvation",
@@ -704,7 +724,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "dbaa99f2c9e82d0c"
+          "fingerprint": "84b6b8ead161d246"
         }
       ],
       "rank": 1
@@ -717,8 +737,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "inGameLoadout",
       "total": {
-        "low": 29,
-        "high": 29
+        "low": 30.5,
+        "high": 30.5
       },
       "layouts": [
         {
@@ -728,12 +748,12 @@ window.scorecardResults = {
           "estimated": false,
           "patch": "4.10.3",
           "total": {
-            "low": 29,
-            "high": 29
+            "low": 30.5,
+            "high": 30.5
           },
           "needed": {
-            "low": 29,
-            "high": 29
+            "low": 30.5,
+            "high": 30.5
           },
           "desired": {
             "low": 0,
@@ -768,8 +788,8 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 2,
-              "high": 2,
+              "low": 3.5,
+              "high": 3.5,
               "source": "rsiSSalvation",
               "sources": {
                 "low": "rsiSSalvation",
@@ -904,7 +924,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "934832547c3ee29c"
+          "fingerprint": "50f56ea382c51c3a"
         }
       ],
       "rank": 2
@@ -917,8 +937,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 28.5,
-        "high": 28.5
+        "low": 30,
+        "high": 30
       },
       "layouts": [
         {
@@ -928,12 +948,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.5",
           "total": {
-            "low": 28.5,
-            "high": 28.5
+            "low": 30,
+            "high": 30
           },
           "needed": {
-            "low": 28.5,
-            "high": 28.5
+            "low": 30,
+            "high": 30
           },
           "desired": {
             "low": 0,
@@ -968,8 +988,8 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 2,
-              "high": 2,
+              "low": 3.5,
+              "high": 3.5,
               "source": "rsiSSalvation",
               "sources": {
                 "low": "rsiSSalvation",
@@ -1117,7 +1137,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "19756e7e3dc437ca"
+          "fingerprint": "9f351c61f45086b8"
         }
       ],
       "rank": 3
@@ -1130,8 +1150,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "inGameLoadout",
       "total": {
-        "low": 25,
-        "high": 25
+        "low": 26.5,
+        "high": 26.5
       },
       "layouts": [
         {
@@ -1141,12 +1161,12 @@ window.scorecardResults = {
           "estimated": false,
           "patch": "4.10.3",
           "total": {
-            "low": 25,
-            "high": 25
+            "low": 26.5,
+            "high": 26.5
           },
           "needed": {
-            "low": 25,
-            "high": 25
+            "low": 26.5,
+            "high": 26.5
           },
           "desired": {
             "low": 0,
@@ -1181,8 +1201,8 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 3,
-              "high": 3,
+              "low": 4.5,
+              "high": 4.5,
               "source": "drakSVulture",
               "sources": {
                 "low": "drakSVulture",
@@ -1325,7 +1345,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "2179ba08dddae9c0"
+          "fingerprint": "17a49c38e763e513"
         }
       ],
       "rank": 4
@@ -1338,8 +1358,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 23,
-        "high": 26
+        "low": 24.5,
+        "high": 27.5
       },
       "layouts": [
         {
@@ -1349,12 +1369,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.8",
           "total": {
-            "low": 23,
-            "high": 26
+            "low": 24.5,
+            "high": 27.5
           },
           "needed": {
-            "low": 23,
-            "high": 26
+            "low": 24.5,
+            "high": 27.5
           },
           "desired": {
             "low": 0,
@@ -1389,8 +1409,8 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 2,
-              "high": 2,
+              "low": 3.5,
+              "high": 3.5,
               "source": "rsiSSalvation",
               "sources": {
                 "low": "rsiSSalvation",
@@ -1525,7 +1545,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "cb22269c0796742c"
+          "fingerprint": "08044ee587d7e6e3"
         }
       ],
       "rank": 5
@@ -1713,7 +1733,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "b466786db9de8a81"
+          "fingerprint": "d4d3a92d467c6364"
         }
       ],
       "rank": 6
@@ -1906,7 +1926,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "6413b7635f1e0974"
+          "fingerprint": "34a9b476c0949ce5"
         }
       ],
       "rank": 7
@@ -1919,8 +1939,8 @@ window.scorecardResults = {
       "status": "flightReady",
       "bestLayout": "starterEstimate",
       "total": {
-        "low": 19,
-        "high": 21
+        "low": 20.5,
+        "high": 22.5
       },
       "layouts": [
         {
@@ -1930,12 +1950,12 @@ window.scorecardResults = {
           "estimated": true,
           "patch": "4.8",
           "total": {
-            "low": 19,
-            "high": 21
+            "low": 20.5,
+            "high": 22.5
           },
           "needed": {
-            "low": 19,
-            "high": 21
+            "low": 20.5,
+            "high": 22.5
           },
           "desired": {
             "low": 0,
@@ -1970,8 +1990,8 @@ window.scorecardResults = {
               }
             },
             "salvageRepair": {
-              "low": 1,
-              "high": 1,
+              "low": 2.5,
+              "high": 2.5,
               "source": "rsiSSalvation",
               "sources": {
                 "low": "rsiSSalvation",
@@ -2110,7 +2130,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "b09dd2970c174f10"
+          "fingerprint": "4e4766d064ae52b6"
         }
       ],
       "rank": 8

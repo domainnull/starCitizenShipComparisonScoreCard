@@ -230,10 +230,13 @@ def validate_roles(path, roles, rubric, report, full):
         ok &= validate_value(path, f + "medical", v["medical"], med, report)
     if "salvageRepair" in v:
         def sal(x):
-            if not isinstance(x, dict) or "level" not in x or "repair" not in x:
-                return "needs level and repair"
-            if x["level"] not in cats["salvageRepair"]["levels"]:
-                return f"level {x['level']!r} is not one of {', '.join(cats['salvageRepair']['levels'])}"
+            if not isinstance(x, dict) or set(x) != {"heads", "tractorHeads", "scraperModules", "repair"}:
+                return "needs heads, tractorHeads, scraperModules and repair"
+            for k in ("heads", "tractorHeads", "scraperModules"):
+                if not isinstance(x[k], int) or isinstance(x[k], bool) or x[k] < 0:
+                    return f"{k} must be a whole number, 0 or more"
+            if x["tractorHeads"] > x["heads"]:
+                return "tractorHeads can't be more than heads"
             if x["repair"] not in cats["salvageRepair"]["repairBonus"]:
                 return f"repair {x['repair']!r} is not one of {', '.join(cats['salvageRepair']['repairBonus'])}"
         ok &= validate_value(path, f + "salvageRepair", v["salvageRepair"], sal, report)
@@ -371,6 +374,10 @@ def carried_role_check(role, sid, sroles):
     elif role == "defense":
         if "defense" not in sroles:
             return "error", f"{sid} has no defense data"
+    elif role == "salvageRepair":
+        v = sroles.get("salvageRepair")
+        if not isinstance(v, dict) or not any((resolve(v, s).get("heads") or 0) > 0 for s in SCENARIOS):
+            return "error", f"{sid} has no salvage head"
     elif role == "mining":
         m = sroles.get("mining")
         if not isinstance(m, dict) or not any(
@@ -570,13 +577,21 @@ class Scorer:
             s += cfg["multipleBedsBonus"]
         return min(s, cfg["max"])
 
+    def salvage_one(self, v):
+        """Heads, tractor-beam heads and scraper modules, before repair."""
+        if not isinstance(v, dict):
+            return 0
+        cfg = self.cats["salvageRepair"]
+        return (cfg["perHead"] * v.get("heads", 0) + cfg["perTractorHead"] * v.get("tractorHeads", 0)
+                + cfg["perScraperModule"] * v.get("scraperModules", 0))
+
     def salvageRepair(self, n, c):
         cfg = self.cats["salvageRepair"]
-        ns = n.get("salvageRepair") or {"level": "none", "repair": "none"}
-        s = cfg["levels"][ns["level"]]
-        if c and c.get("salvageRepair"):
-            s = max(s, cfg["levels"][c["salvageRepair"]["level"]])
-        s += cfg["repairBonus"][ns["repair"]]
+        ns = n.get("salvageRepair") or {}
+        s = self.salvage_one(ns)
+        if c:
+            s = max(s, self.salvage_one(c.get("salvageRepair")))
+        s += cfg["repairBonus"][ns.get("repair", "none")]
         return min(s, cfg["max"])
 
     def manufacturing(self, n, c):
