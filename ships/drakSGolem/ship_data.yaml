@@ -8,9 +8,11 @@ status: flightReady
 patch: 4.10.3
 dimensions: {length: 15.5, width: 7, height: 5}
 carrierSize: small
-roles: {mining: golem}
+roles:
+  mining: {headPower: 3900, moduleSlots: 2, heads: 1}
 notes:
-- Mines with modules only; the head is not swappable.
+- Pitman head (3,900 power, 2 module slots); the head can be swapped in game now, and the best S1 head
+  (Helix I) has the same power and slots.
 sources:
 - https://github.com/StarCitizenWiki/scunpacked-data/blob/master/ships.json
 - https://starcitizen.tools/Golem

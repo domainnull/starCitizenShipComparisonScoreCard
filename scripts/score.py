@@ -196,7 +196,17 @@ def validate_roles(path, roles, rubric, report, full):
             report.warn(path, f"roles.{k}", "extra field", "ignored, not graded")
     v = roles
     f = "roles."
-    for key in ("mining", "refining", "manufacturing"):
+    if "mining" in v:
+        def mine(x):
+            if not isinstance(x, dict) or set(x) != {"headPower", "moduleSlots", "heads"}:
+                return "needs headPower, moduleSlots and heads"
+            if not isinstance(x["headPower"], (int, float)) or isinstance(x["headPower"], bool) or x["headPower"] < 0:
+                return "headPower must be a number, 0 or more"
+            for k in ("moduleSlots", "heads"):
+                if not isinstance(x[k], int) or isinstance(x[k], bool) or x[k] < 0:
+                    return f"{k} must be a whole number, 0 or more"
+        ok &= validate_value(path, f + "mining", v["mining"], mine, report)
+    for key in ("refining", "manufacturing"):
         if key in v:
             ok &= validate_value(path, f + key, v[key], level_check(cats[key]["levels"]), report)
     if "exploration" in v:
@@ -361,6 +371,11 @@ def carried_role_check(role, sid, sroles):
     elif role == "defense":
         if "defense" not in sroles:
             return "error", f"{sid} has no defense data"
+    elif role == "mining":
+        m = sroles.get("mining")
+        if not isinstance(m, dict) or not any(
+                (resolve(m, s).get("heads") or 0) > 0 and (resolve(m, s).get("headPower") or 0) > 0 for s in SCENARIOS):
+            return "error", f"{sid} has no mining head"
     elif role not in sroles or sroles.get(role) in (False, "none"):
         return "error", f"{sid} has no {role} data"
     return None, None
@@ -515,11 +530,25 @@ class Scorer:
         return max([self.seat_score(s) for s in seats] or [0])
 
     # Each line function returns the score given the carried ship roles (or None).
+    def mining_power(self, m):
+        """Best head's power with every module slot holding the best passive module."""
+        if not isinstance(m, dict) or not m.get("heads"):
+            return 0
+        return m.get("headPower", 0) * self.cats["mining"]["passiveModuleMultiplier"] ** m.get("moduleSlots", 0)
+
+    def mining_one(self, m):
+        cfg = self.cats["mining"]
+        power = self.mining_power(m)
+        if power <= 0:
+            return 0
+        s = max(sc for mn, sc in cfg["powerTiers"].items() if power >= mn and (mn > 0 or power > 0))
+        s += max([b for k, b in cfg["headBonus"].items() if m["heads"] >= k] or [0])
+        return min(s, cfg["max"])
+
     def mining(self, n, c):
-        lv = self.cats["mining"]["levels"]
-        s = lv[n.get("mining", "none")]
+        s = self.mining_one(n.get("mining"))
         if c:
-            s = max(s, lv[c.get("mining", "none")])
+            s = max(s, self.mining_one(c.get("mining")))
         return s
 
     def refining(self, n, c):

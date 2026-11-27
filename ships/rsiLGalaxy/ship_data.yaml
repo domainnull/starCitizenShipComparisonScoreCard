@@ -9,7 +9,7 @@ patch: 4.10.3
 dimensions: {length: 110, width: 60, height: 25}
 carrierSize: none
 roles:
-  mining: none
+  mining: {headPower: 0, moduleSlots: 0, heads: 0}
   refining: roomForLater
   medical: {level: tier1, beds: 3}
   salvageRepair:

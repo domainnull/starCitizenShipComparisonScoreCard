@@ -6,7 +6,27 @@ Semver for both the rubric and the score script: **major** = old scores are not 
 `rubric-vX.Y.Z`. Keep the last 3-5 rubric versions in this folder, each with its results
 snapshot.
 
-## Rubric 3.2.0 / script 2.2.0 / editor 2.2.0 (Nov 27 2026): bespoke guns
+## Rubric 3.2.0 / script 2.2.0 / editor 2.2.0 (Nov 27 2026): bespoke guns, mining by passive power
+
+- **Mining by passive power** (mining). The named levels (capital 5, MOLE 4, Prospector 3, Golem 2,
+  ROC 1) are gone. A ship's mining is now `{headPower, moduleSlots, heads}`: the best head it can fit,
+  its module slots, and how many heads it has. Power is `headPower x passiveModuleMultiplier ^
+  moduleSlots`, with every slot holding the best passive power module (Rieger-C3, x1.25), so active
+  modules never count. Owner's words: Golem and Prospector should come out the same, they favour high
+  power passive, and a ship like the MOLE with several heads deserves an extra point or two.
+- Tiers (`powerTiers`, maintainer's defaults): above 0 scores 1, 5,000+ 2, 8,000+ 3, 12,000+ 4.
+  `headBonus`: 2 heads +1, 3 or more +2. Capped at 5.
+- Owner, Nov 27: every snub industrial's head is unlocked in game now, so the Golem counts the best
+  S1 head (Pitman and Helix I are both 3,900 power with 2 slots). If that changes, it gets adjusted.
+- Data from scunpacked-data: Pitman and Helix I 3,900 / 2 slots (6,094 passive, score 2); Helix II S2
+  4,930 / 3 slots (9,629, so a MOLE would score 3 + 2 = 5, not in the ship data yet); ROC-DS fixed S0
+  head at 0.8 on another scale (score 1). Odyssey's arm head is estimated, ROC-class to S1.
+- Unverified (issue 19): module stacking assumed multiplicative, S0 power scale, Odyssey arm head,
+  and the thresholds.
+- Scores that moved: Prospector mining 3 -> 2 (not in any layout). Odyssey mining high 3 -> 2, total
+  21-28 -> 21-27. Every Golem layout stays at 2, Galaxy's ROC-DS stays at 0-1.
+
+### Bespoke guns
 
 - **Bespoke guns** (defense). A seat can be marked `bespoke: true` with a `weaponType` (energy,
   ballistic or distortion) for guns built for the ship that can't be swapped. Swappable guns keep

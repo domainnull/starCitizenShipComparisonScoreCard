@@ -10,7 +10,7 @@ patch: null
 dimensions: {length: 140}
 carrierSize: none
 roles:
-  mining: {low: roc, high: prospector}
+  mining: {headPower: {low: 0.8, high: 3900}, moduleSlots: {low: 0, high: 2}, heads: 1}
   refining: oreOrFuel
   medical:
     level: tier2
@@ -36,6 +36,7 @@ roles:
 locations: [hangar, vehicleBay]
 notes:
 - Built-in mining arm feeds the fuel refinery; makes its own hydrogen and quantum fuel, no ore refining (Q&A).
+- Mining arm head unpublished: estimated as a ROC-class head (low) to a Prospector-class S1 head (high).
 - One XS hangar slot; a separate Ursa-sized ground bay. Turret positions unpublished.
 - Turret guns assumed swappable (not bespoke) until the ship is in game; see issue 17.
 - Marketed as a long-range explorer: explorer level in the high case only, since the exploration loop is not in game.

@@ -713,7 +713,7 @@
   // ------------------------------------------------------------------ ship form
 
   var ROLE_DEFAULTS = {
-    mining: "none", refining: "none", manufacturing: "none",
+    mining: { headPower: 0, moduleSlots: 0, heads: 1 }, refining: "none", manufacturing: "none",
     medical: { level: "none", beds: 0 }, salvageRepair: { level: "none", repair: "none" },
     defense: { seats: [] }, livingQuarters: { beds: 0, recSpace: false }, cargo: { scu: 0, maneuverability: 0 },
     commuter: false, exploration: { radarSize: 1, level: "none" }, hauler: true, fighter: true,
@@ -729,7 +729,7 @@
   // Whether the structured form can show this ship without losing anything.
   function formCanShow(d) {
     var roles = d.roles || {};
-    var objRoles = ["medical", "salvageRepair", "defense", "livingQuarters", "cargo"];
+    var objRoles = ["mining", "medical", "salvageRepair", "defense", "livingQuarters", "cargo"];
     for (var i = 0; i < objRoles.length; i++) {
       var v = roles[objRoles[i]];
       if (v !== undefined && (isRange(v) || typeof v !== "object" || Array.isArray(v))) return false;
@@ -891,7 +891,13 @@
         inner.innerHTML = "";
         if (!(k in roles)) return;
         var p = ["roles", k];
-        if (k === "mining" || k === "refining" || k === "manufacturing") {
+        if (k === "mining") {
+          inner.appendChild(row("Head power", bind(p.concat("headPower"), numberInput(false)),
+            "Best head the ship can fit, before modules (game data's mining laser power)"));
+          inner.appendChild(row("Module slots", bind(p.concat("moduleSlots"), numberInput(true)),
+            "Each holds a passive power module (x" + R.miningModule + ")"));
+          inner.appendChild(row("Mining heads", bind(p.concat("heads"), numberInput(true)), "2 heads add 1, 3 or more add 2"));
+        } else if (k === "refining" || k === "manufacturing") {
           inner.appendChild(row("Level", bind(p, selectInput(R.categories[k].levels))));
         } else if (k === "exploration") {
           inner.appendChild(row("Radar size", bind(p.concat("radarSize"), function (v, set) {
@@ -1030,6 +1036,14 @@
     if (role === "cargo") return !!r.hauler;
     if (role === "defense") return "defense" in r;
     if (role === "livingQuarters") return !!r.livingQuarters;
+    if (role === "mining") {
+      var m = r.mining;
+      if (!m || typeof m !== "object") return false;
+      return ["low", "high"].some(function (s) {
+        var pick = function (x) { return isRange(x) ? x[s] : x; };
+        return pick(m.heads) > 0 && pick(m.headPower) > 0;
+      });
+    }
     return role in r && r[role] !== false && r[role] !== "none";
   }
 

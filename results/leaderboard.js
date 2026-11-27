@@ -150,6 +150,13 @@ window.scorecardResults = {
       "text": "Defense counts the best single seat (pilot or one turret). Swappable guns score by size, since they can take energy guns; missiles never count."
     },
     {
+      "id": "miningPower",
+      "categories": [
+        "mining"
+      ],
+      "text": "Mining scores the best head's power with passive modules only (each module slot holding a Rieger-C3, +25%), so ships with the same head and slots score the same. Power above 0 scores 1, 5,000 or more 2, 8,000 or more 3, 12,000 or more 4. Two heads add 1 and three or more add 2, capped at 5."
+    },
+    {
       "id": "bespokeGuns",
       "categories": [
         "defense"
@@ -697,7 +704,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "fb44b99df2edb7d9"
+          "fingerprint": "dbaa99f2c9e82d0c"
         }
       ],
       "rank": 1
@@ -897,7 +904,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "0aba8e1bfd271686"
+          "fingerprint": "934832547c3ee29c"
         }
       ],
       "rank": 2
@@ -1110,7 +1117,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "7e69042a86489803"
+          "fingerprint": "19756e7e3dc437ca"
         }
       ],
       "rank": 3
@@ -1318,198 +1325,10 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "eef0fe5bce52377d"
+          "fingerprint": "2179ba08dddae9c0"
         }
       ],
       "rank": 4
-    },
-    {
-      "id": "miscCOdyssey",
-      "name": "MISC Odyssey",
-      "manufacturer": "MISC",
-      "size": "C",
-      "status": "concept",
-      "bestLayout": "starterEstimate",
-      "total": {
-        "low": 21,
-        "high": 28
-      },
-      "layouts": [
-        {
-          "layout": "starterEstimate",
-          "file": "ships/miscCOdyssey/layouts/starterEstimate.yaml",
-          "description": "Starter layout ported from the scorecard doc (rev 73). The one hangar slot holds the C8X, which scored more than the Salvation.",
-          "estimated": true,
-          "patch": null,
-          "total": {
-            "low": 21,
-            "high": 28
-          },
-          "needed": {
-            "low": 21,
-            "high": 28
-          },
-          "desired": {
-            "low": 0,
-            "high": 0
-          },
-          "lines": {
-            "mining": {
-              "low": 1,
-              "high": 3,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "refining": {
-              "low": 4,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "medical": {
-              "low": 3,
-              "high": 4,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "salvageRepair": {
-              "low": 0,
-              "high": 0,
-              "source": "noRoom",
-              "sources": {
-                "low": "noRoom",
-                "high": "noRoom"
-              }
-            },
-            "manufacturing": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "defense": {
-              "low": 2,
-              "high": 2,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "livingQuarters": {
-              "low": 5,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "cargo": {
-              "low": 1,
-              "high": 2,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "cargoCapacity": {
-              "low": 1,
-              "high": 1,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "commuter": {
-              "low": 1,
-              "high": 1,
-              "source": "anvlSC8x",
-              "sources": {
-                "low": "anvlSC8x",
-                "high": "anvlSC8x"
-              }
-            },
-            "exploration": {
-              "low": 2,
-              "high": 5,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            },
-            "extraShips": {
-              "low": 0,
-              "high": 0,
-              "source": "native",
-              "sources": {
-                "low": "native",
-                "high": "native"
-              }
-            }
-          },
-          "cargoLeftScu": {
-            "low": 252,
-            "high": 252
-          },
-          "roles": {
-            "mining": {
-              "source": "native"
-            },
-            "refining": {
-              "source": "native"
-            },
-            "medical": {
-              "source": "native"
-            },
-            "salvageRepair": {
-              "source": "noRoom"
-            },
-            "manufacturing": {
-              "source": "native"
-            },
-            "defense": {
-              "source": "native"
-            },
-            "livingQuarters": {
-              "source": "native"
-            },
-            "cargo": {
-              "source": "native"
-            },
-            "commuter": {
-              "source": "anvlSC8x",
-              "location": "hangar",
-              "cargoScu": 0,
-              "fit": "Estimated: concept ship, sizes unpublished",
-              "patch": null
-            },
-            "exploration": {
-              "source": "native"
-            }
-          },
-          "extraShips": [],
-          "rubricVersion": "3.2.0",
-          "scriptVersion": "2.2.0",
-          "fingerprint": "d01ff3509fdf7433"
-        }
-      ],
-      "rank": 5
     },
     {
       "id": "drakLIroncladAssault",
@@ -1706,7 +1525,195 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "56171f3a6080b9fc"
+          "fingerprint": "cb22269c0796742c"
+        }
+      ],
+      "rank": 5
+    },
+    {
+      "id": "miscCOdyssey",
+      "name": "MISC Odyssey",
+      "manufacturer": "MISC",
+      "size": "C",
+      "status": "concept",
+      "bestLayout": "starterEstimate",
+      "total": {
+        "low": 21,
+        "high": 27
+      },
+      "layouts": [
+        {
+          "layout": "starterEstimate",
+          "file": "ships/miscCOdyssey/layouts/starterEstimate.yaml",
+          "description": "Starter layout ported from the scorecard doc (rev 73). The one hangar slot holds the C8X, which scored more than the Salvation.",
+          "estimated": true,
+          "patch": null,
+          "total": {
+            "low": 21,
+            "high": 27
+          },
+          "needed": {
+            "low": 21,
+            "high": 27
+          },
+          "desired": {
+            "low": 0,
+            "high": 0
+          },
+          "lines": {
+            "mining": {
+              "low": 1,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "refining": {
+              "low": 4,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "medical": {
+              "low": 3,
+              "high": 4,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "salvageRepair": {
+              "low": 0,
+              "high": 0,
+              "source": "noRoom",
+              "sources": {
+                "low": "noRoom",
+                "high": "noRoom"
+              }
+            },
+            "manufacturing": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "defense": {
+              "low": 2,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "livingQuarters": {
+              "low": 5,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargo": {
+              "low": 1,
+              "high": 2,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "cargoCapacity": {
+              "low": 1,
+              "high": 1,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "commuter": {
+              "low": 1,
+              "high": 1,
+              "source": "anvlSC8x",
+              "sources": {
+                "low": "anvlSC8x",
+                "high": "anvlSC8x"
+              }
+            },
+            "exploration": {
+              "low": 2,
+              "high": 5,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            },
+            "extraShips": {
+              "low": 0,
+              "high": 0,
+              "source": "native",
+              "sources": {
+                "low": "native",
+                "high": "native"
+              }
+            }
+          },
+          "cargoLeftScu": {
+            "low": 252,
+            "high": 252
+          },
+          "roles": {
+            "mining": {
+              "source": "native"
+            },
+            "refining": {
+              "source": "native"
+            },
+            "medical": {
+              "source": "native"
+            },
+            "salvageRepair": {
+              "source": "noRoom"
+            },
+            "manufacturing": {
+              "source": "native"
+            },
+            "defense": {
+              "source": "native"
+            },
+            "livingQuarters": {
+              "source": "native"
+            },
+            "cargo": {
+              "source": "native"
+            },
+            "commuter": {
+              "source": "anvlSC8x",
+              "location": "hangar",
+              "cargoScu": 0,
+              "fit": "Estimated: concept ship, sizes unpublished",
+              "patch": null
+            },
+            "exploration": {
+              "source": "native"
+            }
+          },
+          "extraShips": [],
+          "rubricVersion": "3.2.0",
+          "scriptVersion": "2.2.0",
+          "fingerprint": "b466786db9de8a81"
         }
       ],
       "rank": 6
@@ -1899,7 +1906,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "1ed7e25572210931"
+          "fingerprint": "6413b7635f1e0974"
         }
       ],
       "rank": 7
@@ -2103,7 +2110,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "2851c94a7bc9f2b0"
+          "fingerprint": "b09dd2970c174f10"
         }
       ],
       "rank": 8

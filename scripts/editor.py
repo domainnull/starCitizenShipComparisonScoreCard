@@ -226,6 +226,7 @@ def rubric_info(rubric):
         "repairLevels": list(cats["salvageRepair"]["repairBonus"].keys()),
         "gunSizes": list(cats["defense"]["gunScore"].keys()),
         "weaponTypes": cats["defense"]["weaponTypes"],
+        "miningModule": cats["mining"]["passiveModuleMultiplier"],
         "bespokeAmmoPenalty": cats["defense"]["bespokeAmmoPenalty"],
         "radarSizes": list(cats["exploration"]["radarScore"].keys()),
         "maneuverabilityMax": cats["cargo"]["maneuverabilityMax"],
