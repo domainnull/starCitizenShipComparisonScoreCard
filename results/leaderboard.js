@@ -697,7 +697,7 @@ window.scorecardResults = {
           ],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "c3cd06895978d15f"
+          "fingerprint": "fb44b99df2edb7d9"
         }
       ],
       "rank": 1
@@ -1506,7 +1506,7 @@ window.scorecardResults = {
           "extraShips": [],
           "rubricVersion": "3.2.0",
           "scriptVersion": "2.2.0",
-          "fingerprint": "63c1cb198ba330d8"
+          "fingerprint": "d01ff3509fdf7433"
         }
       ],
       "rank": 5
